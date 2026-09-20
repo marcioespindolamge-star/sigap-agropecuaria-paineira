@@ -21,7 +21,7 @@ PROJECT_ID = "sigap-agropecuaria-paineira"
 TABELAS_SIGAP = (
     "animais", "nascimentos", "pesagens", "sanidade", "medicamentos",
     "movimentacoes", "frigorificos", "compradores", "vendas", "venda_itens",
-    "campos", "inseminacoes", "protocolos_iatf", "config",
+    "campos", "inseminacoes", "entouramentos", "protocolos_iatf", "config",
 )
 
 def firestore_habilitado():
