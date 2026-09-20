@@ -69,7 +69,7 @@ main h1{
     </div>
   </div>
 </header>
-<button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" onclick="toggleSigapMenu(this)">☰ MENU</button>
+<a class="mobile-home-back" href="{{url_for('dashboard')}}">← INÍCIO</a>
 <nav class="main-nav" id="main-nav">
 <a href="{{url_for('dashboard')}}">🏠 Início</a>
 <a href="{{url_for('animal_novo', cadastro_vaca_url=True)}}">🐄 Matrizes</a>
