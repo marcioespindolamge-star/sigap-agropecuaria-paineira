@@ -70,7 +70,11 @@ def _hash_dados(dados):
     return hashlib.sha256(bruto.encode("utf-8")).hexdigest()
 
 def sincronizar_sqlite(db_path):
-    """Sincroniza somente registros novos ou alterados. Não propaga exclusões."""
+    """Espelha rapidamente os registros locais no Firestore, sem propagar exclusões.
+
+    Evita uma leitura remota por registro. Isso é importante no Render, onde a
+    sincronização ocorre dentro da requisição e precisa terminar antes do timeout.
+    """
     cloud = _cliente()
     if cloud is None:
         return False
@@ -85,32 +89,25 @@ def sincronizar_sqlite(db_path):
         }
         agora = datetime.now(timezone.utc).isoformat()
         enviados = 0
+        batch = cloud.batch()
+        operacoes = 0
 
         for tabela in TABELAS_SIGAP:
             if tabela not in existentes:
                 continue
 
             rows = conn.execute(f'SELECT rowid AS _rowid_, * FROM "{tabela}"').fetchall()
-            batch = cloud.batch()
-            operacoes = 0
-
             for row in rows:
                 dados = dict(row)
                 doc_id = str(dados.get("id") or dados.get("_rowid_"))
                 dados.pop("_rowid_", None)
                 dados = {str(k): _normalizar(v) for k, v in dados.items()}
-                hash_local = _hash_dados(dados)
-
-                ref = cloud.collection(tabela).document(doc_id)
-                atual = ref.get()
-                if atual.exists:
-                    remoto = atual.to_dict() or {}
-                    if remoto.get("_sigap_hash") == hash_local:
-                        continue
 
                 payload = dict(dados)
-                payload["_sigap_hash"] = hash_local
+                payload["_sigap_hash"] = _hash_dados(dados)
                 payload["_sigap_atualizado_em"] = agora
+
+                ref = cloud.collection(tabela).document(doc_id)
                 batch.set(ref, payload, merge=True)
                 operacoes += 1
                 enviados += 1
@@ -120,9 +117,8 @@ def sincronizar_sqlite(db_path):
                     batch = cloud.batch()
                     operacoes = 0
 
-            # Segurança mantida: exclusões locais não são propagadas automaticamente.
-            if operacoes:
-                batch.commit()
+        if operacoes:
+            batch.commit()
 
         cloud.collection("_sigap").document("estado").set({
             "ultima_sincronizacao": agora,
