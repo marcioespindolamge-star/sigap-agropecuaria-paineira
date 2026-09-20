@@ -7,6 +7,7 @@ Nenhuma chave privada é gravada no GitHub.
 import json
 import os
 import sqlite3
+import hashlib
 from datetime import datetime, timezone
 
 try:
@@ -63,8 +64,13 @@ def excluir_documento(colecao, documento_id):
     db.collection(str(colecao)).document(str(documento_id)).delete()
     return True
 
+def _hash_dados(dados):
+    """Hash estável do conteúdo local para evitar reenvios desnecessários."""
+    bruto = json.dumps(dados, ensure_ascii=False, sort_keys=True, default=str, separators=(",", ":"))
+    return hashlib.sha256(bruto.encode("utf-8")).hexdigest()
+
 def sincronizar_sqlite(db_path):
-    """Espelha as tabelas do SIGAP no Firestore. Retorna False se desativado."""
+    """Sincroniza somente registros novos ou alterados. Não propaga exclusões."""
     cloud = _cliente()
     if cloud is None:
         return False
@@ -78,32 +84,43 @@ def sincronizar_sqlite(db_path):
             ).fetchall()
         }
         agora = datetime.now(timezone.utc).isoformat()
+        enviados = 0
 
         for tabela in TABELAS_SIGAP:
             if tabela not in existentes:
                 continue
+
             rows = conn.execute(f'SELECT rowid AS _rowid_, * FROM "{tabela}"').fetchall()
-            ids_atuais = set()
             batch = cloud.batch()
             operacoes = 0
 
             for row in rows:
                 dados = dict(row)
                 doc_id = str(dados.get("id") or dados.get("_rowid_"))
-                ids_atuais.add(doc_id)
                 dados.pop("_rowid_", None)
                 dados = {str(k): _normalizar(v) for k, v in dados.items()}
-                dados["_sigap_atualizado_em"] = agora
+                hash_local = _hash_dados(dados)
+
                 ref = cloud.collection(tabela).document(doc_id)
-                batch.set(ref, dados)
+                atual = ref.get()
+                if atual.exists:
+                    remoto = atual.to_dict() or {}
+                    if remoto.get("_sigap_hash") == hash_local:
+                        continue
+
+                payload = dict(dados)
+                payload["_sigap_hash"] = hash_local
+                payload["_sigap_atualizado_em"] = agora
+                batch.set(ref, payload, merge=True)
                 operacoes += 1
+                enviados += 1
+
                 if operacoes >= 400:
                     batch.commit()
                     batch = cloud.batch()
                     operacoes = 0
 
-            # Sincronização segura: apenas cria/atualiza documentos no Firestore.
-            # Exclusões locais não são propagadas automaticamente para a nuvem.
+            # Segurança mantida: exclusões locais não são propagadas automaticamente.
             if operacoes:
                 batch.commit()
 
@@ -111,6 +128,7 @@ def sincronizar_sqlite(db_path):
             "ultima_sincronizacao": agora,
             "origem": "sqlite-local",
             "projeto": PROJECT_ID,
+            "documentos_enviados": enviados,
         }, merge=True)
         return True
     finally:
