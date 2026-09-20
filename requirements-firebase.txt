@@ -1,0 +1,2 @@
+# Dependências adicionais para a etapa servidor/Firebase do SIGAP
+firebase-admin>=6.5,<7
