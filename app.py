@@ -190,6 +190,16 @@ def init_db():
         resultado TEXT,
         observacoes TEXT
     );
+    CREATE TABLE IF NOT EXISTS entouramentos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        matriz_brinco TEXT NOT NULL,
+        data_entouramento TEXT NOT NULL,
+        observacoes TEXT,
+        ativo INTEGER NOT NULL DEFAULT 1,
+        criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+        diagnostico_data TEXT,
+        resultado TEXT
+    );
     CREATE TABLE IF NOT EXISTS protocolos_iatf (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL UNIQUE,
