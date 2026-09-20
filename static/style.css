@@ -2158,3 +2158,41 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
     padding:0 8px!important;
   }
 }
+
+
+/* V6.1.84 — menu recolhível exclusivo do celular */
+.mobile-menu-toggle{display:none}
+@media(max-width:700px){
+  .mobile-menu-toggle{
+    display:flex!important;
+    width:calc(100% - 10px)!important;
+    margin:4px 5px!important;
+    min-height:34px!important;
+    align-items:center!important;
+    justify-content:center!important;
+    background:#e9f2ec!important;
+    color:#075c2b!important;
+    border:1px solid #cbdccf!important;
+    border-radius:7px!important;
+    font-size:12px!important;
+    font-weight:900!important;
+  }
+  .main-nav,nav.main-nav{display:none!important}
+  .main-nav.mobile-open,nav.main-nav.mobile-open{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    position:relative!important;
+    top:auto!important;
+    overflow:visible!important;
+    padding:5px!important;
+    gap:5px!important;
+    background:#fff!important;
+  }
+  .main-nav.mobile-open a,nav.main-nav.mobile-open a{
+    width:100%!important;
+    justify-content:center!important;
+    white-space:normal!important;
+    text-align:center!important;
+    min-height:38px!important;
+  }
+}
