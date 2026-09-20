@@ -69,7 +69,8 @@ main h1{
     </div>
   </div>
 </header>
-<nav class="main-nav">
+<button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" onclick="toggleSigapMenu(this)">☰ MENU</button>
+<nav class="main-nav" id="main-nav">
 <a href="{{url_for('dashboard')}}">🏠 Início</a>
 <a href="{{url_for('animal_novo', cadastro_vaca_url=True)}}">🐄 Matrizes</a>
 <a href="{{url_for('iatf')}}">🐂 Reprodução</a>
@@ -84,6 +85,13 @@ main h1{
 </main>
 <footer><a href="{{url_for('backup')}}">Baixar backup</a> · <a href="{{url_for('importar_banco')}}">Importar banco antigo</a> · <a href="{{url_for('reset_banco')}}" style="color:#a51d1d;font-weight:700">Zerar banco</a></footer>
 <script>
+function toggleSigapMenu(botao){
+  const menu=document.getElementById('main-nav');
+  if(!menu) return;
+  const aberto=menu.classList.toggle('mobile-open');
+  botao.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  botao.textContent=aberto ? '✕ FECHAR' : '☰ MENU';
+}
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/static/sw.js'));
 }
