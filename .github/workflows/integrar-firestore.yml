@@ -1,0 +1,62 @@
+name: Integrar Firestore ao SIGAP
+
+on:
+  push:
+    branches: [integracao-firebase-segura]
+    paths:
+      - ".github/workflows/integrar-firestore.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integracao-firebase-segura
+      - name: Integrar sincronizacao no app.py
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path("app.py")
+          s = p.read_text(encoding="utf-8")
+          imp = "from firestore_sync import firestore_habilitado, sincronizar_sqlite\n"
+          if imp not in s:
+              alvo = "from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, abort\n"
+              if alvo not in s:
+                  raise SystemExit("Import do Flask nao encontrado; app.py nao foi alterado.")
+              s = s.replace(alvo, alvo + imp, 1)
+          bloco = """
+@app.after_request
+def sincronizar_firestore_apos_alteracao(response):
+    # O SQLite continua principal. POSTs bem-sucedidos espelham o banco no Firestore.
+    if request.method == "POST" and response.status_code < 400 and firestore_habilitado():
+        try:
+            sincronizar_sqlite(DB_PATH)
+        except Exception as exc:
+            app.logger.warning("Firestore: sincronizacao nao concluida: %s", exc)
+    return response
+
+"""
+          marcador = "def db():\n"
+          if "def sincronizar_firestore_apos_alteracao(response):" not in s:
+              if marcador not in s:
+                  raise SystemExit("Funcao db() nao encontrada; app.py nao foi alterado.")
+              s = s.replace(marcador, bloco + marcador, 1)
+          p.write_text(s, encoding="utf-8")
+      - name: Validar sintaxe
+        run: python -m py_compile app.py firestore_sync.py
+      - name: Gravar alteracao na branch segura
+        run: |
+          if git diff --quiet; then
+            echo "Nenhuma alteracao necessaria."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py
+          git commit -m "Integrar app.py ao Firestore com fallback local"
+          git push origin HEAD:integracao-firebase-segura
