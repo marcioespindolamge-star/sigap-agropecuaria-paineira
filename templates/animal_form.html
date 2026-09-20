@@ -1,0 +1,311 @@
+{% extends "base.html" %}{% block content %}<div class="matrizes-topo"><h1>{{ ('Matrizes' if modo_vaca else ('Editar animal' if a else ('Cadastrar animal de compra' if request.args.get('origem')=='compra' else 'Novo animal'))) }}</h1></div><section class="{% if modo_vaca %}matriz-form-section{% endif %}">{% if modo_vaca %}<div class="matriz-form-head"><h2 class="matriz-subtitulo">{{ 'Editar matriz' if a else 'Cadastrar matriz' }}</h2><a class="button light nascimentos-geral-btn" href="{{ url_for('nascimentos') }}">🐄 LISTAR TODOS OS NASCIMENTOS</a></div>{% endif %}<form autocomplete="off" method="post" class="grid js-fast-save {% if modo_vaca %}matriz-form-grid{% endif %}" data-fast-save="1">
+  {% if modo_vaca %}<input type="hidden" name="voltar_para" value="vacas">{% elif request.args.get("voltar_para")=="pesagens" %}<input type="hidden" name="voltar_para" value="pesagens">{% elif request.args.get("voltar_para")=="movimentacoes" %}<input type="hidden" name="voltar_para" value="movimentacoes"><input type="hidden" name="origem" value="compra">{% endif %}
+<label>Brinco *<input id="brinco" name="brinco" required {% if modo_vaca and not a %}autofocus{% endif %} value="{{a['brinco'] if a else ''}}"><small id="brinco-aviso" class="field-alert" hidden></small></label>
+<label>Sexo<select name="sexo" id="sexo_animal" {% if modo_vaca %}disabled{% endif %}><option {{'selected' if modo_vaca or (a and a['sexo']=='Fêmea')}}>Fêmea</option>{% if not modo_vaca %}<option {{'selected' if a and a['sexo']=='Macho'}}>Macho</option>{% endif %}</select>{% if modo_vaca %}<input type="hidden" name="sexo" value="Fêmea">{% endif %}</label>
+<label>Raça<select name="raca" class="select-scroll normal-select" size="1">
+  <option value="">Selecione a raça</option>
+  {% for r in ["ANGUS", "RED ANGUS", "BRANGUS", "BRAFORD", "CHAROLÊS", "NELORE"] %}
+    <option value="{{ r }}" {% if a and a["raca"] == r %}selected{% endif %}>{{ r }}</option>
+  {% endfor %}
+</select></label><label>Ano Safra<select name="nascimento" class="select-scroll normal-select" id="ano_safra">
+  <option value="">Selecione o ano</option>
+  {% for ano in range(2020, ano_atual + 1) %}
+    <option value="{{ano}}" {{'selected' if a and (a['nascimento']|string)==(ano|string)}}>{{ano}}</option>
+  {% endfor %}
+</select></label>
+
+<label>Núcleo de Idade
+  <input id="nucleo_idade_cadastro" type="text" value="" readonly
+         style="background:#f5f7f5;cursor:not-allowed">
+  <small>Calculado automaticamente pelo Ano Safra.</small>
+</label>
+<label>Categoria
+  <input id="categoria_auto" name="categoria" type="text"
+         value="{{ categoria_automatica('Fêmea', a['nascimento']) if modo_vaca and a else (categoria_automatica(a['sexo'], a['nascimento']) if a else '') }}"
+         readonly style="background:#f5f7f5;cursor:not-allowed">
+  <small>Preenchida automaticamente pelo sexo e pelo Núcleo de Idade.</small>
+</label>
+<label>Campo/Lote<select name="lote" class="select-scroll normal-select">
+  <option value="">Selecione o Campo/Lote</option>
+  {% if modo_vaca %}
+    {% set lotes_matriz = ["FRENTE", "VALDOMIRO", "FUNDOS", "PASTAGEM BERGAMOTEIRA", "PASTAGEM OVELHAS", "PASTAGEM FRENTE", "PASTAGEM MATO", "PASTAGEM DECO", "PASTAGEM VALDOMIRO"] %}
+    {% for lote_nome in lotes_matriz %}
+      <option value="{{ lote_nome }}" {% if a and a["lote"] == lote_nome %}selected{% endif %}>{{ lote_nome }}</option>
+    {% endfor %}
+  {% else %}
+    {% for lote_nome in campos_lotes %}
+      <option value="{{ lote_nome }}" {% if a and a["lote"] == lote_nome %}selected{% endif %}>{{ lote_nome }}</option>
+    {% endfor %}
+  {% endif %}
+</select></label>
+{% if modo_vaca %}
+<label class="diu-aplicado-opcao">
+  <span>DIU</span>
+  <span class="diu-check-wrap"><input type="checkbox" name="diu_aplicado" value="1" {% if (a and a['diu_aplicado']) or request.form.get('diu_aplicado')=='1' %}checked{% endif %}> <b>DIU APLICADO</b></span>
+  <small>Marcada, a matriz fica inapta para reprodução (TOURO e IATF).</small>
+</label>
+{% endif %}
+{% if not modo_vaca %}<label>Mãe / brinco<input name="mae_brinco" value="{{a['mae_brinco'] if a else ''}}"></label><label>Pai / brinco<input name="pai_brinco" value="{{a['pai_brinco'] if a else ''}}"></label>{% endif %}
+
+<label class="full">Observações<textarea name="observacoes" class="animal-observacoes">{{a['observacoes'] if a else ''}}</textarea></label>
+{% if modo_vaca %}
+<div id="nascimento-modal" class="nascimento-modal" aria-hidden="true">
+  <div class="nascimento-modal-card">
+    <div class="nascimento-modal-head">
+      <div>
+        <div class="nascimento-modal-title">NASCIMENTO / TERNEIROS</div>
+        <div class="nascimento-modal-sub">Matriz: <b>{{ a['brinco'] if a else 'NOVA MATRIZ' }}</b></div>
+      </div>
+      <button type="button" class="nascimento-modal-x" onclick="fecharNascimentoModal()">×</button>
+    </div>
+    <input type="hidden" id="incluir_cria" name="incluir_cria" value="1" disabled>
+    <input type="hidden" name="cria_registro_id" value="{{ filho_editar['id'] if filho_editar else '' }}">
+    <div class="grid nascimento-modal-grid">
+      <label>Brinco do terneiro *<input id="cria_brinco" name="cria_brinco" value="{{ request.form.get('cria_brinco', filho_editar['terneiro_brinco'] if filho_editar else '') }}"><small id="cria-brinco-aviso" class="field-alert" hidden></small></label>
+      <label>Sexo<select name="cria_sexo"><option value="Macho" {% if request.form.get('cria_sexo', filho_editar['sexo'] if filho_editar else 'Macho')=='Macho' %}selected{% endif %}>Macho</option><option value="Fêmea" {% if request.form.get('cria_sexo', filho_editar['sexo'] if filho_editar else '')=='Fêmea' %}selected{% endif %}>Fêmea</option></select></label>
+      <label>Ano Safra<select name="cria_ano_safra">{% for ano in range(2020, ano_atual + 1) %}<option value="{{ano}}" {% set cria_ano_val = request.form.get('cria_ano_safra', filho_editar['data_nascimento'] if filho_editar else '') %}{% if (cria_ano_val and (cria_ano_val|string)==(ano|string)) or (not cria_ano_val and ano==ano_atual) %}selected{% endif %}>{{ano}}</option>{% endfor %}</select></label>
+      {% if filho_editar %}
+      <label>Mãe / Matriz *<select name="cria_mae_brinco" required>{% set mae_atual = request.form.get('cria_mae_brinco', filho_editar['vaca_brinco']) %}{% for m in matrizes_rows %}<option value="{{ m['brinco'] }}" {% if (mae_atual|string)==(m['brinco']|string) %}selected{% endif %}>{{ m['brinco'] }}{% if m['nome'] %} - {{ m['nome'] }}{% endif %}</option>{% endfor %}</select></label>
+      {% endif %}
+      <label class="full">Observação<textarea name="cria_observacoes" class="animal-observacoes">{{ request.form.get('cria_observacoes', filho_editar['observacoes'] if filho_editar else '') }}</textarea></label>
+      {% if not filho_editar %}
+      <div class="full gemeos-opcao"><label class="nascimento-check"><input type="checkbox" id="gemeos" name="gemeos" value="1" {% if request.form.get('gemeos')=='1' %}checked{% endif %}> GÊMEOS — ADICIONAR 2º TERNEIRO</label></div>
+      <div id="campos-segunda-cria" class="grid nascimento-grid full" style="display:none">
+        <label>Brinco do 2º terneiro *<input id="cria2_brinco" name="cria2_brinco" value="{{ request.form.get('cria2_brinco','') }}"><small id="cria2-brinco-aviso" class="field-alert" hidden></small></label>
+        <label>Sexo<select name="cria2_sexo"><option value="Macho" {% if request.form.get('cria2_sexo','Macho')=='Macho' %}selected{% endif %}>Macho</option><option value="Fêmea" {% if request.form.get('cria2_sexo')=='Fêmea' %}selected{% endif %}>Fêmea</option></select></label>
+        <label>Ano Safra<select name="cria2_ano_safra">{% for ano in range(2020, ano_atual + 1) %}<option value="{{ano}}" {% set cria2_ano_val = request.form.get('cria2_ano_safra','') %}{% if (cria2_ano_val and (cria2_ano_val|string)==(ano|string)) or (not cria2_ano_val and ano==ano_atual) %}selected{% endif %}>{{ano}}</option>{% endfor %}</select></label>
+        <label class="full">Observação do 2º terneiro<textarea name="cria2_observacoes" class="animal-observacoes">{{ request.form.get('cria2_observacoes','') }}</textarea></label>
+      </div>
+      {% endif %}
+    </div>
+    {% if filhos_rows %}
+    <div class="filhos-matriz-box nascimento-filhos-lista"><div class="filhos-matriz-titulo">TERNEIROS JÁ CADASTRADOS</div><div class="tablewrap"><table class="filhos-matriz-table"><thead><tr><th>Brinco</th><th>Sexo</th><th>Ano</th><th>Observação</th><th>Ações</th></tr></thead><tbody>{% for f in filhos_rows %}<tr><td><b>{{f['terneiro_brinco']}}</b></td><td>{{f['sexo'] or ''}}</td><td>{{f['data_nascimento'] or ''}}</td><td class="animal-observacao-texto">{{f['observacoes'] or ''}}</td><td class="nasc-acoes"><a class="button light" href="{{ url_for('animal_editar', id=a['id'], voltar_para='vacas', editar_filho=f['id'], abrir_nascimento=1) }}">EDITAR</a><button type="button" class="button danger" onclick="excluirNascimento({{f['id']}}, {{a['id']}})">EXCLUIR</button></td></tr>{% endfor %}</tbody></table></div></div>
+    {% endif %}
+    <div class="nascimento-modal-actions save-cancel-pair"><button type="submit" class="primary">{{ 'SALVAR EDIÇÃO' if filho_editar else 'SALVAR NASCIMENTO' }}</button><button type="button" class="button light" onclick="fecharNascimentoModal()">CANCELAR</button></div>
+  </div>
+</div>
+{% endif %}<div class="full actions save-cancel-pair"><button class="primary form-save-btn">SALVAR</button><a class="button light" href="{{ url_for('vacas') if request.args.get('voltar_para')=='vacas' else url_for('pesagens') if request.args.get('voltar_para')=='pesagens' else url_for('movimentacoes') if request.args.get('voltar_para')=='movimentacoes' else url_for('vacas') }}">CANCELAR</a></div></form></section>
+{% if modo_vaca %}
+<section class="matrizes-lista-integrada">
+  <div class="matrizes-lista-cabecalho">
+    <h2>Matrizes cadastradas</h2>
+    <span>{{ matrizes_rows|length }} matriz(es)</span>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Brinco</th><th>Raça</th><th>Ano Safra</th><th>Campo/Lote</th><th>DIU</th><th>Filhos</th><th>Último terneiro</th><th>Última IA</th><th>Resultado IATF</th><th>Ações</th></tr></thead>
+    <tbody>
+    {% for m in matrizes_rows %}
+      <tr>
+        <td><b>{{m['brinco']}}</b></td><td>{{m['raca'] or ''}}</td><td>{{m['nascimento'] or ''}}</td><td>{{m['lote'] or ''}}</td>
+        <td>{% if m['diu_aplicado'] %}<span style="color:#b91c1c;font-weight:800">DIU APLICADO</span>{% else %}—{% endif %}</td>
+        <td><b>{{m['total_filhos'] or 0}}</b></td><td>{{m['ultimo_terneiro'] or ''}}</td><td>{{br_date(m['ultima_ia']) if m['ultima_ia'] else ''}}</td><td>{{m['ultimo_resultado_iatf'] or ''}}</td>
+        <td><a class="button light" style="padding:6px 11px;font-weight:700;white-space:nowrap" href="{{url_for('animal_editar',id=m['id'],voltar_para='vacas')}}">EDITAR</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="11" style="text-align:center;padding:20px">Nenhuma matriz cadastrada.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const campo = document.getElementById('brinco');
+  // V6.1.05: em nova inclusão de matriz, deixa o cursor imediatamente no Brinco.
+  const novaInclusaoMatriz = {{ 'true' if modo_vaca and not a else 'false' }};
+  if (campo && novaInclusaoMatriz) {
+    setTimeout(() => {
+      campo.focus({preventScroll:false});
+      try { campo.setSelectionRange(campo.value.length, campo.value.length); } catch(e) {}
+    }, 80);
+  }
+  const aviso = document.getElementById('brinco-aviso');
+  if (!campo || !aviso) return;
+  const animalId = {{ a['id'] if a and a['id'] else 'null' }};
+
+  async function verificarBrinco() {
+    const valor = campo.value.trim();
+    if (!valor) {
+      // Ao apenas entrar em Matrizes e sair para outra aba, não mostrar erro.
+      // A obrigatoriedade do brinco é validada somente quando o usuário tentar SALVAR.
+      aviso.textContent = '';
+      aviso.hidden = true;
+      campo.setCustomValidity('');
+      return;
+    }
+
+    let url = '/api/brinco-existe?brinco=' + encodeURIComponent(valor);
+    if ({{ 'true' if modo_vaca else 'false' }}) url += '&tipo=matriz';
+    if (animalId) url += '&excluir_id=' + encodeURIComponent(animalId);
+
+    try {
+      const resposta = await fetch(url, {cache: 'no-store'});
+      const dados = await resposta.json();
+      if (dados.existe) {
+        const modoMatriz = {{ 'true' if modo_vaca else 'false' }};
+        if (modoMatriz && !animalId && dados.id) {
+          aviso.textContent = 'Matriz encontrada. Carregando cadastro e filhos...';
+          aviso.className = 'field-alert ok';
+          aviso.hidden = false;
+          campo.setCustomValidity('');
+          window.location.href = '/rebanho/' + encodeURIComponent(dados.id) + '/editar?voltar_para=vacas';
+          return;
+        }
+        aviso.textContent = 'Este brinco já está cadastrado.';
+        aviso.className = 'field-alert erro';
+        aviso.hidden = false;
+        campo.setCustomValidity('Este brinco já está cadastrado.');
+        campo.focus();
+        campo.select();
+      } else {
+        aviso.textContent = 'Brinco disponível.';
+        aviso.className = 'field-alert ok';
+        aviso.hidden = false;
+        campo.setCustomValidity('');
+      }
+    } catch (e) {
+      campo.setCustomValidity('');
+    }
+  }
+
+  campo.addEventListener('blur', verificarBrinco);
+  campo.addEventListener('input', function () {
+    aviso.hidden = true;
+    campo.setCustomValidity('');
+  });
+});
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const anoSafra = document.getElementById('ano_safra');
+  const nucleo = document.getElementById('nucleo_idade_cadastro');
+
+  function atualizarNucleoIdadeCadastro() {
+    if (!anoSafra || !nucleo) return;
+    const ano = parseInt(anoSafra.value || '', 10);
+    const hoje = new Date();
+    const anoReferencia = hoje.getMonth() >= 3 ? hoje.getFullYear() : hoje.getFullYear() - 1;
+
+    if (!ano) {
+      nucleo.value = '';
+      return;
+    }
+
+    const diferenca = anoReferencia - ano;
+    if (diferenca <= 0) {
+      nucleo.value = '0-12 meses';
+    } else if (diferenca === 1) {
+      nucleo.value = '12-24 meses';
+    } else if (diferenca === 2) {
+      nucleo.value = '24-36 meses';
+    } else {
+      nucleo.value = '+36 meses';
+    }
+  }
+
+  if (anoSafra) {
+    anoSafra.addEventListener('change', atualizarNucleoIdadeCadastro);
+    atualizarNucleoIdadeCadastro();
+  }
+});
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const anoSafra = document.getElementById('ano_safra');
+  const sexo = document.getElementById('sexo_animal');
+  const categoria = document.getElementById('categoria_auto');
+
+  function atualizarCategoriaAutomatica() {
+    if (!anoSafra || !categoria) return;
+    const modoVaca = {{ 'true' if modo_vaca else 'false' }};
+    if (!sexo && !modoVaca) return;
+
+    const ano = parseInt(anoSafra.value || '', 10);
+    const sexoTxt = modoVaca ? 'fêmea' : (sexo.value || '').toLowerCase();
+    if (!ano || !sexoTxt) {
+      categoria.value = '';
+      return;
+    }
+
+    const hoje = new Date();
+    const anoReferencia = hoje.getMonth() >= 3 ? hoje.getFullYear() : hoje.getFullYear() - 1;
+    const dif = anoReferencia - ano;
+    const femea = sexoTxt.startsWith('f');
+
+    if (dif <= 0) {
+      categoria.value = femea ? 'TERNEIRA' : 'TERNEIRO';
+    } else if (dif === 1 || dif === 2) {
+      categoria.value = femea ? 'NOVILHA' : 'NOVILHO';
+    } else {
+      categoria.value = femea ? 'VACA' : 'BOI';
+    }
+  }
+
+  if (anoSafra) anoSafra.addEventListener('change', atualizarCategoriaAutomatica);
+  if (sexo) sexo.addEventListener('change', atualizarCategoriaAutomatica);
+  atualizarCategoriaAutomatica();
+});
+
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const anoSafra = document.getElementById('ano_safra');
+  const atalhoNascimento = document.getElementById('nascimento-atalho');
+  const modalNascimento = document.getElementById('nascimento-modal');
+  const incluirCria = document.getElementById('incluir_cria');
+  const criaBrinco = document.getElementById('cria_brinco');
+  const criaAviso = document.getElementById('cria-brinco-aviso');
+
+  function nucleoAtualNascimento() {
+    if (!anoSafra) return '';
+    const ano = parseInt(anoSafra.value || '', 10); if (!ano) return '';
+    const hoje = new Date(); const ref = hoje.getMonth() >= 3 ? hoje.getFullYear() : hoje.getFullYear()-1;
+    const dif = ref-ano; if (dif<=0) return '0-12 meses'; if (dif===1) return '12-24 meses'; if (dif===2) return '24-36 meses'; return '+36 meses';
+  }
+  function nascimentoElegivel(){ return ['24-36 meses','+36 meses'].includes(nucleoAtualNascimento()); }
+  function atualizarAtalhoNascimento(){ if (atalhoNascimento) atalhoNascimento.style.display = nascimentoElegivel() ? 'flex' : 'none'; }
+  if (anoSafra) anoSafra.addEventListener('change', function(){ atualizarAtalhoNascimento(); if (nascimentoElegivel()) abrirNascimentoModal(); });
+  atualizarAtalhoNascimento();
+
+  // Não abrir automaticamente a janela de terneiros ao entrar na edição da matriz.
+  // Ela abre somente quando uma ação de nascimento/edição de filho pedir explicitamente.
+  if ({{ 'true' if request.args.get('abrir_nascimento')=='1' or filho_editar else 'false' }}) setTimeout(abrirNascimentoModal, 120);
+
+  const gemeos = document.getElementById('gemeos');
+  const camposSegundaCria = document.getElementById('campos-segunda-cria');
+  const cria2Brinco = document.getElementById('cria2_brinco');
+  function atualizarGemeos(){ if (!camposSegundaCria) return; const on=!!(gemeos&&gemeos.checked); camposSegundaCria.style.display=on?'grid':'none'; if(cria2Brinco) cria2Brinco.required=on; }
+  if(gemeos) gemeos.addEventListener('change', atualizarGemeos); atualizarGemeos();
+
+  async function checarCria(input,aviso){ if(!input||!aviso||!input.value.trim()) return; try{ const r=await fetch('/api/terneiro-brinco-existe?brinco='+encodeURIComponent(input.value.trim()),{cache:'no-store'}); const d=await r.json(); if(d.existe && !{{ 'true' if filho_editar else 'false' }}){ aviso.textContent='Este brinco já está cadastrado.'; aviso.className='field-alert erro'; aviso.hidden=false; input.setCustomValidity('Brinco já cadastrado.'); } else { aviso.hidden=true; input.setCustomValidity(''); } }catch(e){ input.setCustomValidity(''); } }
+  if(criaBrinco&&criaAviso){ criaBrinco.addEventListener('blur',()=>checarCria(criaBrinco,criaAviso)); criaBrinco.addEventListener('input',()=>{criaAviso.hidden=true;criaBrinco.setCustomValidity('');}); }
+
+});
+function abrirNascimentoModal(){
+  const m=document.getElementById('nascimento-modal'); const inc=document.getElementById('incluir_cria');
+  if(!m) return; if(inc) inc.disabled=false; m.classList.add('open'); m.setAttribute('aria-hidden','false');
+  setTimeout(()=>document.getElementById('cria_brinco')?.focus(),80);
+}
+function fecharNascimentoModal(){
+  const m=document.getElementById('nascimento-modal'); const inc=document.getElementById('incluir_cria');
+  if(inc) inc.disabled=true; if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true');}
+}
+async function excluirNascimento(nascimentoId, matrizId){
+  if(!confirm('Excluir este nascimento e o terneiro vinculado?')) return;
+  const r=await fetch('/matrizes/'+matrizId+'/nascimentos/'+nascimentoId+'/excluir',{method:'POST'});
+  if(r.ok) window.location.href='/rebanho/'+matrizId+'/editar?voltar_para=vacas&abrir_nascimento=1';
+  else alert('Não foi possível excluir o nascimento.');
+}
+
+</script>
+
+{% endblock %}

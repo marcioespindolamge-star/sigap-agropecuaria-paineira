@@ -1,0 +1,58 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório de Matrizes</title><style>@page{size:A4 portrait;margin:8mm}body{font-family:Arial;color:#203228}.head{display:grid;grid-template-columns:110px 1fr 110px;align-items:center;border-bottom:3px solid #125b2d;padding-bottom:16px;margin-bottom:8px}.logo{text-align:center;display:flex;align-items:center;justify-content:center}.report-logo{width:92px;height:92px;object-fit:contain;display:block}.farm h1{margin:0;color:#125b2d;font-size:24px}.farm p{margin:3px 0}.rs{font-size:18px;font-weight:bold}.g{color:#008c45}.r{color:#e31b23}.y{color:#d5a900}.flag{height:72px;background:linear-gradient(150deg,#009246 0 38%,#f1c40f 38% 55%,#ce2b37 55% 72%,#009246 72%);border-radius:6px}table{width:100%;border-collapse:collapse;margin-top:14px;font-size:11px}th{background:#125b2d;color:#fff}th,td{border:1px solid #b7c9bb;padding:5px;text-align:left}.report-toolbar{display:grid;grid-template-columns:260px 1fr 260px;gap:8px;align-items:center;margin:10px 0 16px}.report-toolbar-title{text-align:center;font:800 18px Arial,sans-serif;color:#125b2d;text-transform:uppercase}.report-toolbar-spacer{width:260px}.report-toolbar button,.report-toolbar a{box-sizing:border-box;height:40px;border-radius:5px;font:700 14px Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 12px;cursor:pointer}.report-toolbar .print{width:50px;border:1px solid #0f6b35;background:#0f6b35;color:#fff;padding:0}.report-toolbar .print svg{width:22px;height:22px;display:block}.report-toolbar .back{width:100px;border:1px solid #77a98a;background:#fff;color:#075c2f}.report-meta{display:flex;justify-content:flex-end;margin:6px 0 10px;font-size:11px;color:#506257}
+.age-block{border:1px solid #b7c9bb;border-radius:8px;padding:10px 12px;margin:10px 0 14px;background:#f8fbf8}
+.age-title{font-size:13px;color:#125b2d;font-weight:800;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px}
+.nucleo-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.nucleo-summary>div{border:1px solid #c9d7cc;border-radius:6px;padding:8px 10px;background:#fff;text-align:center}
+.nucleo-summary strong{display:block;font-size:10px;color:#4c6655;margin-bottom:3px}
+.nucleo-summary span{display:block;font-size:18px;font-weight:800;color:#125b2d}
+.nucleo-summary .nucleo-total{background:#eaf4ed;border-color:#9db9a5}
+@media print{.report-toolbar{display:none}.age-block{break-inside:avoid}.report-meta{font-size:10px}}.report-head-v6043{grid-template-columns:110px 1fr 120px!important;align-items:center}.report-farm-centered{text-align:center}.report-farm-centered .rs{text-align:center}.report-flag-real{display:flex;align-items:center;justify-content:center}.report-flag-real img{width:112px;height:92px;object-fit:contain;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12))}</style>
+<style>
+/* V6.0.79 — impressão mais nítida em todos os relatórios */
+@media print {
+  body { color:#000 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  table { font-size:12px !important; color:#000 !important; }
+  th { background:#e1e1e1 !important; color:#000 !important; font-weight:800 !important; border:1.2px solid #555 !important; }
+  td { color:#000 !important; font-weight:600 !important; border:1px solid #777 !important; }
+  th, td { padding:6px 5px !important; }
+  tr { break-inside:avoid; }
+}
+</style>
+
+<style>
+/* V6.0.85 — impressão A4 retrato */
+@page { size: A4 portrait; margin: 8mm; }
+@media print {
+  html, body { width: 194mm !important; margin: 0 !important; padding: 0 !important; }
+  .head { grid-template-columns:72px 1fr 78px !important; padding-bottom:8px !important; }
+  .report-logo { width:64px !important; height:64px !important; }
+  .report-flag-real img { width:72px !important; height:60px !important; }
+  .farm h1 { font-size:18px !important; }
+  .farm p { font-size:9px !important; margin:2px 0 !important; }
+  .rs { font-size:13px !important; }
+  .age-block { padding:6px 8px !important; margin:6px 0 8px !important; }
+  table { width:100% !important; table-layout:fixed !important; font-size:8.2px !important; }
+  th, td { padding:4px 2px !important; overflow-wrap:anywhere; word-break:normal; }
+}
+ .situacao-repro{font-weight:800}.situacao-diu{color:#b00020}.situacao-touro{color:#7a4a00}.situacao-iatf{color:#075b8a}.situacao-prenhe{color:#0b6b32}.situacao-livre{color:#4d5e53}.obs-text{color:#c40000!important;font-weight:700!important;}
+</style>
+</head><body>
+<div class="head report-head-v6043">
+  <div class="logo"><img class="report-logo" src="{{ url_for('static', filename='logo-paineira.png') }}" alt="Agropecuária Paineira"></div>
+  <div class="farm report-farm-centered">
+    <h1>AGROPECUÁRIA PAINEIRA</h1>
+    <p>Restinga Sêca – Vila Santuário – CEP 97200-000</p>
+    <p>Marcio 55 99922-2680 • Alex 55 99955-3773</p>
+    <div class="rs"><span class="g">CONTROLE</span> <span class="r">DO</span> <span class="y">REBANHO</span></div>
+  </div>
+  <div class="report-flag-real"><img src="{{url_for('static',filename='bandeira-rs-bonita.png')}}" alt="Bandeira do Rio Grande do Sul"></div>
+</div>
+<div class="report-toolbar"><div><a class="back" href="{{url_for('relatorios')}}">VOLTAR</a></div><div class="report-toolbar-title">RELATÓRIO DE MATRIZES</div><div style="display:flex;justify-content:flex-end"><button class="print" onclick="window.print()" title="Imprimir" aria-label="Imprimir"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 9V3h12v6h1a3 3 0 0 1 3 3v5h-4v4H6v-4H2v-5a3 3 0 0 1 3-3h1Zm2-4v4h8V5H8Zm8 14v-5H8v5h8Zm3-5h1v-2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v2h2v-2h12v2h1Z"/></svg></button></div></div>
+<div class="report-meta"><strong>Emissão:&nbsp;</strong> {{emissao}}</div>
+
+<div class="age-block" style="text-align:center">
+  <div class="age-title">Total de Matrizes Cadastradas</div>
+  <div style="font-size:24px;font-weight:800;color:#125b2d">{{ rows|length }}</div>
+</div>
+
+<table><tr><th>Brinco</th><th>Categoria</th><th>Raça</th><th>Ano Safra</th><th>Núcleo de Idade</th><th>Campo/Lote</th><th>Situação</th><th>Observação</th></tr>{% for a in rows %}<tr><td><strong>{{a['brinco']}}</strong></td><td>{{a['categoria']}}</td><td>{{a['raca'] or ''}}</td><td>{{a['nascimento'] or ''}}</td><td>{{a['nucleo'] or ''}}</td><td>{{a['lote'] or ''}}</td><td class="situacao-repro situacao-{{a['situacao_classe']}}">{{a['situacao_reprodutiva']}}</td><td class="obs-text">{{a['observacoes'] or ''}}</td></tr>{% endfor %}</table></body></html>

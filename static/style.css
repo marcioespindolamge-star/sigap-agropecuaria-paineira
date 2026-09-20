@@ -1,0 +1,1955 @@
+
+:root{--g:#0f5f2f;--g2:#1d8b4a;--bg:#f3f7f4;--line:#d7e3da;--text:#203328;--gold:#d3a900;--red:#d9272e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+header{background:#fff;padding:18px 20px 14px;border-bottom:4px solid var(--g)}.brand{font-size:25px;font-weight:900;color:var(--g)}.address,.contacts{font-size:13px;color:#5d6e63;margin-top:3px}.rs{font-size:17px;font-weight:900;margin-top:8px}.rs span{color:#008c45}.rs b{color:var(--red)}.rs em{color:var(--gold);font-style:normal}
+nav{display:flex;gap:6px;overflow:auto;padding:9px 14px;background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}nav a{text-decoration:none;color:#164d2c;background:#e9f2ec;padding:8px 11px;border-radius:18px;white-space:nowrap;font-weight:700;font-size:13px}
+main{max-width:1180px;margin:auto;padding:18px}h1{color:var(--g);font-size:25px}h2{color:var(--g);font-size:18px}section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 9px #0000000b}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:16px}.stat{background:white;border:1px solid var(--line);border-radius:14px;padding:17px;text-align:center}.stat b{display:block;color:var(--g);font-size:28px}.stat span{font-size:12px;color:#66756b}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}label{font-size:12px;font-weight:800;color:#486052}input,select,textarea{display:block;width:100%;margin-top:5px;padding:11px;border:1px solid #bfcfc3;border-radius:9px;background:white;font-size:15px}textarea{min-height:80px}
+button,.button{display:inline-block;border:0;border-radius:9px;padding:10px 14px;text-decoration:none;font-weight:800;cursor:pointer}.primary,.button{background:var(--g);color:white}.light{background:#e9f0eb;color:#1e5132}.actions{display:flex;gap:8px;align-items:center}
+.titlebar{display:flex;justify-content:space-between;align-items:center}.search{display:flex;gap:8px;margin-bottom:12px}.search input{margin:0}.search button{background:#dce9df;color:#174d2d}
+.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;background:white}th,td{padding:9px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;white-space:nowrap}th{background:#175d31;color:white}
+.flash{padding:11px 13px;border-radius:10px;margin-bottom:12px}.flash.ok{background:#e3f5e8;color:#185b2e}.flash.erro{background:#fde9e9;color:#8b2020}.rowcard{border-bottom:1px solid var(--line);padding:8px 0}.muted{color:#6c7b71}
+footer{text-align:center;padding:22px;font-size:12px;color:#65746a}footer a{color:var(--g)}
+.login{display:grid;place-items:center;min-height:100vh}.loginbox{background:white;width:min(420px,92vw);padding:28px;border-radius:18px;border:1px solid var(--line);box-shadow:0 10px 35px #0002}.loginbox h1{margin-bottom:3px}.loginbox .primary{width:100%;margin-top:12px}.loginbox small{display:block;margin-top:16px;color:#6a786e}
+@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}.brand{font-size:21px}.titlebar{align-items:flex-start;gap:10px}.titlebar h1{margin-top:4px}main{padding:12px}nav{padding-left:8px}}
+
+/* V6.0.1 - identidade visual Agropecuária Paineira */
+.app-header{background:linear-gradient(180deg,#fff 0%,#fbfdfb 100%);padding:10px 20px;border-bottom:4px solid var(--g);box-shadow:0 2px 10px #0000000d}
+.header-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:92px 1fr 105px;gap:18px;align-items:center}
+.farm-logo{width:88px;height:88px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 2px 3px #0002)}
+.header-copy{min-width:0}
+.header-copy .brand{font-size:27px;letter-spacing:.2px}
+.header-copy .rs{text-align:left;margin-top:8px;font-size:18px}
+.wa{color:#25D366;font-size:15px}
+.rs-flag{width:100px;height:64px;border-radius:7px;border:1px solid #bfd0c2;box-shadow:0 1px 5px #0002;background:
+linear-gradient(153deg,
+#078b48 0 35%,
+#f4cf27 35% 46%,
+#c9272c 46% 65%,
+#078b48 65% 100%)}
+nav{box-shadow:0 2px 7px #0000000a}
+nav a:hover{background:#d5e8da}
+.login-logo{display:block;width:120px;height:120px;object-fit:contain;border-radius:50%;margin:0 auto 12px}
+.loginbox{text-align:center}.loginbox label{text-align:left}
+@media(max-width:800px){
+  .app-header{padding:9px 12px}
+  .header-inner{grid-template-columns:68px 1fr;gap:11px}
+  .farm-logo{width:66px;height:66px}
+  .rs-flag{display:none}
+  .header-copy .brand{font-size:19px}
+  .header-copy .address,.header-copy .contacts{font-size:11px}
+  .header-copy .rs{font-size:14px;margin-top:5px}
+}
+
+.ver{font-size:10px;color:#748278;font-weight:700;vertical-align:middle;margin-left:6px}.farm-logo{background:#fff;border:2px solid #dce8df}
+
+
+/* V6.0.3 - Ajustes do menu local */
+.main-nav,
+nav {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: visible !important;
+  white-space: normal !important;
+  padding: 8px 10px !important;
+}
+
+.main-nav a,
+nav a {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  padding: 9px 13px !important;
+  border-radius: 8px !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Bandeira estilizada do Rio Grande do Sul no cabeçalho */
+.rs-flag {
+  width: 104px;
+  height: 68px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #b8c6ba;
+  box-shadow: 0 2px 7px rgba(0,0,0,.12);
+  background:
+    linear-gradient(150deg,
+      #16864a 0 35%,
+      #f3d12a 35% 50%,
+      #c72c34 50% 65%,
+      #16864a 65% 100%);
+}
+
+.rs-star {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  color: rgba(255,255,255,.90);
+  text-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+
+@media (max-width: 980px) {
+  .main-nav a,
+  nav a {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .main-nav,
+  nav {
+    justify-content: flex-start !important;
+    gap: 5px !important;
+  }
+
+  .main-nav a,
+  nav a {
+    padding: 8px 9px !important;
+    font-size: 13px !important;
+  }
+
+  .rs-flag {
+    width: 78px;
+    height: 50px;
+  }
+}
+
+
+/* V6.0.4 - seleção de raça */
+.select-scroll {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid #b9c8bc;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+.select-scroll:focus {
+  outline: 2px solid rgba(15,95,47,.18);
+  border-color: #0f5f2f;
+}
+
+/* V6.0.5 - selects de raça e categoria sem negrito */
+select.select-scroll,
+select.normal-select,
+select.select-scroll option,
+select.normal-select option {
+  font-weight: 400 !important;
+}
+
+
+/* V6.0.6 - botão Salvar sempre visível nos formulários longos */
+.form-save-btn {
+  position: sticky !important;
+  bottom: 12px !important;
+  z-index: 80 !important;
+  min-width: 170px;
+  min-height: 44px;
+  margin-top: 10px;
+  box-shadow: 0 5px 16px rgba(0,0,0,.20);
+}
+
+/* No cadastro de animal o botão fica dentro da área de ações */
+.actions:has(.form-save-btn) {
+  position: sticky;
+  bottom: 8px;
+  z-index: 79;
+  background: rgba(255,255,255,.96);
+  padding: 8px 0;
+  border-radius: 8px;
+}
+
+@media (max-width: 760px) {
+  .form-save-btn {
+    width: 100%;
+    bottom: 8px !important;
+  }
+}
+
+/* V6.0.9 - validação imediata do brinco */
+.field-alert{display:block;margin-top:5px;font-size:13px;font-weight:400}
+.field-alert.erro{color:#b42318}
+.field-alert.ok{color:#157347}
+
+/* V6.0.18 - resumo por núcleo no cabeçalho e impressão */
+.nucleo-summary{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(110px,1fr));
+  gap:8px;
+  margin:12px 0 16px;
+}
+.nucleo-summary>div{
+  border:1px solid #d9e4dc;
+  border-radius:8px;
+  padding:9px 10px;
+  background:#f7faf8;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.nucleo-summary strong{font-size:13px;}
+.nucleo-summary span{font-size:20px;font-weight:800;}
+.nucleo-summary .nucleo-total{
+  background:#eef5f0;
+  border-color:#bfcfc4;
+}
+@media (max-width:900px){
+  .nucleo-summary{grid-template-columns:repeat(2,minmax(130px,1fr));}
+}
+@media print{
+  .nucleo-summary{
+    grid-template-columns:repeat(5,1fr)!important;
+    gap:4px!important;
+    margin:6px 0 10px!important;
+  }
+  .nucleo-summary>div{
+    padding:5px 6px!important;
+    border-radius:4px!important;
+    break-inside:avoid;
+  }
+  .nucleo-summary strong{font-size:9pt!important;}
+  .nucleo-summary span{font-size:12pt!important;}
+}
+
+
+/* V6.0.37 — cabeçalho alinhado + bandeira ilustrada */
+.header-inner{
+  grid-template-columns:112px minmax(0,1fr) 112px !important;
+  align-items:center !important;
+  min-height:112px;
+}
+.farm-logo{
+  width:102px !important;
+  height:102px !important;
+  align-self:center !important;
+  justify-self:center !important;
+  border-radius:50%;
+  object-fit:contain;
+}
+.flag-wrap{
+  width:112px;
+  height:112px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  align-self:center;
+  justify-self:center;
+  overflow:visible;
+}
+.rs-flag-img{
+  display:block;
+  width:112px;
+  height:112px;
+  object-fit:contain;
+  object-position:center;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+.header-copy{
+  align-self:center;
+}
+@media(max-width:800px){
+  .header-inner{grid-template-columns:68px 1fr !important;min-height:72px}
+  .farm-logo{width:66px !important;height:66px !important}
+  .flag-wrap{display:none}
+}
+
+/* Tela de entrada/carregamento */
+.paineira-splash{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  place-items:center;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(255,255,255,.96),rgba(242,248,243,.98)),
+    #f4f8f4;
+  opacity:1;
+  transition:opacity .4s ease;
+}
+.paineira-splash.show{display:grid}
+.paineira-splash.hide{opacity:0;pointer-events:none}
+.splash-card{
+  width:min(430px,88vw);
+  text-align:center;
+  padding:32px 28px 28px;
+  border:1px solid #c9d8cc;
+  border-radius:20px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 18px 55px rgba(12,72,35,.14);
+}
+.splash-card img{
+  width:150px;
+  height:150px;
+  object-fit:contain;
+  border-radius:50%;
+  margin-bottom:14px;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.12));
+}
+.splash-title{
+  font-size:25px;
+  font-weight:900;
+  color:#0d5a2d;
+  letter-spacing:.3px;
+}
+.splash-sub{
+  margin-top:7px;
+  color:#607168;
+  font-size:15px;
+}
+.splash-bar{
+  width:76%;
+  height:7px;
+  overflow:hidden;
+  margin:22px auto 0;
+  background:#e2ece5;
+  border-radius:999px;
+}
+.splash-bar span{
+  display:block;
+  height:100%;
+  width:42%;
+  border-radius:999px;
+  background:#0f6b35;
+  animation:paineira-load 1s ease-in-out infinite alternate;
+}
+@keyframes paineira-load{
+  from{transform:translateX(-8%)}
+  to{transform:translateX(142%)}
+}
+
+
+/* V6.0.38 — cabeçalho aprovado exatamente como o modelo enviado */
+.approved-header{
+  padding:0 !important;
+  border-bottom:3px solid #0b5d2d !important;
+  background:#fff !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.08) !important;
+}
+.approved-header-inner{
+  width:100%;
+  max-width:1500px;
+  margin:0 auto;
+  overflow:hidden;
+  background:#fff;
+}
+.approved-header-inner img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:180px;
+  object-fit:fill;
+}
+@media(max-width:800px){
+  .approved-header-inner img{
+    min-height:92px;
+    object-fit:cover;
+    object-position:center;
+  }
+}
+
+/* Tela de acesso no estilo "carregando", com senha */
+.login-loading{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,255,255,.98),rgba(237,246,239,.97)),
+    #eef6f0;
+}
+.login-loader-card{
+  width:min(440px,92vw);
+  padding:32px 30px 28px;
+  text-align:center;
+  background:rgba(255,255,255,.97);
+  border:1px solid #c7d8cb;
+  border-radius:22px;
+  box-shadow:0 22px 65px rgba(10,78,37,.16);
+}
+.login-logo-loading{
+  width:150px;
+  height:150px;
+  object-fit:contain;
+  border-radius:50%;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.14));
+}
+.login-loader-card h1{
+  margin:14px 0 3px;
+  color:#0d572c;
+  font-size:27px;
+}
+.login-system-name{
+  margin:0 0 24px;
+  color:#bd2028;
+  font-weight:900;
+  letter-spacing:.8px;
+}
+.password-label{
+  display:block;
+  text-align:left;
+  font-weight:800;
+  color:#234a32;
+}
+.password-wrap{
+  position:relative;
+  margin-top:7px;
+}
+.password-wrap input{
+  width:100%;
+  box-sizing:border-box;
+  padding:13px 48px 13px 14px;
+  font-size:17px;
+  border:1px solid #9eb8a5;
+  border-radius:9px;
+  outline:none;
+}
+.password-wrap input:focus{
+  border-color:#0f6b35;
+  box-shadow:0 0 0 3px rgba(15,107,53,.12);
+}
+.show-pass{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  font-size:18px;
+}
+.login-enter{
+  width:100%;
+  margin-top:14px;
+  padding:13px 16px !important;
+  font-size:16px;
+  font-weight:900;
+}
+.login-loading-state{
+  display:none;
+  margin-top:18px;
+}
+.login-loading-state.active{display:block}
+.loading-text{
+  color:#52695a;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:9px;
+}
+
+
+/* ==========================================================
+   V6.0.39 — CABEÇALHO RECONSTRUÍDO, SEM IMAGEM ESTICADA
+   ========================================================== */
+.paineira-header{
+  position:relative;
+  overflow:hidden;
+  padding:0 !important;
+  min-height:170px;
+  background:linear-gradient(180deg,#fffef9 0%,#f9fbf6 63%,#edf5ed 100%) !important;
+  border-bottom:4px solid #0b5c2c !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.08) !important;
+}
+.paineira-header-bg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.85;
+}
+.paineira-header-bg:before,
+.paineira-header-bg:after{
+  content:"";
+  position:absolute;
+  bottom:10px;
+  width:120px;
+  height:95px;
+  opacity:.15;
+  background:
+    radial-gradient(circle at 50% 22%,#2d6a3f 0 18%,transparent 19%),
+    radial-gradient(circle at 32% 38%,#2d6a3f 0 14%,transparent 15%),
+    radial-gradient(circle at 68% 40%,#2d6a3f 0 14%,transparent 15%),
+    linear-gradient(90deg,transparent 47%,#2d6a3f 48% 52%,transparent 53%);
+}
+.paineira-header-bg:before{left:18%}
+.paineira-header-bg:after{right:19%;transform:scale(.75)}
+.paineira-hill{
+  position:absolute;
+  left:-5%;
+  right:-5%;
+  height:75px;
+  bottom:-42px;
+  border-radius:50%;
+  background:#bfd2bd;
+  opacity:.34;
+}
+.paineira-hill.hill-b{
+  bottom:-54px;
+  left:32%;
+  right:-15%;
+  background:#8fb293;
+  opacity:.22;
+}
+.paineira-header-inner{
+  position:relative;
+  z-index:2;
+  max-width:1450px;
+  min-height:170px;
+  margin:0 auto;
+  padding:10px 22px;
+  box-sizing:border-box;
+  display:grid;
+  grid-template-columns:155px minmax(520px,1fr) 175px;
+  gap:26px;
+  align-items:center;
+}
+.paineira-logo-box,
+.paineira-flag-box{
+  height:145px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.paineira-logo{
+  width:136px;
+  height:136px;
+  object-fit:contain;
+  border-radius:50%;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.18));
+}
+.paineira-flag{
+  width:165px;
+  height:145px;
+  object-fit:contain;
+  object-position:center;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.15));
+}
+.paineira-header-center{
+  text-align:center;
+  align-self:center;
+  min-width:0;
+}
+.paineira-brand{
+  color:#0a4f27;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:900;
+  font-size:clamp(29px,3.1vw,48px);
+  line-height:1;
+  letter-spacing:.5px;
+  white-space:nowrap;
+}
+.paineira-divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  max-width:620px;
+  margin:8px auto 7px;
+  color:#0c5a2d;
+  font-size:11px;
+}
+.paineira-divider span{
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,transparent,#3f7d52);
+}
+.paineira-divider span:last-child{
+  background:linear-gradient(90deg,#3f7d52,transparent);
+}
+.paineira-address{
+  font-size:15px;
+  color:#202b23;
+  font-weight:600;
+  white-space:nowrap;
+}
+.paineira-contacts{
+  margin-top:5px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  font-size:14px;
+  color:#1f2a22;
+  font-weight:600;
+}
+.paineira-contacts i{
+  width:1px;
+  height:18px;
+  background:#aebcaf;
+}
+.paineira-control{
+  display:inline-block;
+  margin-top:8px;
+  padding:7px 20px 6px;
+  border-radius:11px;
+  background:linear-gradient(180deg,#0d672f,#06461f);
+  border:1px solid #d8b923;
+  box-shadow:0 2px 5px rgba(0,0,0,.12);
+  font-size:20px;
+  font-weight:900;
+  font-style:normal;
+  line-height:1;
+}
+.paineira-control span{color:#fff}
+.paineira-control b{color:#df202b}
+.paineira-control em{color:#f2c624;font-style:normal}
+
+@media(max-width:950px){
+  .paineira-header-inner{
+    grid-template-columns:100px minmax(0,1fr) 110px;
+    gap:12px;
+    min-height:130px;
+    padding:8px 12px;
+  }
+  .paineira-header{min-height:130px}
+  .paineira-logo-box,.paineira-flag-box{height:112px}
+  .paineira-logo{width:98px;height:98px}
+  .paineira-flag{width:108px;height:108px}
+  .paineira-brand{font-size:28px}
+  .paineira-address{font-size:12px}
+  .paineira-contacts{font-size:11px}
+  .paineira-control{font-size:16px}
+}
+@media(max-width:700px){
+  .paineira-header-inner{
+    grid-template-columns:76px 1fr;
+    min-height:105px;
+  }
+  .paineira-header{min-height:105px}
+  .paineira-logo-box{height:88px}
+  .paineira-logo{width:74px;height:74px}
+  .paineira-flag-box{display:none}
+  .paineira-brand{font-size:20px;white-space:normal}
+  .paineira-divider{margin:4px auto}
+  .paineira-address{font-size:10px;white-space:normal}
+  .paineira-contacts{font-size:9px;gap:6px;flex-wrap:wrap}
+  .paineira-control{font-size:13px;padding:5px 10px}
+}
+
+/* LOGIN — senha primeiro; carregamento só DEPOIS da autenticação */
+.login-loading-state{display:none!important}
+
+/* Tela exclusiva pós-senha */
+.post-login-loading{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,255,255,.98),rgba(236,246,239,.98)),
+    #eef6f0;
+}
+.post-login-card{
+  width:min(440px,90vw);
+  padding:34px 30px 30px;
+  text-align:center;
+  background:#fff;
+  border:1px solid #c7d9cc;
+  border-radius:22px;
+  box-shadow:0 22px 65px rgba(10,78,37,.17);
+}
+.post-login-card img{
+  width:155px;
+  height:155px;
+  object-fit:contain;
+  border-radius:50%;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.14));
+}
+.post-login-title{
+  margin-top:13px;
+  font-size:26px;
+  font-weight:900;
+  color:#0d572c;
+}
+.post-login-sub{
+  margin-top:5px;
+  color:#5b6d61;
+  font-size:15px;
+}
+.post-login-bar{
+  width:78%;
+  height:8px;
+  margin:22px auto 0;
+  background:#e1ece4;
+  border-radius:999px;
+  overflow:hidden;
+}
+.post-login-bar span{
+  display:block;
+  width:38%;
+  height:100%;
+  border-radius:999px;
+  background:#0f6b35;
+  animation:post-login-move .8s ease-in-out infinite alternate;
+}
+@keyframes post-login-move{
+  from{transform:translateX(-12%)}
+  to{transform:translateX(175%)}
+}
+
+
+/* V6.0.40 — cabeçalho ajustado ao modelo aprovado */
+.exact-header{
+  position:relative;
+  overflow:hidden;
+  min-height:150px !important;
+  padding:0 !important;
+  background:linear-gradient(180deg,#fffef9 0%,#fafcf7 62%,#edf4ec 100%) !important;
+  border-bottom:0 !important;
+  box-shadow:0 2px 7px rgba(0,0,0,.08) !important;
+}
+.exact-rural-bg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.exact-rural-bg:before{
+  content:"";
+  position:absolute;
+  left:-4%;
+  right:-4%;
+  bottom:-28px;
+  height:78px;
+  background:#dfeade;
+  border-radius:50% 50% 0 0 / 60% 60% 0 0;
+  opacity:.78;
+}
+.exact-rural-bg:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:8px;
+  height:22px;
+  background:linear-gradient(90deg,rgba(17,96,45,.08),rgba(17,96,45,.02),rgba(17,96,45,.09));
+}
+.exact-rural-bg .tree{
+  position:absolute;
+  bottom:18px;
+  width:52px;
+  height:72px;
+  opacity:.10;
+}
+.exact-rural-bg .tree:before{
+  content:"";
+  position:absolute;
+  left:23px;
+  bottom:0;
+  width:6px;
+  height:45px;
+  background:#376a45;
+}
+.exact-rural-bg .tree:after{
+  content:"";
+  position:absolute;
+  left:4px;
+  top:0;
+  width:44px;
+  height:40px;
+  border-radius:50%;
+  background:#376a45;
+}
+.exact-rural-bg .tree1{left:18%}
+.exact-rural-bg .tree2{left:30%;transform:scale(.72)}
+.exact-rural-bg .tree3{right:18%;transform:scale(.78)}
+.exact-rural-bg .cattle{
+  position:absolute;
+  bottom:11px;
+  font-size:28px;
+  filter:grayscale(1);
+  opacity:.10;
+}
+.exact-rural-bg .cattle1{left:24%}
+.exact-rural-bg .cattle2{left:28%}
+.exact-rural-bg .cattle3{left:32%}
+
+.exact-header-inner{
+  position:relative;
+  z-index:2;
+  max-width:1460px;
+  min-height:148px;
+  margin:0 auto;
+  padding:5px 15px 0;
+  box-sizing:border-box;
+  display:grid;
+  grid-template-columns:150px minmax(540px,1fr) 190px;
+  gap:12px;
+  align-items:center;
+}
+.exact-logo-area,
+.exact-flag-area{
+  height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.exact-logo{
+  width:132px;
+  height:132px;
+  object-fit:contain;
+  border-radius:50%;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.16));
+}
+.exact-flag{
+  width:180px;
+  height:140px;
+  object-fit:contain;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+.exact-center{
+  align-self:center;
+  text-align:center;
+  transform:translateY(-1px);
+}
+.exact-brand{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:900;
+  font-size:clamp(31px,3vw,44px);
+  line-height:1;
+  color:#084f27;
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+.exact-line{
+  width:min(650px,90%);
+  margin:5px auto 5px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  color:#0a5a2b;
+  font-size:8px;
+}
+.exact-line span{
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,transparent,#6c9477);
+}
+.exact-line span:last-child{
+  background:linear-gradient(90deg,#6c9477,transparent);
+}
+.exact-address{
+  font-size:13px;
+  font-weight:600;
+  color:#252d27;
+  white-space:nowrap;
+}
+.exact-contacts{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-top:4px;
+  font-size:12px;
+  font-weight:600;
+  color:#252d27;
+}
+.exact-contacts i{
+  width:1px;
+  height:15px;
+  background:#b5c0b7;
+}
+.exact-control{
+  display:inline-block;
+  margin-top:6px;
+  padding:5px 17px 5px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#0d652f,#06481f);
+  border:1px solid #d8b622;
+  box-shadow:0 2px 4px rgba(0,0,0,.12);
+  font-size:17px;
+  font-weight:900;
+  line-height:1;
+}
+.exact-control span{color:#fff}
+.exact-control b{color:#e0222c}
+.exact-control em{color:#f0c624;font-style:normal}
+.exact-bottom-strip{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:4px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+}
+.exact-bottom-strip span{background:#0d7138}
+.exact-bottom-strip b{background:#c9202e}
+.exact-bottom-strip em{background:#e9bd1d}
+
+@media(max-width:950px){
+  .exact-header{min-height:125px!important}
+  .exact-header-inner{
+    min-height:122px;
+    grid-template-columns:104px minmax(0,1fr) 125px;
+  }
+  .exact-logo-area,.exact-flag-area{height:112px}
+  .exact-logo{width:98px;height:98px}
+  .exact-flag{width:120px;height:105px}
+  .exact-brand{font-size:27px}
+  .exact-address{font-size:11px}
+  .exact-contacts{font-size:10px}
+  .exact-control{font-size:14px}
+}
+@media(max-width:700px){
+  .exact-header{min-height:100px!important}
+  .exact-header-inner{min-height:98px;grid-template-columns:72px 1fr;padding:4px 8px}
+  .exact-logo-area{height:88px}
+  .exact-logo{width:68px;height:68px}
+  .exact-flag-area{display:none}
+  .exact-brand{font-size:19px;white-space:normal}
+  .exact-address{font-size:9px;white-space:normal}
+  .exact-contacts{font-size:8px;gap:5px;flex-wrap:wrap}
+  .exact-control{font-size:12px;padding:4px 8px}
+}
+
+
+/* V6.0.41 — foto campeira no fundo do cabeçalho */
+.exact-header{
+  background:#f8fbf6 !important;
+}
+.photo-rural-bg{
+  position:absolute !important;
+  inset:0 !important;
+  opacity:1 !important;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,.62) 0%,
+      rgba(255,255,255,.48) 17%,
+      rgba(255,255,255,.72) 34%,
+      rgba(255,255,255,.72) 66%,
+      rgba(255,255,255,.48) 83%,
+      rgba(255,255,255,.58) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.22),rgba(236,244,233,.28)),
+    url("/static/fundo-campeiro-cabecalho.jpg") center 48% / cover no-repeat !important;
+}
+.photo-rural-bg:before,
+.photo-rural-bg:after{
+  display:none !important;
+}
+.exact-header-inner{
+  text-shadow:0 1px 0 rgba(255,255,255,.72);
+}
+.exact-logo,
+.exact-flag{
+  position:relative;
+  z-index:3;
+}
+.exact-control{
+  text-shadow:none;
+}
+
+
+/* V6.0.42 — CABEÇALHO RESTAURADO EXATAMENTE DA V6.0.36 */
+/* V6.0.1 - identidade visual Agropecuária Paineira */
+.app-header{background:linear-gradient(180deg,#fff 0%,#fbfdfb 100%);padding:10px 20px;border-bottom:4px solid var(--g);box-shadow:0 2px 10px #0000000d}
+.header-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:92px 1fr 105px;gap:18px;align-items:center}
+.farm-logo{width:88px;height:88px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 2px 3px #0002)}
+.header-copy{min-width:0}
+.header-copy .brand{font-size:27px;letter-spacing:.2px}
+.header-copy .rs{text-align:left;margin-top:8px;font-size:18px}
+.wa{color:#25D366;font-size:15px}
+.rs-flag{width:100px;height:64px;border-radius:7px;border:1px solid #bfd0c2;box-shadow:0 1px 5px #0002;background:
+linear-gradient(153deg,
+#078b48 0 35%,
+#f4cf27 35% 46%,
+#c9272c 46% 65%,
+#078b48 65% 100%)}
+nav{box-shadow:0 2px 7px #0000000a}
+nav a:hover{background:#d5e8da}
+.login-logo{display:block;width:120px;height:120px;object-fit:contain;border-radius:50%;margin:0 auto 12px}
+.loginbox{text-align:center}.loginbox label{text-align:left}
+@media(max-width:800px){
+  .app-header{padding:9px 12px}
+  .header-inner{grid-template-columns:68px 1fr;gap:11px}
+  .farm-logo{width:66px;height:66px}
+  .rs-flag{display:none}
+  .header-copy .brand{font-size:19px}
+  .header-copy .address,.header-copy .contacts{font-size:11px}
+  .header-copy .rs{font-size:14px;margin-top:5px}
+}
+
+.ver{font-size:10px;color:#748278;font-weight:700;vertical-align:middle;margin-left:6px}.farm-logo{background:#fff;border:2px solid #dce8df}
+
+
+/* V6.0.3 - Ajustes do menu local */
+.main-nav,
+nav {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: visible !important;
+  white-space: normal !important;
+  padding: 8px 10px !important;
+}
+
+.main-nav a,
+nav a {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  padding: 9px 13px !important;
+  border-radius: 8px !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Bandeira estilizada do Rio Grande do Sul no cabeçalho */
+.rs-flag {
+  width: 104px;
+  height: 68px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #b8c6ba;
+  box-shadow: 0 2px 7px rgba(0,0,0,.12);
+  background:
+    linear-gradient(150deg,
+      #16864a 0 35%,
+      #f3d12a 35% 50%,
+      #c72c34 50% 65%,
+      #16864a 65% 100%);
+}
+
+.rs-star {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  color: rgba(255,255,255,.90);
+  text-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+
+@media (max-width: 980px) {
+  .main-nav a,
+  nav a {
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .main-nav,
+  nav {
+    justify-content: flex-start !important;
+    gap: 5px !important;
+  }
+
+  .main-nav a,
+  nav a {
+    padding: 8px 9px !important;
+    font-size: 13px !important;
+  }
+
+  .rs-flag {
+    width: 78px;
+    height: 50px;
+  }
+}
+
+
+
+
+
+/* V6.0.43 — SOMENTE CABEÇALHOS */
+.header-v6043{
+  grid-template-columns:110px minmax(0,1fr) 125px !important;
+  align-items:center !important;
+}
+.header-copy-centered{
+  text-align:center !important;
+}
+.header-copy-centered .brand,
+.header-copy-centered .address,
+.header-copy-centered .contacts,
+.header-copy-centered .rs{
+  text-align:center !important;
+}
+.header-copy-centered .contacts{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.rs-real-flag-wrap{
+  width:125px;
+  height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.rs-real-flag{
+  width:118px;
+  height:88px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.15));
+}
+@media(max-width:800px){
+  .header-v6043{grid-template-columns:68px 1fr !important}
+  .rs-real-flag-wrap{display:none}
+}
+
+
+/* V6.0.47 — SOMENTE TELA INICIAL */
+.dashboard-modern{
+  padding:18px 20px 28px;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(224,239,224,.72),transparent 30%),
+    linear-gradient(180deg,#f8fbf8 0%,#f1f6f1 100%);
+  min-height:calc(100vh - 190px);
+}
+.welcome-card{
+  background:linear-gradient(135deg,#0d5d2c 0%,#14743a 55%,#0e5d2d 100%);
+  color:white;
+  border-radius:18px;
+  padding:22px 26px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  box-shadow:0 10px 26px rgba(16,83,40,.15);
+  margin-bottom:18px;
+}
+.welcome-kicker,.panel-kicker{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.2px;
+  opacity:.82;
+}
+.welcome-card h1{
+  margin:4px 0 4px;
+  font-size:30px;
+  line-height:1;
+}
+.welcome-card p{margin:0;opacity:.9;font-size:14px}
+.welcome-badge{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+  padding:10px 15px;
+  font-weight:900;
+  font-size:12px;
+  white-space:nowrap;
+}
+.dashboard-stats{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.stat-card{
+  background:#fff;
+  border:1px solid #dfe8df;
+  border-radius:16px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-height:112px;
+  box-shadow:0 6px 17px rgba(44,75,53,.06);
+}
+.stat-icon{
+  width:50px;height:50px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  flex:0 0 50px;
+  color:#fff;
+}
+.stat-copy span{display:block;font-size:12px;font-weight:800;color:#47594d;text-transform:uppercase}
+.stat-copy strong{display:block;font-size:28px;line-height:1.08;margin:4px 0;color:#153d23}
+.stat-copy small{display:block;color:#718077;font-size:11px}
+.stat-green .stat-icon{background:#0e6b31}
+.stat-blue .stat-icon{background:#1d6dc8}
+.stat-gold .stat-icon{background:#e3a008}
+.stat-teal .stat-icon{background:#2b7a69}
+.stat-purple .stat-icon{background:#6a35a6}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1.35fr .85fr;
+  gap:16px;
+}
+.home-panel{
+  background:#fff;
+  border:1px solid #dfe8df;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 6px 17px rgba(44,75,53,.055);
+}
+.panel-title-row{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+  border-bottom:1px solid #edf1ed;
+  padding-bottom:12px;margin-bottom:12px;
+}
+.panel-title-row h2{margin:3px 0 0;color:#164625;font-size:20px}
+.panel-kicker{color:#6f8374}
+.panel-link{
+  text-decoration:none;color:#176d37;font-weight:800;font-size:12px;
+  background:#edf6ef;border-radius:999px;padding:8px 11px;
+}
+.summary-list{display:grid;gap:9px}
+.summary-item{
+  display:grid;
+  grid-template-columns:12px 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:12px 4px;
+  border-bottom:1px dashed #e4ebe4;
+  color:#3b5041;
+  font-size:14px;
+}
+.summary-item:last-child{border-bottom:0}
+.summary-item strong{font-size:18px;color:#123e20}
+.summary-dot{width:9px;height:9px;border-radius:50%}
+.dot-green{background:#14843f}.dot-blue{background:#2b78c8}.dot-gold{background:#e5a212}
+
+.quick-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.quick-actions a{
+  min-height:74px;
+  border:1px solid #e1e9e1;
+  border-radius:13px;
+  text-decoration:none;
+  color:#164425;
+  background:linear-gradient(180deg,#fff,#f7faf7);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:20px;
+  font-weight:900;
+  transition:.18s ease;
+}
+.quick-actions a span{font-size:12px}
+.quick-actions a:hover{
+  transform:translateY(-1px);
+  border-color:#b9d6c0;
+  box-shadow:0 6px 15px rgba(26,92,48,.08);
+}
+@media(max-width:1100px){
+  .dashboard-stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:760px){
+  .welcome-card{align-items:flex-start;flex-direction:column}
+  .dashboard-stats{grid-template-columns:1fr 1fr}
+  .dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .dashboard-stats{grid-template-columns:1fr}
+  .quick-actions{grid-template-columns:1fr 1fr}
+}
+
+/* V6.0.48 — correções solicitadas */
+.dashboard-modern{padding-top:18px}
+
+
+/* V6.0.49 — SOMENTE FUNDO DO CABEÇALHO MAIS BRANCO */
+.app-header{
+  background:#ffffff !important;
+  background-image:linear-gradient(180deg,#ffffff 0%,#ffffff 68%,#fbfdfb 100%) !important;
+}
+
+
+/* V6.0.50 — bandeira sem marca de fundo + painel por núcleos */
+.rs-real-flag-wrap,
+.rs-real-flag,
+.report-flag-real,
+.report-list-flag{
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.rs-real-flag{
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.14)) !important;
+}
+.dashboard-nucleos .stat-icon{
+  font-weight:900;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+
+/* V6.0.62 — cabeçalho principal: visual limpo e discreto */
+.app-header{
+  padding:10px 18px 8px !important;
+  background:#ffffff !important;
+  border-bottom:3px solid #0f5f2f !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.035) !important;
+}
+.header-v6043{
+  max-width:1220px !important;
+  min-height:108px !important;
+  margin:0 auto !important;
+  padding:4px 8px !important;
+  grid-template-columns:116px minmax(0,1fr) 116px !important;
+  gap:18px !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+.header-v6043:after{display:none !important}
+.header-v6043 .farm-logo{
+  width:102px !important;
+  height:102px !important;
+  object-fit:contain !important;
+  border:0 !important;
+  background:transparent !important;
+  filter:none !important;
+}
+.header-copy-centered{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.header-copy-centered .brand{
+  margin:0 !important;
+  font-size:29px !important;
+  line-height:1.08 !important;
+  letter-spacing:.25px !important;
+  color:#0f5f2f !important;
+  text-shadow:none !important;
+}
+.header-copy-centered .brand .ver{
+  margin-left:7px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  color:#7a887f !important;
+  font-size:9px !important;
+  font-weight:700 !important;
+}
+.header-copy-centered .address{
+  margin-top:5px !important;
+  font-size:13px !important;
+  color:#5d6e63 !important;
+}
+.header-copy-centered .contacts{
+  margin-top:5px !important;
+  font-size:13px !important;
+  font-weight:600 !important;
+  color:#334c3b !important;
+}
+.header-copy-centered .contacts .wa{
+  color:#25a85a !important;
+  font-size:14px !important;
+}
+.header-copy-centered .rs{
+  margin-top:7px !important;
+  padding-top:0 !important;
+  width:auto !important;
+  border-top:0 !important;
+  font-size:17px !important;
+  letter-spacing:.35px !important;
+}
+.rs-real-flag-wrap{
+  width:116px !important;
+  height:102px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.rs-real-flag{
+  width:108px !important;
+  height:96px !important;
+  object-fit:contain !important;
+  filter:none !important;
+}
+.main-nav{
+  margin-top:0 !important;
+  border-top:0 !important;
+  box-shadow:0 2px 7px rgba(0,0,0,.04) !important;
+}
+@media(max-width:800px){
+  .app-header{padding:8px 9px 7px !important}
+  .header-v6043{
+    min-height:74px !important;
+    padding:2px 4px !important;
+    grid-template-columns:68px minmax(0,1fr) !important;
+    gap:9px !important;
+  }
+  .header-v6043 .farm-logo{width:64px !important;height:64px !important}
+  .header-copy-centered .brand{font-size:20px !important}
+  .header-copy-centered .brand .ver{display:none !important}
+  .header-copy-centered .address{font-size:10.5px !important;margin-top:3px !important}
+  .header-copy-centered .contacts{font-size:10.5px !important;margin-top:3px !important}
+  .header-copy-centered .rs{font-size:12px !important;margin-top:4px !important}
+  .rs-real-flag-wrap{display:none !important}
+}
+
+
+/* V6.0.73 — fundo campeiro discreto no cabeçalho, feito somente com CSS */
+.app-header{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+  background:
+    radial-gradient(ellipse at 12% 78%, rgba(80,88,82,.13) 0 10%, transparent 10.5%),
+    radial-gradient(ellipse at 88% 76%, rgba(80,88,82,.12) 0 12%, transparent 12.5%),
+    linear-gradient(165deg, transparent 0 58%, rgba(93,101,95,.08) 58.3% 64%, transparent 64.3%),
+    linear-gradient(195deg, transparent 0 61%, rgba(93,101,95,.07) 61.3% 67%, transparent 67.3%),
+    linear-gradient(180deg,#f7f8f7 0%,#eef1ef 63%,#e7ebe8 100%) !important;
+}
+.app-header:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:0; right:0; bottom:8px;
+  height:43px;
+  opacity:.32;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 88px, rgba(76,82,78,.34) 89px 92px, transparent 93px 176px),
+    linear-gradient(180deg, transparent 0 15px, rgba(76,82,78,.28) 16px 18px, transparent 19px 29px, rgba(76,82,78,.24) 30px 32px, transparent 33px);
+  transform:perspective(300px) rotateX(2deg);
+}
+.app-header:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.42),rgba(255,255,255,.10) 28%,rgba(255,255,255,.08) 72%,rgba(255,255,255,.40));
+}
+.header-v6043{position:relative !important;z-index:1 !important}
+.header-copy-centered .brand,
+.header-copy-centered .address,
+.header-copy-centered .contacts,
+.header-copy-centered .rs{position:relative;z-index:2}
+
+/* V6.0.74 — imagem campeira real em cinza no cabeçalho */
+.app-header{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.30),rgba(255,255,255,.30)),
+    url("fundo-campeiro-cabecalho.png") !important;
+  background-size:cover !important;
+  background-position:center 58% !important;
+  background-repeat:no-repeat !important;
+}
+.app-header:before{display:none !important;content:none !important;}
+.app-header:after{
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  z-index:0 !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(255,255,255,.08) 25%,rgba(255,255,255,.08) 75%,rgba(255,255,255,.18)) !important;
+}
+.header-v6043{position:relative !important;z-index:1 !important;}
+
+/* V6.0.77 — fundo campeiro mais claro e textos do cabeçalho legíveis */
+.app-header{
+  background-image:
+    linear-gradient(rgba(255,255,255,.68),rgba(255,255,255,.68)),
+    url("fundo-campeiro-cabecalho.png") !important;
+  background-size:cover !important;
+  background-position:center 58% !important;
+  background-repeat:no-repeat !important;
+}
+.app-header:after{
+  background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(255,255,255,.42) 28%,rgba(255,255,255,.42) 72%,rgba(255,255,255,.18)) !important;
+}
+.header-copy-centered .brand,
+.header-copy-centered .address,
+.header-copy-centered .contacts,
+.header-copy-centered .rs{
+  text-shadow:0 1px 2px rgba(255,255,255,.98),0 0 6px rgba(255,255,255,.95) !important;
+}
+.header-v6043 .farm-logo,
+.rs-real-flag{
+  opacity:1 !important;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.18)) !important;
+}
+
+
+/* V6.0.78 — paisagem mais visível, clareamento central e contatos com ícone WhatsApp */
+.app-header{
+  background-image:
+    linear-gradient(rgba(255,255,255,.34),rgba(255,255,255,.34)),
+    url("fundo-campeiro-cabecalho.png") !important;
+  background-size:cover !important;
+  background-position:center 58% !important;
+  background-repeat:no-repeat !important;
+}
+.app-header:after{
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.05) 0%,
+    rgba(255,255,255,.14) 20%,
+    rgba(255,255,255,.60) 38%,
+    rgba(255,255,255,.66) 50%,
+    rgba(255,255,255,.60) 62%,
+    rgba(255,255,255,.14) 80%,
+    rgba(255,255,255,.05) 100%) !important;
+}
+.header-v6043{
+  min-height:128px !important;
+}
+.header-copy-centered .brand,
+.header-copy-centered .address,
+.header-copy-centered .contacts,
+.header-copy-centered .rs{
+  text-shadow:0 1px 2px rgba(255,255,255,1),0 0 5px rgba(255,255,255,.95) !important;
+}
+.header-copy-centered .contacts{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:18px !important;
+}
+.contact-item{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.wa-icon{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:18px !important;
+  height:18px !important;
+  border-radius:50% !important;
+  background:#25D366 !important;
+  color:#fff !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-family:Arial,sans-serif !important;
+  font-weight:700 !important;
+  text-shadow:none !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.18) !important;
+  transform:rotate(-15deg);
+}
+@media(max-width:800px){
+  .header-v6043{min-height:82px !important;}
+  .header-copy-centered .contacts{gap:8px !important;}
+  .wa-icon{width:15px !important;height:15px !important;font-size:10px !important;}
+}
+
+/* V6.0.92 — interface mais compacta em todo o programa */
+main{
+  padding:10px 14px !important;
+}
+h1{
+  font-size:22px !important;
+  margin-top:8px !important;
+  margin-bottom:10px !important;
+}
+h2{
+  font-size:17px !important;
+  margin-top:8px !important;
+  margin-bottom:8px !important;
+}
+section{
+  padding:11px 13px !important;
+  margin-bottom:11px !important;
+  border-radius:11px !important;
+}
+.grid{
+  gap:8px 10px !important;
+}
+label{
+  font-size:11px !important;
+}
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea{
+  margin-top:3px !important;
+  padding:7px 9px !important;
+  border-radius:7px !important;
+  font-size:13px !important;
+  line-height:1.2 !important;
+  min-height:34px !important;
+  box-sizing:border-box !important;
+}
+textarea{
+  min-height:58px !important;
+}
+input[type="checkbox"],input[type="radio"]{
+  width:auto !important;
+  min-height:0 !important;
+  padding:0 !important;
+}
+button,.button{
+  padding:8px 12px !important;
+  border-radius:7px !important;
+  font-size:13px !important;
+}
+th,td{
+  padding:7px 8px !important;
+  font-size:12px !important;
+}
+.flash{
+  padding:8px 10px !important;
+  margin-bottom:8px !important;
+}
+.actions{
+  gap:6px !important;
+}
+@media(max-width:800px){
+  main{padding:8px !important;}
+  section{padding:10px !important;}
+  input:not([type="checkbox"]):not([type="radio"]),select,textarea{font-size:14px !important;}
+}
+
+
+/* V6.0.95 — formulários ainda mais compactos e botão Sair visível */
+input:not([type="checkbox"]):not([type="radio"]),
+select, textarea{
+  padding:5px 7px !important;
+  font-size:12px !important;
+  min-height:30px !important;
+  margin-top:2px !important;
+  border-radius:6px !important;
+}
+textarea{min-height:44px !important;}
+.grid{gap:6px 9px !important;}
+label{font-size:10.5px !important;}
+.nav-sair{
+  margin-left:auto !important;
+  background:#9f1d1d !important;
+  color:#fff !important;
+  font-weight:900 !important;
+  border-radius:6px !important;
+}
+.nav-sair:hover{background:#7f1515 !important;}
+@media(max-width:800px){
+  input:not([type="checkbox"]):not([type="radio"]),select,textarea{font-size:13px !important;min-height:31px !important;}
+  .nav-sair{margin-left:0 !important;}
+}
+
+
+/* V6.0.96 — menu centralizado e formulário de Matrizes mais organizado */
+.main-nav,
+nav.main-nav{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:7px !important;
+  padding:8px 12px !important;
+}
+.main-nav .nav-sair,
+nav.main-nav .nav-sair{
+  margin-left:0 !important;
+}
+
+/* Mantém os campos compactos, mas com respiro e alinhamento visual. */
+.matriz-form-section{
+  max-width:1040px !important;
+  margin:0 auto 12px !important;
+  padding:14px 16px !important;
+}
+.matriz-form-grid{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  column-gap:18px !important;
+  row-gap:11px !important;
+}
+.matriz-form-grid label{
+  display:block !important;
+  margin:0 !important;
+  line-height:1.25 !important;
+}
+.matriz-form-grid input:not([type="checkbox"]):not([type="radio"]),
+.matriz-form-grid select,
+.matriz-form-grid textarea{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:32px !important;
+  margin-top:4px !important;
+}
+.matriz-form-grid small{
+  display:block;
+  margin-top:3px;
+  line-height:1.25;
+}
+.matriz-form-grid #bloco-nascimento-matriz{
+  margin:1px 0 2px !important;
+  padding:10px 12px !important;
+}
+.matriz-form-grid .actions{
+  margin-top:2px !important;
+}
+@media(max-width:800px){
+  .main-nav,nav.main-nav{justify-content:flex-start !important;overflow-x:auto !important;flex-wrap:nowrap !important;}
+  .matriz-form-section{max-width:none !important;padding:11px !important;}
+  .matriz-form-grid{grid-template-columns:1fr !important;row-gap:9px !important;}
+}
+
+/* V6.0.98 - cadastro e listagem de Matrizes na mesma página */
+.matriz-subtitulo{margin:0 0 8px;font-size:16px;color:#315b3e}
+.matrizes-lista-integrada{margin-top:18px;padding-top:14px;border-top:2px solid #d9e5dc}
+.matrizes-lista-cabecalho{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.matrizes-lista-cabecalho h2{margin:0;font-size:18px;color:#0d5e2d}
+.matrizes-lista-cabecalho span{font-size:12px;color:#5f6f64;font-weight:700}
+
+/* V6.1.09 — compactação equilibrada: sem campos gigantes e sem formulário apertado */
+.matriz-form-section{
+  max-width:980px !important;
+  margin:0 auto 12px !important;
+}
+.matriz-form-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  column-gap:16px !important;
+  row-gap:10px !important;
+  align-items:start !important;
+}
+.matriz-form-grid > label{
+  width:100% !important;
+  max-width:none !important;
+}
+.matriz-form-grid > label input:not([type="checkbox"]):not([type="radio"]),
+.matriz-form-grid > label select{
+  width:100% !important;
+  max-width:none !important;
+}
+.matriz-form-grid > .full,
+.matriz-form-grid > .actions{
+  grid-column:1 / -1 !important;
+}
+.matriz-form-grid > .full textarea{
+  width:100% !important;
+  max-width:none !important;
+  min-height:64px !important;
+}
+/* Outros formulários: mantém o padrão compacto anterior, sem forçar caixinhas estreitas. */
+section form.grid:not(.matriz-form-grid),
+section form.g,
+section form.med-grid{
+  justify-content:stretch !important;
+}
+@media(max-width:900px){
+  .matriz-form-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+}
+@media(max-width:620px){
+  .matriz-form-grid{grid-template-columns:1fr !important;}
+}
+
+
+/* V6.1.17 — interface organizada do assistente de Movimentação/Venda */
+.mov-wrap{max-width:1160px;margin:18px auto 34px;padding:0 18px;color:#173c28}
+.mov-wrap>.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #d8e4dc}
+.mov-wrap>.top h1{margin:0;color:#075b2f;font-size:25px;line-height:1.2}
+.mov-wrap>.top .etapa{background:#e8f3eb;border:1px solid #b8d1bf;color:#075b2f;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:800;white-space:nowrap}
+.mov-wrap form{display:flex;flex-direction:column;gap:12px}
+.mov-wrap .section-title{order:1;background:linear-gradient(90deg,#0b6335,#177943);color:#fff;border-radius:7px;padding:11px 15px;font-size:16px;font-weight:800;letter-spacing:.2px}
+.mov-wrap form>.box,.mov-wrap form>.nucleo-escolha,.mov-wrap form>#aviso-nucleo,.mov-wrap form>.nucleo-wrap{order:2}
+.mov-wrap .box{background:#fff;border:1px solid #d5e0d8;border-radius:8px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mov-wrap .nav{order:9;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;padding-top:13px;border-top:1px solid #d8e4dc}
+.mov-wrap .nav>div{display:flex;gap:8px;align-items:center}
+.mov-wrap .nav button,.mov-wrap .nav a.button{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 18px;border-radius:6px;border:1px solid #0b6335;background:#0b6335;color:#fff;font:800 14px Arial,sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.mov-wrap .nav button[name="acao"][value="voltar"],.mov-wrap .nav a.button.light{background:#fff;color:#0b6335;border-color:#8cae98}
+.mov-wrap .nav button[name="acao"][value="limpar"]{background:#fff;color:#a11d1d;border-color:#d6a2a2}
+.mov-wrap .nav button[name="acao"][value="finalizar"]{background:#075b2f;border-color:#075b2f;min-width:245px}
+.mov-wrap .nav button:hover,.mov-wrap .nav a.button:hover{filter:brightness(.95);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mov-wrap table{width:100%;border-collapse:collapse}
+.mov-wrap table thead th{background:#126333;color:#fff;padding:9px 10px;text-align:left;font-size:13px}
+.mov-wrap table tbody td{padding:9px 10px;border-bottom:1px solid #e1e8e3;vertical-align:middle}
+.mov-wrap table input[type="number"]{max-width:220px;height:36px}
+.mov-wrap .summary{background:#f5faf6}
+@media(max-width:760px){.mov-wrap{padding:0 10px}.mov-wrap>.top{align-items:flex-start}.mov-wrap>.top h1{font-size:21px}.mov-wrap .nav{flex-wrap:wrap}.mov-wrap .nav>div{order:2;width:100%}.mov-wrap .nav>button,.mov-wrap .nav>a.button{width:100%}.mov-wrap .nav>div button{flex:1}.mov-wrap .nav button[name="acao"][value="finalizar"]{min-width:0}}
+
+
+/* V6.1.18 — cálculos em cartões e botão AVANÇAR flutuante */
+.mov-wrap .calcgrid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(150px,1fr));
+  gap:10px;
+  width:100%;
+}
+.mov-wrap .calcitem{
+  min-height:76px;
+  padding:12px 14px;
+  border:1px solid #cbdcd0;
+  border-radius:8px;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  box-sizing:border-box;
+}
+.mov-wrap .calcitem span{
+  color:#51675a;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.25px;
+}
+.mov-wrap .calcitem strong{
+  color:#075b2f;
+  font-size:20px;
+  line-height:1.15;
+  white-space:nowrap;
+}
+.mov-wrap .summary{padding:14px !important;}
+
+/* O botão principal acompanha a rolagem sem obrigar a descer até o fim. */
+.mov-wrap .mov-float-next{
+  position:fixed !important;
+  right:24px;
+  bottom:24px;
+  z-index:120;
+  min-width:150px;
+  min-height:46px !important;
+  padding:11px 22px !important;
+  border-radius:24px !important;
+  box-shadow:0 6px 18px rgba(0,0,0,.24) !important;
+}
+.mov-wrap .mov-float-final{min-width:270px;}
+/* reserva espaço para o botão flutuante não cobrir o último conteúdo */
+.mov-wrap form{padding-bottom:58px;}
+
+@media(max-width:1000px){
+  .mov-wrap .calcgrid{grid-template-columns:repeat(3,minmax(150px,1fr));}
+}
+@media(max-width:700px){
+  .mov-wrap .calcgrid{grid-template-columns:repeat(2,minmax(135px,1fr));}
+  .mov-wrap .calcitem strong{font-size:17px;}
+  .mov-wrap .mov-float-next{right:12px;bottom:12px;min-width:135px;}
+  .mov-wrap .mov-float-final{min-width:230px;}
+}
+
+/* V6.1.32 — DIU aplicado no cadastro de Matrizes */
+.diu-aplicado-opcao{border:1px solid #f0b8b8;background:#fff7f7;border-radius:8px;padding:9px 12px}
+.diu-aplicado-opcao>span:first-child{font-size:12px;font-weight:700;color:#7f1d1d;display:block;margin-bottom:5px}
+.diu-check-wrap{display:flex!important;align-items:center;gap:8px;color:#b91c1c}
+.diu-check-wrap input{width:18px;height:18px;margin:0}
+.diu-aplicado-opcao small{display:block;margin-top:4px;color:#7f1d1d}
+
+
+/* V6.1.40 — títulos principais centralizados e padronizados em todas as páginas */
+main h1{font-size:22px!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;color:#075b2f!important;margin:8px auto 10px!important;}
+.matrizes-topo,.nascimentos-topo,.titlebar,.mov-wrap>.top{position:relative!important;display:flex!important;justify-content:center!important;align-items:center!important;min-height:44px;}
+.matrizes-topo h1,.nascimentos-topo h1,.titlebar h1,.mov-wrap>.top h1{width:100%!important;text-align:center!important;margin-left:auto!important;margin-right:auto!important;}
+.matrizes-topo>a,.nascimentos-topo>a,.titlebar>a{position:absolute!important;right:0;}
+.mov-wrap>.top .etapa{position:absolute!important;right:0;}
+@media(max-width:760px){.matrizes-topo,.nascimentos-topo,.titlebar,.mov-wrap>.top{padding-top:0!important;flex-wrap:wrap!important}.matrizes-topo>a,.nascimentos-topo>a,.titlebar>a,.mov-wrap>.top .etapa{position:static!important;margin-left:auto!important;margin-right:auto!important}.matrizes-topo h1,.nascimentos-topo h1,.titlebar h1,.mov-wrap>.top h1{flex-basis:100%!important;}}
+
+/* V6.1.44 - subtítulo de cadastro de matriz */
+.matriz-subtitulo{text-transform:none !important;font-weight:700 !important;}
+
+
+/* V6.1.48 - padrão uniforme SALVAR / CANCELAR */
+.save-cancel-pair{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap}
+.save-cancel-pair .primary,.save-cancel-pair .button{width:170px!important;min-width:170px!important;height:44px!important;min-height:44px!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:0 14px!important;font-weight:800!important;border-radius:7px!important;text-decoration:none!important}
+.save-cancel-pair .primary{background:#0b6335!important;color:#fff!important;border:1px solid #0b6335!important}
+.save-cancel-pair .button{background:#eef3ef!important;color:#075c2b!important;border:1px solid #eef3ef!important}
+.venda-excluir-form{display:inline-block;margin:0}
+.venda-excluir{background:#fff!important;color:#a61b1b!important;border:1px solid #c95b5b!important;font-weight:800!important}
+
+/* V6.1.49 - padrão uniforme para todos os botões VOLTAR */
+.btn-voltar,.report-back,.back-btn,.report-toolbar .back,.vendas-voltar,
+a.button.light[href*="voltar"],a.button.light[href*="vacas"],
+.mov-wrap .nav button[name="acao"][value="voltar"],
+a.tab[href*="iatf"]{
+  background:#fff!important;
+  color:#075c2b!important;
+  border:1px solid #8cae98!important;
+  border-radius:7px!important;
+  min-width:82px!important;
+  width:auto!important;
+  height:40px!important;
+  min-height:40px!important;
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 12px!important;
+  font:800 14px Arial,sans-serif!important;
+  text-decoration:none!important;
+  box-shadow:none!important;
+}
+.btn-voltar:hover,.report-back:hover,.back-btn:hover,.report-toolbar .back:hover,.vendas-voltar:hover,
+a.button.light[href*="voltar"]:hover,a.button.light[href*="vacas"]:hover,
+.mov-wrap .nav button[name="acao"][value="voltar"]:hover,
+a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
+
+
+/* V6.1.50 - alinhamento no cadastro de Matrizes e par SALVAR/CANCELAR */
+.matriz-form-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  margin:0 0 10px!important;
+  width:100%!important;
+}
+.matriz-form-head .matriz-subtitulo{margin:0!important;}
+.matriz-form-head .nascimentos-geral-btn{
+  margin:0!important;
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+/* Garante que SALVAR e CANCELAR permaneçam alinhados e exatamente do mesmo tamanho,
+   mesmo quando o link de cancelar aponta para /vacas. */
+.save-cancel-pair{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:8px!important;
+}
+.save-cancel-pair .primary,
+.save-cancel-pair .button,
+.save-cancel-pair a.button.light[href*="vacas"],
+.save-cancel-pair a.button.light[href*="voltar"]{
+  width:170px!important;
+  min-width:170px!important;
+  max-width:170px!important;
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 14px!important;
+  margin:0!important;
+  border-radius:7px!important;
+  font:800 14px Arial,sans-serif!important;
+  line-height:1!important;
+}
+.save-cancel-pair .primary{
+  background:#0b6335!important;
+  color:#fff!important;
+  border:1px solid #0b6335!important;
+}
+.save-cancel-pair .button,
+.save-cancel-pair a.button.light[href*="vacas"],
+.save-cancel-pair a.button.light[href*="voltar"]{
+  background:#fff!important;
+  color:#075c2b!important;
+  border:1px solid #8cae98!important;
+}
+@media(max-width:700px){
+  .matriz-form-head{align-items:flex-start!important;flex-direction:column!important;gap:8px!important;}
+}
+
+/* V6.1.53 - cartões dos núcleos: machos e fêmeas */
+.dashboard-nucleos .stat-sexos{display:block;margin-top:5px;font-size:11px;line-height:1.2;white-space:nowrap;color:#44564c}
+.dashboard-nucleos .stat-sexos b{font-weight:800}
+
+/* V6.1.81 — identidade SIGAP */
+.header-copy-centered .sigap-title{font-size:24px!important;font-weight:950!important;letter-spacing:2px!important;color:#075f2d!important;margin-top:7px!important;line-height:1!important;}
+.header-copy-centered .sigap-subtitle{font-size:10px;font-weight:800;letter-spacing:.35px;color:#40594a;margin-top:4px;white-space:nowrap;}
+@media(max-width:760px){.header-copy-centered .sigap-title{font-size:18px!important}.header-copy-centered .sigap-subtitle{font-size:8px;white-space:normal}}

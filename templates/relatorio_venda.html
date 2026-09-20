@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relatório da Venda</title>
+<style>
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:#173525;font-family:Arial,sans-serif}
+body{font-size:13px}
+.sale-report{max-width:190mm;margin:0 auto}
+.report-actions{display:flex;gap:8px;align-items:center;margin:0 0 12px}
+.report-actions button,.report-actions a{height:40px;padding:0 14px;border-radius:5px;font:700 14px Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
+.report-actions button{width:50px;padding:0;border:1px solid #0f6b35;background:#0f6b35;color:#fff}.report-actions button svg{width:22px;height:22px;display:block}
+.report-actions a{border:1px solid #77a98a;background:#fff;color:#075c2f}.report-actions a.back-report{width:100px;padding:0}.report-actions a.download-pdf{border-color:#0f6b35;background:#0f6b35;color:#fff}
+.report-header{display:grid;grid-template-columns:92px 1fr 92px;align-items:center;text-align:center;border-bottom:2px solid #1d5e37;padding:4px 4px 10px}
+.report-header img{max-width:82px;max-height:72px;object-fit:contain}
+.report-header h1{margin:0 0 4px;color:#0a5b2d;font-size:22px}
+.report-header h2{margin:5px 0 3px;color:#0a5b2d;font-size:16px}
+.report-header .sub{font-size:11px;color:#4f6257}
+.sale-report section{margin-top:12px;padding:11px;border:1px solid #cbd8cf;border-radius:7px;break-inside:avoid}
+.sale-report h3{margin:0 0 9px;color:#064c24;font-size:14px}
+.sale-report p{margin:6px 0;line-height:1.35}
+.sale-report table{width:100%;border-collapse:collapse;font-size:11px}
+.sale-report th,.sale-report td{border:1px solid #bfc9c2;padding:6px;text-align:left}
+.sale-report th{background:#edf4ef;color:#064c24}
+.totais{font-size:13px}
+.totais-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 20px}
+@media print{
+  .report-actions{display:none!important}
+  .sale-report{max-width:none!important;margin:0!important}
+  body{font-size:11pt}
+  .sale-report section{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="sale-report">
+  <div class="report-actions"><button onclick="window.print()" title="Imprimir" aria-label="Imprimir"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 9V3h12v6h1a3 3 0 0 1 3 3v5h-4v4H6v-4H2v-5a3 3 0 0 1 3-3h1Zm2-4v4h8V5H8Zm8 14v-5H8v5h8Zm3-5h1v-2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v2h2v-2h12v2h1Z"/></svg></button><a class="download-pdf" href="{{url_for('baixar_relatorio_venda_pdf',venda_id=venda['id'])}}">⬇ BAIXAR PDF</a><a class="back-report" href="{{url_for('movimentacoes')}}">VOLTAR</a></div>
+  <div class="report-header">
+    <img src="{{url_for('static',filename='logo-paineira.png')}}" alt="Logo">
+    <div><h1>AGROPECUÁRIA PAINEIRA</h1><div class="sub">Restinga Sêca – Vila Santuário – CEP 97200-000</div><h2>RELATÓRIO DA VENDA</h2><div>Código: {{venda['codigo']}} &nbsp; Data: {{br_date(venda['data'])}}</div></div>
+    <img src="{{url_for('static',filename='bandeira-rs-bonita.png')}}" alt="Bandeira RS">
+  </div>
+  <section><h3>DADOS DO VENDEDOR</h3><p><b>Nome:</b> {% if venda['cpf_titular']=='976.068.470-53' %}MARCIO GRIGOLETTO ESPINDOLA{% elif venda['cpf_titular']=='801.910.530-15' %}MARIA CAROLINA GRIGOLETTO ESPINDOLA{% else %}-{% endif %}</p><p><b>CPF:</b> {{venda['cpf_titular'] or '-'}} &nbsp; <b>Banco:</b> {{venda['banco'] or '-'}} &nbsp; <b>Agência:</b> {{venda['agencia'] or '-'}} &nbsp; <b>Conta:</b> {{venda['conta_corrente'] or '-'}}</p></section>
+  <section><h3>DADOS DO COMPRADOR</h3><p><b>Nome:</b> {{venda['comprador_nome'] or '-'}} &nbsp; <b>Nome fantasia:</b> {{venda['comprador_nome_fantasia'] or '-'}}</p><p><b>CNPJ:</b> {{venda['comprador_cnpj'] or '-'}} &nbsp; <b>CEP:</b> {{venda['comprador_cep'] or '-'}} &nbsp; <b>Cidade:</b> {{venda['comprador_cidade'] or '-'}}</p><p><b>Endereço:</b> {{venda['comprador_endereco'] or '-'}}</p>{% if venda['comprador_observacoes'] %}<p><b>Observação:</b> {{venda['comprador_observacoes']}}</p>{% endif %}</section>
+  <section><h3>DADOS DO ANIMAL</h3><table><thead><tr><th>Brinco</th><th>Categoria</th><th>Peso (kg)</th><th>Valor</th></tr></thead><tbody>{% for i in itens %}<tr><td>{{i['brinco']}}</td><td>{{i['categoria'] or ''}}</td><td>{{'%.1f'|format(i['peso'])}}</td><td>R$ {{'%.2f'|format(i['valor_individual'])|replace('.',',')}}</td></tr>{% endfor %}</tbody></table></section>
+  <section class="totais"><h3>VALORES DA VENDA</h3><div class="totais-grid"><p><b>Peso total:</b> {{'%.1f'|format(venda['total_peso'])}} kg</p><p><b>Valor bruto:</b> R$ {{'%.2f'|format(venda['total_bruto'])|replace('.',',')}}</p><p><b>Fundo Rural (1,5%):</b> R$ {{'%.2f'|format(venda['fundo_rural'])|replace('.',',')}}</p><p><b>Valor líquido:</b> R$ {{'%.2f'|format(venda['total_liquido'])|replace('.',',')}}</p></div>{% if venda['observacoes'] %}<p><b>Observações da venda:</b> {{venda['observacoes']}}</p>{% endif %}</section>
+</div>
+{% if imprimir %}<script>window.addEventListener('load',function(){setTimeout(function(){window.print()},250)});</script>{% endif %}
+</body>
+</html>

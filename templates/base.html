@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Paineira">
+<title>{{ title or APP_NAME }}</title>
+<meta name="theme-color" content="#0f5f2f">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="{{ url_for('static',filename='manifest.json') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static',filename='apple-touch-icon.png') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static',filename='favicon-32.png') }}">
+<link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('static',filename='favicon-48.png') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css', v='6125') }}">
+
+<style>
+/* V6.1.02 - separa claramente os dados da matriz dos dados do nascimento */
+.nascimento-separador{margin-top:12px;padding-top:14px;border-top:2px solid #d7e2d8}
+.nascimento-separador-titulo{font-weight:800;font-size:15px;color:#145c32;margin-bottom:8px}
+.nascimento-check{display:flex!important;align-items:center;gap:8px;font-weight:800;margin:0 0 4px 0!important}
+.nascimento-check input{width:auto!important;margin:0!important}
+.nascimento-grid{margin-top:10px!important;padding:12px;border:1px solid #d7e2d8;border-radius:8px;background:#fbfcfb}
+
+/* V6.1.02 - observações do animal em vermelho para destaque */
+textarea.animal-observacoes { color:#c00000 !important; font-weight:700; }
+textarea.animal-observacoes::placeholder { color:#c00000; opacity:.65; }
+
+
+/* V6.1.09 - após salvar matriz, formulário limpo e foco automático no Brinco */
+/* V6.1.03 - cadastro opcional de duas crias gêmeas para a mesma matriz */
+.gemeos-opcao{margin-top:8px;padding-top:9px;border-top:1px dashed #c9d2c9}.gemeos-opcao .nascimento-check{font-weight:800}
+/* V6.1.02 - matriz digitada carrega cadastro e filhos para edição */
+.filhos-matriz-box{margin-top:12px;border:1px solid #cfd9d1;border-radius:8px;padding:10px;background:#fff}
+.filhos-matriz-titulo{font-weight:800;color:#0f5f32;margin-bottom:8px}
+.filhos-matriz-table th,.filhos-matriz-table td{padding:7px 9px}
+.animal-observacao-texto{color:#c40000;font-weight:700}
+
+/* V6.1.46 — padrão único para títulos principais: CAPS LOCK e centralizados */
+main h1{
+  width:100%!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+  text-transform:uppercase!important;
+  color:#075c2b!important;
+  font-size:25px!important;
+  font-weight:900!important;
+  line-height:1.2!important;
+  margin:6px auto 18px!important;
+}
+/* Em telas cujo título divide a barra com botões, o título continua no centro real da página. */
+.titlebar>div:first-child{width:100%!important;}
+.titlebar>div:first-child>h1{width:100%!important;text-align:center!important;}
+.repro-title{ text-align:center!important; text-transform:uppercase!important; }
+@media(max-width:760px){main h1{font-size:22px!important;margin-bottom:14px!important;}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="header-inner header-v6043">
+    <img class="farm-logo" src="{{ url_for('static',filename='logo-paineira.png') }}" alt="Agropecuária Paineira">
+    <div class="header-copy header-copy-centered">
+      <div class="brand">AGROPECUÁRIA PAINEIRA <small class="ver">V6.1.81</small></div>
+      <div class="address">Restinga Sêca – Vila Santuário – CEP 97200-000</div>
+      <div class="contacts"><span class="contact-item"><span class="wa-icon" aria-label="WhatsApp">☎</span> Marcio 55 99922-2680</span><span class="contact-item"><span class="wa-icon" aria-label="WhatsApp">☎</span> Alex 55 99955-3773</span></div>
+      <div class="rs sigap-title">SIGAP</div>
+      <div class="sigap-subtitle">SISTEMA INTEGRADO DE GESTÃO AGROPECUÁRIA PAINEIRA</div>
+    </div>
+    <div class="rs-real-flag-wrap">
+      <img class="rs-real-flag" src="{{ url_for('static',filename='bandeira-rs-bonita.png') }}" alt="Bandeira do Rio Grande do Sul">
+    </div>
+  </div>
+</header>
+<nav class="main-nav">
+<a href="{{url_for('dashboard')}}">🏠 Início</a>
+<a href="{{url_for('animal_novo', cadastro_vaca_url=True)}}">🐄 Matrizes</a>
+<a href="{{url_for('iatf')}}">🐂 Reprodução</a>
+<a href="{{url_for('pesagens')}}">⚖ Pesagens</a>
+<a href="{{url_for('medicacoes')}}">💊 Medicações</a>
+<a href="{{url_for('movimentacoes')}}">↔ Movimentações</a>
+<a href="{{url_for('relatorios')}}">📊 Relatórios</a>
+</nav>
+<main>
+{% with msgs=get_flashed_messages(with_categories=true) %}{% for cat,msg in msgs %}<div class="flash {{cat}}">{{msg}}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</main>
+<footer><a href="{{url_for('backup')}}">Baixar backup</a> · <a href="{{url_for('importar_banco')}}">Importar banco antigo</a> · <a href="{{url_for('reset_banco')}}" style="color:#a51d1d;font-weight:700">Zerar banco</a></footer>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/static/sw.js'));
+}
+
+// V6.0.75 — evita que o navegador misture sugestões de outros cadastros.
+// Cada tela deve mostrar somente as opções fornecidas pelo próprio sistema.
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('form').forEach((form) => {
+    if (!form.closest('.login-card')) form.setAttribute('autocomplete', 'off');
+  });
+
+  document.querySelectorAll('input, textarea').forEach((campo) => {
+    const tipo = (campo.getAttribute('type') || 'text').toLowerCase();
+    if (['hidden','checkbox','radio','file','submit','button','reset','password'].includes(tipo)) return;
+    campo.setAttribute('autocomplete', 'off');
+    campo.setAttribute('autocorrect', 'off');
+    campo.setAttribute('spellcheck', 'false');
+  });
+});
+
+
+// V6.0.94 — gravação rápida: limpa o formulário imediatamente e confirma em seguida.
+// Se o servidor recusar o cadastro, os valores digitados são restaurados.
+function paineiraToast(texto, erro=false) {
+  let t = document.getElementById('paineira-fast-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'paineira-fast-toast';
+    Object.assign(t.style, {
+      position:'fixed', right:'18px', bottom:'18px', zIndex:'99999',
+      padding:'11px 16px', borderRadius:'8px', fontWeight:'800',
+      boxShadow:'0 4px 18px rgba(0,0,0,.18)', transition:'opacity .2s'
+    });
+    document.body.appendChild(t);
+  }
+  t.style.background = erro ? '#a51d1d' : '#0f6b35';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  t.textContent = texto;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity='0'; }, erro ? 4500 : 2200);
+}
+
+function paineiraSnapshot(form) {
+  return Array.from(form.elements).map(el => ({
+    el,
+    value: el.value,
+    checked: ('checked' in el) ? el.checked : undefined,
+    selected: el.tagName === 'SELECT' ? Array.from(el.options).map(o => o.selected) : null
+  }));
+}
+function paineiraRestore(snapshot) {
+  snapshot.forEach(x => {
+    if (!x.el || !x.el.isConnected) return;
+    if (x.selected) Array.from(x.el.options).forEach((o,i)=>o.selected=!!x.selected[i]);
+    else if (x.checked !== undefined && ['checkbox','radio'].includes((x.el.type||'').toLowerCase())) x.el.checked=x.checked;
+    else x.el.value=x.value;
+  });
+}
+function paineiraClear(form) {
+  form.querySelectorAll('input,select,textarea').forEach(el => {
+    const type=(el.type||'').toLowerCase();
+    if (type==='hidden' || type==='submit' || type==='button') return;
+    if (type==='checkbox' || type==='radio') { el.checked=false; return; }
+    if (el.tagName==='SELECT') { el.selectedIndex=0; return; }
+    if (type==='date' && el.defaultValue) { el.value=el.defaultValue; return; }
+    el.value='';
+    if (el.setCustomValidity) el.setCustomValidity('');
+  });
+  // Em grupos de rádio, deixa a primeira opção pronta para o próximo lançamento.
+  const nomes=[...new Set(Array.from(form.querySelectorAll('input[type="radio"]')).map(r=>r.name).filter(Boolean))];
+  nomes.forEach(n=>{ const r=form.querySelector('input[type="radio"][name="'+CSS.escape(n)+'"]'); if(r) r.checked=true; });
+  form.querySelectorAll('.field-alert').forEach(a=>a.hidden=true);
+  // Atualiza campos calculados/condicionais da tela.
+  form.querySelectorAll('select,input[type="radio"],input[type="checkbox"]').forEach(el=>el.dispatchEvent(new Event('change',{bubbles:true})));
+  const primeiro=form.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+  if (primeiro) setTimeout(()=>primeiro.focus(),0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('form[data-fast-save="1"]').forEach(form => {
+    form.addEventListener('submit', async (ev) => {
+      if (form.dataset.fastSaving === '1') { ev.preventDefault(); return; }
+      const submitter=ev.submitter || null;
+      if (!(submitter && submitter.formNoValidate) && !form.checkValidity()) return; // respeita formnovalidate em ações auxiliares
+      ev.preventDefault();
+      form.dataset.fastSaving='1';
+      const snapshot=paineiraSnapshot(form);
+      const dados=new FormData(form); // captura antes de limpar
+      const botao=submitter || form.querySelector('button[type="submit"],input[type="submit"]');
+      const rotulo=botao ? (botao.textContent || botao.value || 'SALVAR') : '';
+      if (botao) { botao.disabled=true; if (botao.tagName==='BUTTON') botao.textContent='SALVANDO...'; }
+      paineiraClear(form); // resposta visual imediata para o próximo cadastro
+      paineiraToast('Salvando...');
+      try {
+        const resp=await fetch(form.action || location.href, {method:(form.method||'POST').toUpperCase(), body:dados, credentials:'same-origin'});
+        if (resp.redirected) {
+          paineiraToast('✓ SALVO COM SUCESSO');
+          // Mantém a sensação instantânea; atualiza a página logo depois para listas/opções refletirem o novo dado.
+          setTimeout(()=>location.replace(resp.url), 550);
+          return;
+        }
+        const html=await resp.text();
+        paineiraRestore(snapshot);
+        const doc=new DOMParser().parseFromString(html,'text/html');
+        const msg=doc.querySelector('.flash.erro,.flash.error,.flash');
+        paineiraToast(msg ? msg.textContent.trim() : 'Não foi possível salvar. Confira os dados.', true);
+      } catch(e) {
+        paineiraRestore(snapshot);
+        paineiraToast('Falha ao salvar. Os dados foram restaurados.', true);
+      } finally {
+        form.dataset.fastSaving='0';
+        if (botao) { botao.disabled=false; if (botao.tagName==='BUTTON') botao.textContent=rotulo; }
+      }
+    });
+  });
+});
+
+</script>
+
+<script>
+// Datas no padrão brasileiro: DIA/MÊS/ANO (DD/MM/AAAA).
+(function(){
+  function isoParaBR(v){
+    const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : v;
+  }
+  function brParaISO(v){
+    const m=String(v||'').trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if(!m) return v;
+    const d=+m[1], mo=+m[2], y=+m[3];
+    const dt=new Date(y,mo-1,d);
+    if(dt.getFullYear()!==y || dt.getMonth()!==mo-1 || dt.getDate()!==d) return v;
+    return `${m[3]}-${m[2]}-${m[1]}`;
+  }
+  function prepararData(el){
+    if(!el || el.dataset.dataBr==='1') return;
+    const valor=el.value;
+    try { el.type='text'; } catch(e) {}
+    el.value=isoParaBR(valor);
+    el.placeholder='DD/MM/AAAA';
+    el.inputMode='numeric';
+    el.maxLength=10;
+    el.dataset.dataBr='1';
+    el.addEventListener('input', function(){
+      let n=this.value.replace(/\D/g,'').slice(0,8);
+      if(n.length>4) n=n.slice(0,2)+'/'+n.slice(2,4)+'/'+n.slice(4);
+      else if(n.length>2) n=n.slice(0,2)+'/'+n.slice(2);
+      this.value=n;
+    });
+  }
+  function prepararTudo(root){ (root||document).querySelectorAll('input[type="date"], input[data-data-br]').forEach(prepararData); }
+  document.addEventListener('DOMContentLoaded', function(){
+    prepararTudo(document);
+    document.querySelectorAll('form').forEach(function(form){
+      form.addEventListener('submit', function(ev){
+        form.querySelectorAll('input[data-data-br="1"]').forEach(function(el){
+          if(!el.value) return;
+          const iso=brParaISO(el.value);
+          if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)){
+            ev.preventDefault();
+            el.setCustomValidity('Informe a data no formato DD/MM/AAAA.');
+            el.reportValidity();
+          } else {
+            el.setCustomValidity('');
+            el.value=iso;
+          }
+        });
+      }, true);
+    });
+  });
+})();
+</script>
+
+</body></html><style>
+/* V6.1.09 - nascimento em janela central compacta */
+.nascimento-atalho{display:flex;align-items:center;gap:10px;padding:8px 0}.nascimento-atalho small{margin:0;color:#5f6d63}.nascimento-atalho .button{font-weight:800}
+.nascimento-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.35);align-items:center;justify-content:center;padding:16px}
+.nascimento-modal.open{display:flex}.nascimento-modal-card{width:min(720px,94vw);max-height:88vh;overflow:auto;background:#fff;border-radius:10px;border:1px solid #cdd8cf;box-shadow:0 14px 40px rgba(0,0,0,.22);padding:16px}
+.nascimento-modal-head{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #dfe6e0;padding-bottom:9px;margin-bottom:12px}.nascimento-modal-title{font-size:18px;font-weight:900;color:#145c32}.nascimento-modal-sub{font-size:12px;margin-top:2px}.nascimento-modal-x{border:0;background:transparent;font-size:28px;line-height:1;cursor:pointer;padding:0 4px}.nascimento-modal-grid{grid-template-columns:1fr 1fr;gap:9px 12px}.nascimento-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:11px;border-top:1px solid #e0e6e1}.nascimento-filhos-lista{margin-top:14px}.nasc-acoes{display:flex;gap:5px;flex-wrap:wrap}.button.danger{background:#fff;border:1px solid #a81616;color:#a81616}.button.danger:hover{background:#fff1f1}.nascimento-modal textarea.animal-observacoes{color:#c00000!important;font-weight:700}
+@media(max-width:700px){.nascimento-modal-grid{grid-template-columns:1fr}.nascimento-modal-card{width:96vw;padding:12px}.nascimento-modal-actions{flex-direction:column}.nascimento-modal-actions>*{width:100%}}
+</style>
+
+<style>
+/* V6.1.09 - acesso direto ao histórico completo de nascimentos */
+.matrizes-topo,.nascimentos-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.matrizes-topo h1,.nascimentos-topo h1{margin-bottom:6px}
+.nascimentos-geral-btn{font-weight:800}
+#editar-nascimento:target{scroll-margin-top:12px}
+</style>

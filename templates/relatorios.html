@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.rel-ref h1{font-size:23px;margin:2px 0 2px;color:#123d25}
+.rel-sub{color:#5b6d61;margin:0 0 9px;font-size:14px}
+.rel-list{max-width:1120px;background:#fff;border:1px solid #d4dfd7;border-radius:9px;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px}
+.rel-row{display:grid;grid-template-columns:minmax(0,1fr) 145px;align-items:center;gap:10px;padding:8px 10px;border:1px solid #e3ebe5;border-radius:7px;font-size:14px;min-height:38px}
+.rel-row:last-child{border-bottom:1px solid #e3ebe5}
+.rel-row a{display:block;text-align:center;padding:8px 7px;background:#0f6b35;color:#fff;text-decoration:none;border-radius:6px;font-weight:800;font-size:13px;white-space:nowrap}
+.rel-row a:hover{background:#0a572a}
+@media(max-width:850px){.rel-list{grid-template-columns:1fr}.rel-row{grid-template-columns:1fr 145px}}
+@media(max-width:600px){.rel-row{grid-template-columns:1fr}.rel-row a{width:100%;box-sizing:border-box}}
+</style>
+<div class="rel-ref">
+  <h1>Relatórios</h1><p class="rel-sub">Escolha o relatório desejado. Ele abrirá diretamente pronto para visualizar e imprimir.</p>
+  <div class="rel-list">
+    <div class="rel-row"><span>Relação de matrizes</span><a href="{{url_for('relatorio_rebanho')}}">ABRIR RELATÓRIO</a></div>
+    <div class="rel-row"><span>Relação de nascimentos</span><a href="{{url_for('relatorio_lista',tipo='nascimentos')}}">ABRIR RELATÓRIO</a></div>
+    <div class="rel-row"><span>Reprodução — Touro e IATF</span><a href="{{url_for('relatorio_reproducao')}}">ABRIR RELATÓRIO</a></div>
+    <div class="rel-row"><span>Histórico de pesagens e ganho de peso</span><a href="{{url_for('relatorio_lista',tipo='pesagens')}}">ABRIR RELATÓRIO</a></div>
+    <div class="rel-row"><span>Medicações e próximos manejos</span><a href="{{url_for('relatorio_lista',tipo='medicacoes')}}">ABRIR RELATÓRIO</a></div>
+<div class="rel-row"><span>Controle por núcleos de idade</span><a href="{{url_for('relatorio_nucleos')}}">ABRIR RELATÓRIO</a></div>
+  </div>
+</div>
+{% endblock %}

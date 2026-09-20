@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.reset-wrap{max-width:780px;margin:28px auto;padding:0 14px}
+.reset-card{background:#fff;border:2px solid #a51d1d;border-radius:12px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.reset-card h1{margin:0 0 12px;font-size:25px;color:#8f1717}
+.reset-alerta{background:#fff4f4;border-left:5px solid #b11f1f;padding:14px 16px;margin:16px 0;line-height:1.5}
+.reset-card ul{margin:10px 0 18px;padding-left:22px;line-height:1.55}
+.reset-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.reset-btn,.cancel-btn{height:42px;border-radius:6px;padding:0 20px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.reset-btn{background:#a51d1d;color:#fff;border:1px solid #841616}
+.cancel-btn{background:#fff;color:#333;border:1px solid #888}
+.reset-note{font-size:13px;color:#555;margin-top:16px}
+</style>
+<div class="reset-wrap">
+  <div class="reset-card">
+    <h1>⚠ ZERAR BANCO DE DADOS</h1>
+    <div class="reset-alerta"><strong>Atenção:</strong> esta função apaga todos os dados cadastrados e recria o banco vazio.</div>
+    <p>Serão apagados os registros de animais, matrizes, nascimentos, pesagens, IATF, medicações, movimentações, campos e demais cadastros do banco.</p>
+    <p><strong>O programa e suas telas não serão apagados.</strong></p>
+    <form method="post" onsubmit="return confirmarResetBanco();">
+      <input type="hidden" name="confirmar_reset" value="SIM">
+      <div class="reset-actions">
+        <button type="submit" class="reset-btn">ZERAR BANCO DE DADOS</button>
+        <a class="cancel-btn" href="{{ url_for('dashboard') }}">CANCELAR</a>
+      </div>
+    </form>
+    <div class="reset-note">Por segurança, o sistema cria automaticamente uma cópia do banco atual antes de executar o reset.</div>
+  </div>
+</div>
+<script>
+function confirmarResetBanco(){
+  return window.confirm('ATENÇÃO! Você tem certeza que quer APAGAR TODO O BANCO DE DADOS?\\n\\nTodos os cadastros serão removidos e o banco será recriado vazio.');
+}
+</script>
+{% endblock %}

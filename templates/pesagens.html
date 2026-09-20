@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.pesagem-ref{max-width:1180px;margin:0 auto}
+.pesagem-ref h1{margin:0 0 14px;color:#0b5a2b}
+.pesagem-ref .box{border:1px solid #cfd8d2;background:#fff;padding:16px;margin-bottom:12px}
+.pesagem-ref .box-title{font-weight:800;color:#0b5a2b;margin-bottom:14px}
+
+.pesagem-ref .form-grid{
+  display:grid;
+  grid-template-columns:110px minmax(160px,1fr) 55px minmax(180px,1.15fr) 72px minmax(140px,.85fr);
+  gap:12px 10px;
+  align-items:center;
+}
+.pesagem-ref .form-grid label{
+  font-weight:700;
+  color:#264936;
+  white-space:nowrap;
+}
+.pesagem-ref input,.pesagem-ref select{
+  width:100%;
+  height:36px;
+  padding:6px 9px;
+  border:1px solid #aeb8b1;
+  border-radius:3px;
+  background:#fff;
+  box-sizing:border-box;
+}
+.pesagem-ref .campo-label{grid-column:1}
+.pesagem-ref .campo-input{grid-column:2}
+.pesagem-ref .obs-label{grid-column:3}
+.pesagem-ref .obs-input{grid-column:4 / 7}
+
+.pesagem-ref .btns{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.pesagem-ref .form-actions{margin-top:15px}
+.pesagem-ref .table-actions{margin:0 0 12px}
+
+.pesagem-ref button,.pesagem-ref .printbtn{
+  min-width:175px;
+  height:42px;
+  padding:0 18px;
+  border:1px solid #9fa9a2;
+  background:#f2f4f2;
+  color:#123b24;
+  text-decoration:none;
+  border-radius:4px;
+  cursor:pointer;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+}
+.pesagem-ref button:hover,.pesagem-ref .printbtn:hover{background:#e2e9e4}
+
+/* V6.1.51 - padronização dos botões de Pesagens */
+.pesagem-ref .btn-pesagem-salvar{
+  width:175px; min-width:175px; height:42px;
+  background:#086b36; border-color:#086b36; color:#fff;
+}
+.pesagem-ref .btn-pesagem-salvar:hover{background:#075c2f}
+.pesagem-ref .btn-pesagem-cadastrar{
+  min-width:205px; height:42px;
+  background:#fff; border:1px solid #86a692; color:#075c2b;
+}
+.pesagem-ref .btn-pesagem-cadastrar:hover{background:#f2f7f3}
+.pesagem-ref .btn-pesagem-excluir{
+  min-width:175px; height:42px;
+  background:#b42318; border-color:#b42318; color:#fff;
+}
+.pesagem-ref .btn-pesagem-excluir:hover{background:#971b12}
+.pesagem-ref .btn-pesagem-imprimir{
+  min-width:52px; width:52px; height:42px; padding:0;
+  background:#086b36; border-color:#086b36; color:#fff;
+}
+.pesagem-ref .btn-pesagem-imprimir:hover{background:#075c2f}
+.pesagem-ref .btn-pesagem-imprimir svg{width:22px;height:22px;display:block}
+
+.pesagem-ref .scroll{
+  max-height:440px;
+  overflow:auto;
+  border:1px solid #cbd4cd;
+  background:#fff;
+}
+.pesagem-ref table{
+  width:100%;
+  min-width:930px;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+.pesagem-ref th{
+  background:#e8f1eb;
+  color:#084f27;
+  padding:9px 6px;
+  border-bottom:1px solid #c5d1c9;
+  white-space:nowrap;
+}
+.pesagem-ref td{
+  padding:8px 6px;
+  border-bottom:1px solid #e5e5e5;
+  text-align:center;
+  white-space:nowrap;
+}
+.pesagem-ref th:nth-child(1),.pesagem-ref td:nth-child(1){width:34px}
+.pesagem-ref th:nth-child(2),.pesagem-ref td:nth-child(2){width:55px}
+.pesagem-ref th:nth-child(3),.pesagem-ref td:nth-child(3){width:100px}
+.pesagem-ref th:nth-child(4),.pesagem-ref td:nth-child(4){width:115px}
+.pesagem-ref th:nth-child(5),.pesagem-ref td:nth-child(5){width:90px}
+.pesagem-ref th:nth-child(6),.pesagem-ref td:nth-child(6){width:90px}
+.pesagem-ref th:nth-child(7),.pesagem-ref td:nth-child(7){width:70px}
+.pesagem-ref th:nth-child(8),.pesagem-ref td:nth-child(8){width:115px}
+.pesagem-ref th:nth-child(9),.pesagem-ref td:nth-child(9){width:135px}
+.pesagem-ref .smallcheck{width:16px;height:16px}
+
+@media(max-width:980px){
+  .pesagem-ref .form-grid{grid-template-columns:110px 1fr 90px 1fr}
+  .pesagem-ref .obs-label{grid-column:1}
+  .pesagem-ref .obs-input{grid-column:2 / 5}
+  .pesagem-ref .campo-label{grid-column:auto}
+  .pesagem-ref .campo-input{grid-column:auto}
+}
+@media(max-width:720px){
+  .pesagem-ref .form-grid{grid-template-columns:1fr}
+  .pesagem-ref .form-grid label,
+  .pesagem-ref .form-grid input,
+  .pesagem-ref .form-grid select,
+  .pesagem-ref .campo-label,
+  .pesagem-ref .campo-input,
+  .pesagem-ref .obs-label,
+  .pesagem-ref .obs-input{grid-column:1}
+  .pesagem-ref button,.pesagem-ref .printbtn{width:100%}
+}
+@media print{
+  body *{visibility:hidden}
+  .pesagem-ref,.pesagem-ref *{visibility:visible}
+  .pesagem-ref{position:absolute;left:0;top:0;width:100%;max-width:none}
+  .pesagem-ref .formbox,.pesagem-ref .selectcol,.pesagem-ref .btns{display:none!important}
+}
+.pesagem-ref .modo{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.pesagem-ref .modo label{display:flex;align-items:center;gap:6px;font-weight:700;background:#f3f7f4;border:1px solid #cbd8cf;padding:8px 12px}.pesagem-ref .modo input{width:auto;height:auto}.pesagem-ref .avulso-fields{display:none;margin-bottom:12px;padding:12px;background:#fbfdfb;border:1px dashed #9fb5a6}.pesagem-ref .avulso-fields.open{display:grid;grid-template-columns:120px 1fr 120px 1fr;gap:10px;align-items:center}.pesagem-ref .tag-avulso{font-size:11px;font-weight:800;background:#fff1c7;padding:3px 7px;border-radius:10px;margin-left:5px}
+</style>
+<div class="pesagem-ref">
+  <h1>PESAGENS / ENGORDA</h1>
+  <div class="box formbox">
+    <div class="box-title">Registrar pesagem</div>
+    <form autocomplete="off" method="post" class="js-fast-save" data-fast-save="1">
+      <input type="hidden" name="acao" value="salvar">
+      <div class="modo"><label><input type="radio" name="modo_pesagem" value="cadastrado" checked onchange="trocaModoPesagem()"> Animal cadastrado</label><label><input type="radio" name="modo_pesagem" value="avulso" onchange="trocaModoPesagem()"> Animal não cadastrado / avulso</label></div>
+      <div class="avulso-fields" id="avulsoFields"><label>Identificação/Nº</label><input name="brinco_avulso" id="brincoAvulso"><label>Nome (opcional)</label><input name="nome_avulso"></div>
+      <div class="form-grid">
+        <label>Brinco/Nº</label>
+        <select name="brinco" id="brincoPes" required onchange="preencheLote()">
+          <option value="">Selecione</option>
+          {% for a in animais %}<option value="{{a['brinco']}}" data-lote="{{a['lote'] or ''}}">{{a['brinco']}}{% if a['nome'] %} - {{a['nome']}}{% endif %}</option>{% endfor %}
+        </select>
+
+        <label>Data</label>
+        <input type="date" name="data" value="{{today}}">
+
+        <label>Peso (kg)</label>
+        <input type="number" step="0.1" name="peso" required>
+
+        <label class="campo-label">Campo</label>
+        <select class="campo-input" id="lotePes" name="lote">
+          <option value="">Selecione o campo</option>
+          {% for campo in campos_lotes %}<option value="{{campo}}">{{campo}}</option>{% endfor %}
+        </select>
+
+        <label class="obs-label">Observação</label>
+        <input class="obs-input" name="observacoes">
+      </div>
+      <div class="btns form-actions">
+        <button type="submit" class="btn-pesagem-salvar">SALVAR</button>
+        <a class="printbtn btn-pesagem-cadastrar" href="{{ url_for('animal_novo', voltar_para='pesagens') }}">CADASTRAR NOVO ANIMAL</a>
+      </div>
+    </form>
+  </div>
+
+  <form autocomplete="off" method="post">
+    <input type="hidden" name="acao" value="excluir">
+    <div class="btns table-actions">
+      <button type="submit" class="btn-pesagem-excluir">EXCLUIR SELECIONADA</button>
+      <button type="button" class="btn-pesagem-imprimir" onclick="window.print()" title="Imprimir pesagens" aria-label="Imprimir pesagens">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6h1a3 3 0 0 1 3 3v5h-4v4H6v-4H2v-5a3 3 0 0 1 3-3h1zm2-4v4h8V5H8zm8 10H8v4h8v-4zm3-4H5a1 1 0 0 0-1 1v3h2v-2h12v2h2v-3a1 1 0 0 0-1-1zm-1.5 1.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th class="selectcol">✓</th><th>Id</th><th>Brinco</th><th>Data</th><th>Peso</th><th>Ganho</th><th>Dias</th><th>GMD kg/dia</th><th>Lote</th></tr></thead>
+        <tbody>
+        {% for r in rows %}
+          <tr>
+            <td class="selectcol"><input class="smallcheck" type="checkbox" name="pesagem_id" value="{{r['id']}}"></td>
+            <td>{{r['id']}}</td><td>{{r['brinco']}}{% if r['avulso'] %}<span class="tag-avulso">AVULSO</span>{% endif %}{% if r['nome_avulso'] %}<br><small>{{r['nome_avulso']}}</small>{% endif %}</td><td>{{br_date(r['data']) if r['data'] else ''}}</td><td>{{'%.1f'|format(r['peso'])}}</td>
+            <td>{% if r['ganho'] is not none %}{{'%+.1f'|format(r['ganho'])}}{% endif %}</td>
+            <td>{{r['dias'] if r['dias'] is not none else ''}}</td>
+            <td>{% if r['gmd'] is not none %}{{'%.3f'|format(r['gmd'])}}{% endif %}</td><td>{{'Animal não cadastrado' if r['avulso'] else (r['lote'] or '')}}</td>
+          </tr>
+        {% else %}<tr><td colspan="9">Nenhuma pesagem registrada.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</div>
+<script>
+function trocaModoPesagem(){const av=document.querySelector('input[name="modo_pesagem"]:checked')?.value==='avulso';document.getElementById('avulsoFields')?.classList.toggle('open',av);const b=document.getElementById('brincoPes');const ba=document.getElementById('brincoAvulso');const l=document.getElementById('lotePes');if(b){b.required=!av;b.disabled=av}if(ba)ba.required=av;if(l)l.disabled=av}
+function preencheLote(){
+  const s=document.getElementById('brincoPes');
+  const o=s.options[s.selectedIndex];
+  const campo=(o?o.dataset.lote||'':'');
+  const sel=document.getElementById('lotePes');
+  if(!sel) return;
+  sel.value=campo;
+  if(campo && sel.value!==campo){
+    sel.value='';
+  }
+}
+document.addEventListener("DOMContentLoaded",trocaModoPesagem);</script>
+{% endblock %}

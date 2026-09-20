@@ -1,0 +1,183 @@
+{% extends "base.html" %}{% block content %}
+<div class="mov-wrap">
+  <div class="top mov-topo-cabecalho"><h1>MOVIMENTAÇÕES</h1><div class="etapa">ETAPA {{passo}} DE 5</div></div>
+
+  {% if passo == 1 %}
+  <form method="post"><input type="hidden" name="passo" value="1">
+    <div class="nav"><a class="button light" href="{{url_for('animal_novo', voltar_para='movimentacoes', origem='compra')}}">+ CADASTRAR ANIMAL DE COMPRA</a><button class="mov-float-next" name="acao" value="avancar">AVANÇAR</button></div>
+    <div class="section-title">1. SELEÇÃO DO OU DOS ANIMAIS</div>
+    <div class="nucleo-escolha">
+      <div class="nucleo-escolha-titulo">Escolha o núcleo de idade:</div>
+      <div class="nucleo-checks">
+        {% for nucleo in nucleos_ordem %}
+        <label class="nucleo-check">
+          <input type="checkbox" class="js-nucleo-check" value="{{loop.index0}}" {% if selected_nucleo == nucleo %}checked{% endif %}>
+          <span>{{nucleo}}</span>
+          <small>{{animais_por_nucleo[nucleo]|length}} animal(is)</small>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    <div id="aviso-nucleo" class="hint" {% if selected_nucleo %}style="display:none"{% endif %}>Marque um núcleo para abrir a lista de animais.</div>
+    <div class="nucleo-wrap nucleo-wrap-unico">
+      {% for nucleo in nucleos_ordem %}
+      <div class="nucleo-box js-nucleo-box" data-nucleo-index="{{loop.index0}}" style="display:{% if selected_nucleo == nucleo %}block{% else %}none{% endif %}">
+        <div class="nucleo-head"><span>{{nucleo}}</span><span>{{animais_por_nucleo[nucleo]|length}} animal(is)</span></div>
+        <div class="scroll"><table><thead><tr><th>✓</th><th>Brinco</th><th>Nome</th><th>Categoria</th><th>Campo/Lote</th></tr></thead><tbody>
+        {% for a in animais_por_nucleo[nucleo] %}
+          <tr><td><input type="checkbox" name="selecionado" value="{{a['id']}}" {% if a['id'] in wiz.get('animal_ids',[]) %}checked{% endif %}></td><td>{{a['brinco']}}</td><td>{{a['nome'] or ''}}</td><td>{{a['categoria'] or ''}}</td><td>{{a['lote'] or ''}}</td></tr>
+        {% else %}<tr><td colspan="5">Nenhum animal neste núcleo.</td></tr>{% endfor %}
+        </tbody></table></div>
+      </div>
+      {% endfor %}
+    </div>
+  </form>
+
+  {% elif passo == 2 %}
+  <form method="post"><input type="hidden" name="passo" value="2">
+    <div class="nav"><div><button name="acao" value="voltar" formnovalidate>VOLTAR</button> <button name="acao" value="limpar" formnovalidate>CANCELAR</button></div><button class="mov-float-next" name="acao" value="avancar">AVANÇAR</button></div>
+    <div class="section-title">2. PESAGEM</div><div class="box"><table><thead><tr><th>Brinco</th><th>Nome</th><th>Campo/Lote</th><th>Último peso</th><th>Peso (kg)</th></tr></thead><tbody>{% for a in selecionados_rows %}<tr><td>{{a['brinco']}}</td><td>{{a['nome'] or ''}}</td><td>{{a['lote'] or ''}}</td><td>{{a['peso_atual'] or ''}}</td><td><input type="number" step="0.1" min="0" name="peso_id_{{a['id']}}" value="{{wiz.get('pesos',{}).get(a['id']|string,a['peso_atual'] or '')}}" required></td></tr>{% endfor %}</tbody></table></div>
+  </form>
+
+  {% elif passo == 3 %}
+  <form method="post"><input type="hidden" name="passo" value="3">
+    <div class="nav"><div><button name="acao" value="voltar" formnovalidate>VOLTAR</button> <button name="acao" value="limpar" formnovalidate>CANCELAR</button></div><button class="mov-float-next" name="acao" value="avancar">AVANÇAR</button></div>
+    <div class="section-title">3. VALORES</div><div class="box grid">
+      {% set v=wiz.get('valores',{}) %}
+      <label>Tipo<select name="tipo"><option {% if v.get('tipo')=='Venda' %}selected{% endif %}>Venda</option><option {% if v.get('tipo')=='Morte' %}selected{% endif %}>Morte</option><option {% if v.get('tipo')=='Transferência' %}selected{% endif %}>Transferência</option></select></label>
+      <label>Data<input type="date" name="data" value="{{v.get('data',today)}}"></label>
+      <label>Forma de cálculo<select name="forma_calculo" id="forma" onchange="trocaForma()"><option value="kg" {% if v.get('forma_calculo','kg')=='kg' %}selected{% endif %}>Valor por kg</option><option value="unitario" {% if v.get('forma_calculo')=='unitario' %}selected{% endif %}>Valor unitário por animal</option></select></label>
+      <label id="labkg">Valor por kg (R$)<input type="number" step="0.01" name="valor_kg" id="valor_kg" value="{{v.get('valor_referencia','') if v.get('forma_calculo','kg')=='kg' else ''}}" oninput="calculaValores()"></label>
+      <label id="labun">Valor unitário (R$)<input type="number" step="0.01" name="valor_unitario" id="valor_unitario" value="{{v.get('valor_referencia','') if v.get('forma_calculo')=='unitario' else ''}}" oninput="calculaValores()"></label>
+      <label>Banco<select name="banco"><option value="">Selecione</option>{% for b in ['Sicredi','Banco do Brasil','Banrisul'] %}<option {% if v.get('banco')==b %}selected{% endif %}>{{b}}</option>{% endfor %}</select></label><label>Agência<input name="agencia" value="{{v.get('agencia','')}}"></label><label>Conta corrente<input name="conta_corrente" value="{{v.get('conta_corrente','')}}"></label>
+      <label class="full">CPF<select name="cpf_titular"><option value="">Selecione o CPF</option><option value="976.068.470-53" {% if v.get('cpf_titular')=='976.068.470-53' %}selected{% endif %}>MARCIO GRIGOLETTO ESPINDOLA — 976.068.470-53</option><option value="801.910.530-15" {% if v.get('cpf_titular')=='801.910.530-15' %}selected{% endif %}>MARIA CAROLINA GRIGOLETTO ESPINDOLA — 801.910.530-15</option></select></label>
+      <label class="full">Observações<textarea name="observacoes">{{v.get('observacoes','')}}</textarea></label>
+    </div>
+    <div class="box summary"><div class="calcgrid"><div class="calcitem"><span>Peso total</span><strong id="pesoTotal"></strong></div><div class="calcitem"><span>Valor bruto</span><strong id="calc_bruto"></strong></div><div class="calcitem"><span>Fundo Rural (1,5%)</span><strong id="calc_fundo"></strong></div><div class="calcitem"><span>Valor líquido</span><strong id="calc_liquido"></strong></div></div></div>
+  </form>
+
+  {% elif passo == 4 %}
+  {% set c=wiz.get('comprador',{}) %}
+  <form method="post"><input type="hidden" name="passo" value="4">
+    <div class="nav"><div><button name="acao" value="voltar" formnovalidate>VOLTAR</button> <button name="acao" value="limpar" formnovalidate>CANCELAR</button></div><button class="mov-float-next" name="acao" value="avancar">AVANÇAR</button></div>
+    <div class="section-title">4. COMPRADOR</div><div class="box grid">
+      <label>Nome<input name="comprador_nome" value="{{c.get('nome','')}}" {% if wiz.get('valores',{}).get('tipo','Venda')=='Venda' %}required{% endif %}></label>
+      <label>Nome fantasia<input name="comprador_nome_fantasia" value="{{c.get('nome_fantasia','')}}"></label>
+      <label>CNPJ<input name="comprador_cnpj" id="cnpj" value="{{c.get('cnpj','')}}" placeholder="00.000.000/0000-00"></label>
+      <label>CEP<input name="comprador_cep" id="cep" value="{{c.get('cep','')}}" placeholder="00000-000" onblur="buscarCep()"></label>
+      <label>Cidade<input name="comprador_cidade" id="cidade" value="{{c.get('cidade','')}}"></label>
+      <label class="full">Endereço<input name="comprador_endereco" id="endereco" value="{{c.get('endereco','')}}"></label>
+      <label class="full">Observação<textarea name="comprador_observacoes">{{c.get('observacoes','')}}</textarea></label>
+    </div><div id="cepAviso" class="hint"></div>
+  </form>
+
+  {% else %}
+  {% set v=wiz.get('valores',{}) %}{% set c=wiz.get('comprador',{}) %}
+  {% set peso_total=wiz.get('pesos',{}).values()|sum %}
+  <form method="post"><input type="hidden" name="passo" value="5">
+    <div class="nav"><div><button name="acao" value="voltar" formnovalidate>VOLTAR</button> <button name="acao" value="limpar" formnovalidate>CANCELAR</button></div><button class="mov-float-next mov-float-final" name="acao" value="finalizar">FINALIZAR E GERAR RELATÓRIO</button></div>
+    <div class="section-title">5. DESCRIÇÃO DA VENDA</div>
+    <div class="box"><h3>Comprador</h3><p><b>Nome:</b> {{c.get('nome','-')}} &nbsp; <b>Fantasia:</b> {{c.get('nome_fantasia','-')}} &nbsp; <b>CNPJ:</b> {{c.get('cnpj','-')}}</p><p><b>CEP:</b> {{c.get('cep','-')}} &nbsp; <b>Cidade:</b> {{c.get('cidade','-')}} &nbsp; <b>Endereço:</b> {{c.get('endereco','-')}}</p>{% if c.get('observacoes') %}<p><b>Observação do comprador:</b> {{c.get('observacoes')}}</p>{% endif %}</div>
+    <div class="box"><h3>Animais</h3><table><thead><tr><th>Brinco</th><th>Nome</th><th>Categoria</th><th>Peso</th><th>Valor</th></tr></thead><tbody>{% for a in selecionados_rows %}{% set p=wiz.get('pesos',{}).get(a['id']|string,0) %}{% set val=(p*v.get('valor_referencia',0)) if v.get('forma_calculo','kg')=='kg' else v.get('valor_referencia',0) %}<tr><td>{{a['brinco']}}</td><td>{{a['nome'] or ''}}</td><td>{{a['categoria'] or ''}}</td><td>{{'%.1f'|format(p)}} kg</td><td>R$ {{'%.2f'|format(val)|replace('.',',')}}</td></tr>{% endfor %}</tbody></table></div>
+    {% set bruto=(peso_total*v.get('valor_referencia',0)) if v.get('forma_calculo','kg')=='kg' else ((selecionados_rows|length)*v.get('valor_referencia',0)) %}{% set fundo=bruto*0.015 %}{% set liquido=bruto-fundo %}
+    <div class="box summary"><p><b>Data:</b> {{v.get('data')}} &nbsp; <b>Tipo:</b> {{v.get('tipo')}}</p><div class="calcgrid"><div class="calcitem"><span>Peso total</span><strong>{{'%.1f'|format(peso_total)}} kg</strong></div><div class="calcitem"><span>Valor bruto</span><strong>R$ {{'%.2f'|format(bruto)|replace('.',',')}}</strong></div><div class="calcitem"><span>Fundo Rural (1,5%)</span><strong>R$ {{'%.2f'|format(fundo)|replace('.',',')}}</strong></div><div class="calcitem"><span>Valor líquido</span><strong>R$ {{'%.2f'|format(liquido)|replace('.',',')}}</strong></div></div>{% if v.get('observacoes') %}<p><b>Observações:</b> {{v.get('observacoes')}}</p>{% endif %}</div>
+  </form>
+  {% endif %}
+
+  {% if passo == 1 %}
+  <details class="vendas-realizadas" {% if request.args.get('historico') == '1' %}open{% endif %}>
+    <summary>🧾 VENDAS REALIZADAS <span>{{vendas_realizadas|length}} registro(s)</span></summary>
+    <div class="vendas-historico-box">
+      <div class="vendas-voltar-wrap"><button type="button" class="button vendas-voltar" onclick="voltarDasVendas()">VOLTAR</button></div>
+      {% if vendas_realizadas %}
+      <div class="vendas-scroll">
+        <table class="vendas-table">
+          <thead><tr><th>Data</th><th>Código</th><th>Comprador</th><th>Animais</th><th>Peso total</th><th>Valor líquido</th><th>Ações</th></tr></thead>
+          <tbody>
+          {% for venda in vendas_realizadas %}
+            <tr>
+              <td>{{br_date(venda['data'])}}</td>
+              <td>{{venda['codigo']}}</td>
+              <td>{{venda['comprador_nome'] or venda['comprador_nome_fantasia'] or '-'}}</td>
+              <td>{{venda['quantidade_animais']}}</td>
+              <td>{{'%.1f'|format(venda['total_peso'] or 0)}} kg</td>
+              <td><strong>R$ {{'%.2f'|format(venda['total_liquido'] or 0)|replace('.',',')}}</strong></td>
+              <td class="venda-acoes">
+                <a class="button venda-ver" href="{{url_for('relatorio_venda',venda_id=venda['id'])}}">VER RELATÓRIO</a>
+                <a class="button venda-imprimir" target="_blank" href="{{url_for('relatorio_venda',venda_id=venda['id'],imprimir=1)}}">🖨 IMPRIMIR</a>
+                <a class="button venda-pdf" href="{{url_for('baixar_relatorio_venda_pdf',venda_id=venda['id'])}}">⬇ BAIXAR PDF</a>
+                <form method="post" action="{{url_for('excluir_venda_realizada',venda_id=venda['id'])}}" class="venda-excluir-form" onsubmit="return confirm('Excluir esta venda realizada do histórico? Esta ação não poderá ser desfeita.');"><button type="submit" class="button venda-excluir">EXCLUIR</button></form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="hint">Ainda não há vendas finalizadas.</div>
+      {% endif %}
+    </div>
+  </details>
+  {% endif %}
+</div>
+<style>
+.mov-topo-cabecalho{display:grid!important;grid-template-columns:120px 1fr 120px;align-items:center;gap:10px}
+.mov-topo-cabecalho h1{text-align:center;margin:0}
+.mov-voltar-principal{justify-self:start;display:inline-flex!important;align-items:center;justify-content:center;text-decoration:none!important;font-weight:800;height:38px;box-sizing:border-box}
+.mov-topo-cabecalho .etapa{justify-self:end}
+@media(max-width:700px){.mov-topo-cabecalho{grid-template-columns:1fr auto}.mov-topo-cabecalho h1{grid-row:2;grid-column:1/-1}.mov-topo-cabecalho .etapa{grid-column:2}.mov-voltar-principal{grid-column:1}}
+
+.vendas-realizadas{margin-top:22px;border:1px solid #c7d8cc;border-radius:8px;background:#fff;overflow:hidden}
+.vendas-realizadas>summary{cursor:pointer;list-style:none;background:#e9f2ec;color:#075f32;font-weight:900;padding:12px 14px;border-bottom:1px solid transparent;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vendas-realizadas[open]>summary{border-bottom-color:#c7d8cc}.vendas-realizadas>summary::-webkit-details-marker{display:none}
+.vendas-realizadas>summary span{font-size:12px;color:#607267;font-weight:700}.vendas-historico-box{padding:10px}.vendas-scroll{overflow-x:auto}
+.vendas-voltar-wrap{margin:0 0 10px}.vendas-voltar{background:#fff!important;color:#075f32!important;border:1px solid #075f32!important;font-weight:800;cursor:pointer}.vendas-table{width:100%;min-width:900px;border-collapse:collapse}.vendas-table th{background:#126334;color:#fff;padding:9px 8px;text-align:left}.vendas-table td{padding:9px 8px;border-bottom:1px solid #dde6e0;vertical-align:middle}
+.venda-acoes{white-space:nowrap}.venda-acoes .button{display:inline-block;margin:2px 4px 2px 0;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none}
+.venda-ver{background:#e9f3ec!important;color:#075f32!important;border:1px solid #91b49f!important}.venda-imprimir{background:#075f32!important;color:#fff!important;border:1px solid #075f32!important}.venda-pdf{background:#fff!important;color:#075f32!important;border:1px solid #075f32!important}
+@media(max-width:760px){.vendas-realizadas>summary{align-items:flex-start;flex-direction:column}.vendas-historico-box{padding:6px}}
+.nucleo-escolha{background:#f6f9f7;border:1px solid #d9e4dc;border-radius:6px;padding:12px 14px;margin:10px 0 8px}
+.nucleo-escolha-titulo{font-weight:800;color:#095b2f;margin-bottom:9px}
+.nucleo-checks{display:flex;flex-wrap:wrap;gap:10px}
+.nucleo-check{display:flex;align-items:center;gap:7px;border:1px solid #b8c8bc;border-radius:6px;background:#fff;padding:9px 12px;cursor:pointer;min-width:180px}
+.nucleo-check:has(input:checked){border-color:#08713a;background:#eaf5ed;box-shadow:0 0 0 1px #08713a inset}
+.nucleo-check input{width:18px;height:18px;margin:0}
+.nucleo-check span{font-weight:800;color:#173c28}
+.nucleo-check small{margin-left:auto;color:#5e7064;white-space:nowrap}
+.nucleo-wrap-unico{display:block !important}
+.nucleo-wrap-unico .nucleo-box{width:100%}
+@media(max-width:760px){.nucleo-check{min-width:calc(50% - 5px);flex:1}.nucleo-checks{gap:7px}}
+</style>
+<script>
+function voltarDasVendas(){const d=document.querySelector('.vendas-realizadas');if(d){d.open=false;d.scrollIntoView({behavior:'smooth',block:'start'});}}
+function moeda(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function trocaForma(){const f=document.getElementById('forma');if(!f)return;const u=f.value==='unitario';document.getElementById('labkg').style.display=u?'none':'';document.getElementById('labun').style.display=u?'':'none';calculaValores()}
+function calculaValores(){const f=document.getElementById('forma');if(!f)return;const peso={{wiz.get('pesos',{}).values()|sum if passo==3 else 0}};const qtd={{selecionados_rows|length}};const vk=parseFloat(document.getElementById('valor_kg')?.value||0),vu=parseFloat(document.getElementById('valor_unitario')?.value||0);const bruto=f.value==='kg'?peso*vk:qtd*vu;const fundo=bruto*.015,liq=bruto-fundo;document.getElementById('pesoTotal').textContent=peso.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' kg';document.getElementById('calc_bruto').textContent=moeda(bruto);document.getElementById('calc_fundo').textContent=moeda(fundo);document.getElementById('calc_liquido').textContent=moeda(liq)}
+async function buscarCep(){const cep=(document.getElementById('cep')?.value||'').replace(/\D/g,'');const aviso=document.getElementById('cepAviso');if(cep.length!==8)return;aviso.textContent='Buscando cidade pelo CEP...';try{const r=await fetch('https://viacep.com.br/ws/'+cep+'/json/');const d=await r.json();if(d.erro)throw new Error();document.getElementById('cidade').value=(d.localidade||'')+(d.uf?' - '+d.uf:'');document.getElementById('endereco').value=[d.logradouro,d.bairro].filter(Boolean).join(' - ');aviso.textContent='Cidade localizada pelo CEP.'}catch(e){aviso.textContent='Sem internet para buscar o CEP. Você pode preencher Cidade e Endereço manualmente.'}}
+function configurarEscolhaNucleo(){
+  const checks=[...document.querySelectorAll('.js-nucleo-check')];
+  const boxes=[...document.querySelectorAll('.js-nucleo-box')];
+  const aviso=document.getElementById('aviso-nucleo');
+  if(!checks.length)return;
+  function abrir(idx){
+    checks.forEach(c=>{ if(c.value!==String(idx)) c.checked=false; });
+    boxes.forEach(b=>{
+      const ativo=b.dataset.nucleoIndex===String(idx);
+      b.style.display=ativo?'block':'none';
+      if(!ativo) b.querySelectorAll('input[name=\"selecionado\"]').forEach(x=>x.checked=false);
+    });
+    if(aviso) aviso.style.display='none';
+  }
+  checks.forEach(c=>c.addEventListener('change',()=>{
+    if(c.checked){ abrir(c.value); }
+    else {
+      const algum=checks.find(x=>x.checked);
+      if(algum) abrir(algum.value);
+      else { boxes.forEach(b=>{b.style.display='none';b.querySelectorAll('input[name=\"selecionado\"]').forEach(x=>x.checked=false)}); if(aviso) aviso.style.display=''; }
+    }
+  }));
+  const marcado=checks.find(c=>c.checked);
+  if(marcado) abrir(marcado.value);
+}
+document.addEventListener('DOMContentLoaded',()=>{trocaForma();calculaValores();configurarEscolhaNucleo()});
+</script>
+{% endblock %}

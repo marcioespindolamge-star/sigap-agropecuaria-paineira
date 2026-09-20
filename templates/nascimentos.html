@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="nascimentos-topo"><h1>Todos os Nascimentos</h1><a class="button light" href="{{ url_for('vacas') }}">VOLTAR ÀS MATRIZES</a></div>
+<section id="editar-nascimento">
+  <h2>{% if editar %}Editar nascimento{% else %}Registrar nascimento{% endif %}</h2>
+  <form autocomplete="off" method="post" class="grid">
+    {% if editar %}<input type="hidden" name="registro_id" value="{{ editar['id'] }}">{% endif %}
+
+    <label>Brinco do terneiro
+      <input name="terneiro_brinco" id="terneiro_brinco" required value="{{ editar['terneiro_brinco'] if editar else '' }}">
+      <small id="terneiro-brinco-aviso" class="field-alert" hidden></small>
+    </label>
+
+    <label>Mãe / Matriz
+      <select name="vaca_brinco" required>
+        <option value="">Selecione</option>
+        {% for v in vacas %}
+          <option value="{{v['brinco']}}" {% if editar and editar['vaca_brinco'] == v['brinco'] %}selected{% endif %}>{{v['brinco']}} {{v['nome']}}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Sexo
+      <select name="sexo">
+        <option {% if not editar or editar['sexo'] == 'Macho' %}selected{% endif %}>Macho</option>
+        <option {% if editar and editar['sexo'] == 'Fêmea' %}selected{% endif %}>Fêmea</option>
+      </select>
+    </label>
+
+    <label>Ano Safra
+      <select name="ano_safra" id="ano_safra_nascimento" required>
+        <option value="">Selecione o ano</option>
+        {% for ano in range(2020, ano_atual + 1) %}
+          <option value="{{ ano }}" {% if editar and editar['data_nascimento']|string == ano|string %}selected{% endif %}>{{ ano }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label class="full">Observações
+      <textarea name="observacoes">{{ editar['observacoes'] if editar and editar['observacoes'] else '' }}</textarea>
+    </label>
+
+    <div class="save-cancel-pair full"><button class="primary form-save-btn">{% if editar %}SALVAR ALTERAÇÕES{% else %}SALVAR NASCIMENTO{% endif %}</button>
+    <a class="button secondary" href="{{ url_for('nascimentos') }}">CANCELAR</a></div>
+  </form>
+</section>
+
+<section>
+  <h2>Histórico</h2>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Terneiro</th><th>Mãe / Matriz</th><th>Sexo</th><th>Ano Safra</th><th>Observações</th><th>Ações</th></tr>
+      {% for r in rows %}
+      <tr>
+        <td>{{r['terneiro_brinco']}}</td>
+        <td>{{r['vaca_brinco']}}</td>
+        <td>{{r['sexo']}}</td>
+        <td>{{r['data_nascimento']}}</td>
+        <td class="animal-observacao-texto">{{r['observacoes']}}</td>
+        <td><a class="button" href="{{ url_for('nascimentos', editar=r['id']) }}#editar-nascimento">EDITAR</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const campo = document.getElementById('terneiro_brinco');
+  const aviso = document.getElementById('terneiro-brinco-aviso');
+  if (!campo || !aviso) return;
+  const nascimentoId = {{ editar['id'] if editar else 'null' }};
+
+  async function verificarBrincoTerneiro() {
+    const valor = campo.value.trim();
+    if (!valor) {
+      aviso.hidden = true;
+      campo.setCustomValidity('');
+      return;
+    }
+    let url = '/api/terneiro-brinco-existe?brinco=' + encodeURIComponent(valor);
+    if (nascimentoId) url += '&excluir_nascimento_id=' + encodeURIComponent(nascimentoId);
+    try {
+      const resposta = await fetch(url, {cache: 'no-store'});
+      const dados = await resposta.json();
+      if (dados.existe) {
+        aviso.textContent = 'Este número de brinco de terneiro já está cadastrado.';
+        aviso.className = 'field-alert erro';
+        aviso.hidden = false;
+        campo.setCustomValidity('Este número de brinco de terneiro já está cadastrado.');
+        setTimeout(function(){ campo.focus(); campo.select(); }, 0);
+      } else {
+        aviso.textContent = 'Brinco disponível.';
+        aviso.className = 'field-alert ok';
+        aviso.hidden = false;
+        campo.setCustomValidity('');
+      }
+    } catch (e) {
+      campo.setCustomValidity('');
+    }
+  }
+  campo.addEventListener('blur', verificarBrincoTerneiro);
+  campo.addEventListener('input', function () {
+    aviso.hidden = true;
+    campo.setCustomValidity('');
+  });
+});
+</script>
+{% endblock %}

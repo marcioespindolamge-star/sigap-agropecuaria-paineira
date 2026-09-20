@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.iatf h1{margin-bottom:14px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1px solid #9fb3a5;background:#f3f6f3;padding:10px 16px;border-radius:5px;font-weight:800;color:#0b5a2b;cursor:pointer}
+.tab.active{background:#0f6b35;color:#fff}.panel{display:none}.panel.active{display:block}
+.box{background:#fff;border:1px solid #cfddd3;border-radius:8px;padding:16px;margin-bottom:14px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:12px}.g label{font-weight:700;color:#244c34}.g input,.g select,.g textarea{width:100%;box-sizing:border-box;margin-top:5px}.full{grid-column:1/-1}
+.lista{max-height:270px;overflow:auto;border:1px solid #d4ded7;border-radius:6px;padding:8px;background:#fbfcfb}
+.vaca{display:grid;grid-template-columns:32px 90px minmax(90px,1fr) 165px 120px minmax(230px,1.4fr);gap:8px;align-items:center;padding:7px;border-bottom:1px solid #edf1ee;font-weight:400!important}
+.vaca .obs-aplicacao{width:100%;box-sizing:border-box;margin:0!important;padding:7px 9px;min-height:36px;border:1px solid #c8d5cc;border-radius:5px;background:#fff;font-weight:400;color:#243b2e}
+.vaca .obs-aplicacao::placeholder{color:#7b8b80}.vaca.bloqueada{background:#fff0f0;color:#a21818;border-left:4px solid #c62828}.vaca.bloqueada strong,.vaca.bloqueada .extra{color:#b51f1f}.tag-metodo{display:inline-block;padding:3px 8px;border-radius:12px;background:#c62828;color:#fff;font-size:11px;font-weight:900}.btn-troca-metodo{background:#fff!important;color:#a21818!important;border:1px solid #c62828!important;border-radius:5px;padding:6px 8px!important;font-size:11px;font-weight:900;white-space:nowrap}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.actions button{min-width:190px}
+table{width:100%;border-collapse:collapse}th{background:#e8f1eb;color:#084f27}th,td{padding:8px;border-bottom:1px solid #e4ebe6;text-align:left;white-space:nowrap}.tablewrap{overflow:auto}
+.diag{display:none;background:#f8faf8}.diag.active{display:table-row}.diagform{display:grid;grid-template-columns:180px 180px 1fr auto;gap:10px;align-items:end}
+.small{font-size:12px;color:#4e6c59}.select-all-vacas{display:flex;align-items:center;gap:8px;padding:8px 4px;font-weight:800;color:#0b5a2b}.select-all-vacas label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;margin:0}.select-all-vacas input[type="checkbox"]{width:auto!important;margin:0!important;flex:0 0 auto}.warn{padding:10px;background:#fff8df;border:1px solid #ead89a;border-radius:5px}
+.proto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}.proto-card{border:1px solid #b8d1c0;border-radius:10px;background:#f8fbf8;overflow:hidden}.proto-head{background:#0f6b35;color:#fff;padding:10px 12px;font-weight:900;font-size:18px;text-align:center}.proto-body{padding:12px}.proto-body textarea{width:100%;box-sizing:border-box;min-height:145px;resize:vertical}.proto-day{display:flex;align-items:center;gap:8px;margin-bottom:9px;font-weight:800;color:#214e31}.proto-day input{width:85px!important;margin:0!important}.proto-note{font-size:12px;color:#55705e;margin-top:6px}.cronograma{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.cronograma.active{display:grid}.cron-card{border:1px solid #bed3c4;border-radius:8px;background:#f7faf8;padding:10px}.cron-card strong{display:block;color:#075c2b;font-size:17px;margin-bottom:5px}.cron-card .data{font-weight:900;margin-bottom:5px}.cron-card .instr{white-space:pre-line;font-size:13px;color:#31483a}.proto-table td{white-space:pre-line;vertical-align:top}.proto-table th{white-space:nowrap}
+.repro-escolha{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0}.repro-card{border:2px solid #b8d1c0;border-radius:12px;background:#f8fbf8;padding:22px;text-align:center}.repro-card h2{margin:0 0 8px;color:#075c2b}.repro-card p{min-height:42px;color:#476351}.repro-card button{min-width:180px;padding:12px 18px;font-weight:900}.touro-box{display:none;margin-top:16px}.touro-box.active{display:block}.touro-lista{max-height:360px;overflow:auto;border:1px solid #d4ded7;border-radius:7px;background:#fff}.touro-vaca{display:grid;grid-template-columns:34px 90px minmax(120px,1fr) 160px;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px solid #edf1ee}.touro-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}.hist-ent td,.hist-ent th{white-space:nowrap}.repro-passos{font-size:13px;color:#52715e;margin:0 0 10px}.repro-passos strong{color:#075c2b}
+@media(max-width:850px){.repro-escolha{grid-template-columns:1fr}.touro-vaca{grid-template-columns:34px 80px 1fr}.touro-vaca .extra{display:none}.proto-grid,.cronograma{grid-template-columns:1fr}.g{grid-template-columns:1fr}.full{grid-column:auto}.vaca{grid-template-columns:32px 80px 1fr}.extra{display:none}.vaca .obs-aplicacao{grid-column:2/-1}.diagform{grid-template-columns:1fr}}
+ .etapa-rel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.etapa-rel-head h2{margin:0}.etapa-rel-btn{white-space:nowrap;background:#fff!important;color:#075c2b!important;border:1px solid #86a692!important;font-weight:800}
+</style>
+<div class="iatf">
+<h1>Reprodução — IATF</h1>
+<p class="repro-passos"><strong>IATF:</strong> siga pelas etapas 2 a 5. Para mudar o tipo de reprodução, volte à tela inicial de Reprodução.</p>
+<div class="tabs">
+<button type="button" class="tab active" onclick="tabI('cad',this)">2. Cadastrar protocolo</button>
+<button type="button" class="tab" onclick="tabI('apl',this)">3. Aplicar protocolo</button>
+<button type="button" class="tab" onclick="tabI('ia',this)">4. Registrar IA</button>
+<button type="button" class="tab" onclick="tabI('diag',this)">5. Diagnóstico</button>
+<a class="tab" href="{{url_for('iatf')}}" style="text-decoration:none">VOLTAR</a>
+</div>
+<div id="cad" class="panel active">
+<div class="box"><h2>Cadastrar protocolo IATF — D0 / D8 / D10</h2>
+<p>Monte o protocolo pela sequência do manejo. Os textos abaixo já vêm preenchidos como referência e podem ser alterados conforme a orientação do veterinário e o protocolo utilizado na propriedade.</p>
+<form autocomplete="off" method="post" class="js-fast-save" data-fast-save="1"><input type="hidden" name="acao" value="cadastrar_protocolo">
+<div class="g"><label>Nome do protocolo<input name="nome" required placeholder="Ex.: IATF D0-D8-D10"></label><label class="full">Observação geral<textarea name="observacoes" rows="2" placeholder="Orientações gerais do protocolo"></textarea></label></div>
+<div class="proto-grid">
+  <div class="proto-card"><div class="proto-head">D0 — INÍCIO</div><div class="proto-body">
+    <div class="proto-day">Dia após D0 <input type="number" value="0" disabled></div>
+    <label>Produtos / procedimentos<textarea name="etapa_d0">Inserir 1 dispositivo intravaginal de CIDR
+Aplicar 2 mL de Gonadiol</textarea></label>
+    <div class="proto-note">Dia em que o protocolo é iniciado.</div>
+  </div></div>
+  <div class="proto-card"><div class="proto-head">D8 — MANEJO</div><div class="proto-body">
+    <div class="proto-day">Dia após D0 <input type="number" min="0" name="dias_etapa2" value="8"></div>
+    <input type="hidden" name="dias_retirada" value="8"><input type="hidden" name="retirada" value="">
+    <label>Produtos / procedimentos<textarea name="etapa2">Retirar o dispositivo CIDR
+Pintar a região sacral (identificação)
+Aplicar 3 mL de Sincrocio
+Aplicar 2 mL de Sincro eCG
+Aplicar 1 mL de SincroCP</textarea></label>
+    <div class="proto-note">A data desta etapa será calculada automaticamente a partir do D0.</div>
+  </div></div>
+  <div class="proto-card"><div class="proto-head">D10 — INSEMINAÇÃO</div><div class="proto-body">
+    <div class="proto-day">Dia após D0 <input type="number" min="0" name="dias_ia" value="10"></div>
+    <label>Procedimentos da IA<textarea name="etapa_ia">Realizar a Inseminação Artificial (48 horas após o D8)
+Nas vacas sem manifestação de cio, aplicar 2,5 mL de Gonaxal</textarea></label>
+    <div class="proto-note">A data prevista da IA será calculada automaticamente.</div>
+  </div></div>
+</div>
+<div class="actions"><button class="primary">SALVAR PROTOCOLO</button></div></form>
+</div>
+<div class="box"><h2>Protocolos cadastrados</h2><div class="tablewrap"><table class="proto-table">
+<tr><th>Protocolo</th><th>D0</th><th>D8 / Manejo</th><th>D10 / IA</th><th>Observação</th><th></th></tr>
+{% for p in protocolos %}<tr><td><strong>{{p['nome']}}</strong></td><td>{{p['etapa_d0'] or ''}}</td>
+<td><strong>D+{{p['dias_etapa2'] if p['dias_etapa2'] is not none else 8}}</strong>
+{{p['etapa2'] or ''}}</td>
+<td><strong>D+{{p['dias_ia'] if p['dias_ia'] is not none else 10}}</strong>
+{{p['etapa_ia'] or ''}}</td>
+<td>{{p['observacoes'] or ''}}</td>
+<td><form autocomplete="off" method="post" onsubmit="return confirm('Remover protocolo da lista?')"><input type="hidden" name="acao" value="excluir_protocolo"><input type="hidden" name="protocolo_id" value="{{p['id']}}"><button>Remover</button></form></td></tr>
+{% else %}<tr><td colspan="6">Nenhum protocolo cadastrado.</td></tr>{% endfor %}
+</table></div></div></div>
+
+<div id="apl" class="panel"><div class="box"><div class="etapa-rel-head"><h2>Aplicar protocolo</h2><a class="button light etapa-rel-btn" href="{{url_for('relatorio_iatf_etapa',etapa='aplicar')}}">RELATÓRIO</a></div>
+{% if protocolos %}
+<form autocomplete="off" method="post" class="js-fast-save" data-fast-save="1"><input type="hidden" name="acao" id="acao_aplicar_iatf" value="aplicar_protocolo"><input type="hidden" name="matriz_brinco" id="matriz_brinco_troca_iatf"><input type="hidden" name="voltar_modo" value="iatf">
+<div class="g"><label>Protocolo<select name="protocolo_id" id="protocoloAplicar" required><option value="">Selecione</option>{% for p in protocolos %}<option value="{{p['id']}}" data-d8="{{p['dias_etapa2'] if p['dias_etapa2'] is not none else 8}}" data-d10="{{p['dias_ia'] if p['dias_ia'] is not none else 10}}" data-d0txt="{{(p['etapa_d0'] or '')|e}}" data-d8txt="{{(p['etapa2'] or '')|e}}" data-d10txt="{{(p['etapa_ia'] or '')|e}}">{{p['nome']}}</option>{% endfor %}</select></label>
+<label>Data do D0 / Início<input type="date" id="dataInicioIatf" name="data_inicio" value="{{today}}" required></label>
+<div class="full"><div id="cronogramaIatf" class="cronograma">
+  <div class="cron-card"><strong>D0 — INÍCIO</strong><div class="data" id="cronD0"></div><div class="instr" id="cronD0Txt"></div></div>
+  <div class="cron-card"><strong>D8 — MANEJO</strong><div class="data" id="cronD8"></div><div class="instr" id="cronD8Txt"></div></div>
+  <div class="cron-card"><strong>D10 — IA</strong><div class="data" id="cronD10"></div><div class="instr" id="cronD10Txt"></div></div>
+</div></div>
+<div class="full"><label>Selecione a(s) matriz(es)</label><div class="small" style="margin-top:4px">Você pode escrever uma observação diferente para cada matriz. Ela ficará registrada junto desta aplicação do protocolo.</div>
+<div class="select-all-vacas"><label><input type="checkbox" id="selTodas" onchange="selTodasVacas(this)"><span>SELECIONAR TODAS</span></label><span class="small" id="contSel"></span></div>
+<div class="lista">{% for v in vacas %}
+{% set bloqueada_touro = (v['brinco']|string) in touro_bloqueadas_iatf %}
+<label class="vaca{% if bloqueada_touro %} bloqueada{% endif %}">
+<input class="chk-vaca" type="checkbox" name="matrizes" value="{{v['brinco']}}" onchange="atualizaSel()" {% if bloqueada_touro %}disabled title="Matriz já está em reprodução por TOURO"{% endif %}>
+<strong>{{v['brinco']}}</strong>
+<span>{{v['nome'] or ''}}{% if bloqueada_touro %} <span class="tag-metodo">TOURO</span>{% endif %}</span>
+<span class="extra">{{v['categoria'] or ''}}{% if situacao[v['brinco']]['teve_protocolo'] %} · <b>{{situacao[v['brinco']]['status']}}</b>{% endif %}</span>
+<span class="extra">{{v['lote'] or ''}}</span>
+<span>{% if bloqueada_touro %}<button type="submit" class="btn-troca-metodo" formnovalidate onclick="document.getElementById('acao_aplicar_iatf').value='liberar_touro_matriz'; document.getElementById('matriz_brinco_troca_iatf').value='{{v['brinco']}}'; return confirm('Retirar a matriz {{v['brinco']}} do TOURO e liberá-la para IATF?')">RETIRAR DO TOURO</button>{% else %}<input type="hidden" name="obs_brinco" value="{{v['brinco']}}"><input class="obs-aplicacao" name="obs_matriz" autocomplete="off" placeholder="Observação desta matriz (opcional)">{% endif %}</span>
+</label>
+{% else %}<div>Nenhuma matriz disponível para novo protocolo.</div>{% endfor %}</div></div></div>
+<div class="actions"><button class="primary">APLICAR PROTOCOLO</button></div></form>
+{% else %}<div class="warn"><strong>Cadastre um protocolo primeiro.</strong> Depois ele aparecerá aqui.</div>{% endif %}
+</div></div>
+
+<div id="ia" class="panel"><div class="box"><div class="etapa-rel-head"><h2>Registrar IA</h2><a class="button light etapa-rel-btn" href="{{url_for('relatorio_iatf_etapa',etapa='registrar')}}">RELATÓRIO</a></div>
+<p>Registro individual por animal: informe a data da IA, sêmen/touro e a observação específica daquela matriz.</p>
+<div class="iatf-total-etapa3"><span>TOTAL DE MATRIZES COM IATF</span><strong>{{ total_matrizes_iatf }}</strong></div>
+<div class="tablewrap"><table><tr><th>Matriz</th><th>Protocolo</th><th>D0 / Início</th><th>Data IA</th><th>Sêmen / Touro</th><th>Observação</th><th></th></tr>
+{% for r in rows %}<tr><td><strong>{{r['matriz_brinco']}}</strong></td><td>{{r['protocolo'] or ''}}</td><td>{{br_date(r['data_inicio']) if r['data_inicio'] else ''}}</td><td>{{br_date(r['data_ia']) if r['data_ia'] else ''}}</td><td>{{r['semen_touro'] or ''}}</td><td style="max-width:280px;white-space:normal">{{r['observacoes'] or ''}}</td><td><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><button type="button" onclick="iaInd({{r['id']}})">Registrar / Editar</button><form autocomplete="off" method="post" style="margin:0" onsubmit="return confirm('Excluir este registro de IA/IATF? Esta ação também removerá o registro do diagnóstico correspondente.');"><input type="hidden" name="acao" value="excluir_ia"><input type="hidden" name="iatf_id" value="{{r['id']}}"><button type="submit" class="danger" style="background:#b42318;color:#fff;border-color:#b42318">EXCLUIR</button></form></div></td></tr>
+<tr id="ia{{r['id']}}" class="diag"><td colspan="7"><form autocomplete="off" method="post" class="diagform js-fast-save" data-fast-save="1" style="grid-template-columns:180px 240px 1fr auto"><input type="hidden" name="acao" value="registrar_ia"><input type="hidden" name="iatf_id" value="{{r['id']}}">
+<label>Data da IA<input type="date" name="data_ia" value="{{r['data_ia'] or ''}}" required></label><label>Sêmen / Touro<input name="semen_touro" value="{{r['semen_touro'] or ''}}"></label><label>Observação do animal<textarea name="observacao_ia" rows="2" placeholder="Observação específica desta matriz"></textarea></label><button class="primary">SALVAR IA</button></form></td></tr>
+{% else %}<tr><td colspan="7">Nenhum protocolo aplicado.</td></tr>{% endfor %}</table></div></div></div>
+
+<div id="diag" class="panel"><div class="box"><div class="etapa-rel-head"><h2>Diagnóstico de prenhez</h2><a class="button light etapa-rel-btn" href="{{url_for('relatorio_iatf_etapa',etapa='diagnostico')}}">RELATÓRIO</a></div>
+<p>O diagnóstico é feito em uma data posterior à IA. Até o exame, o animal permanece como <strong>AGUARDANDO DIAGNÓSTICO</strong>.</p>
+<div class="tablewrap"><table>
+<tr><th>Matriz</th><th>Protocolo</th><th>IA realizada</th><th>Situação</th><th>Data diagnóstico</th><th>Previsão de parto</th><th></th></tr>
+{% for r in rows %}
+<tr>
+<td><strong>{{r['matriz_brinco']}}</strong></td>
+<td>{{r['protocolo'] or ''}}</td>
+<td>{{br_date(r['data_ia']) if r['data_ia'] else 'IA ainda não registrada'}}</td>
+<td>
+  {% if r['resultado']=='Prenhe' %}<strong>PRENHE</strong>
+  {% elif r['resultado']=='Vazia' %}<strong>VAZIA — LIBERADA PARA REPASSE</strong>
+  {% elif r['data_ia'] %}<strong>AGUARDANDO DIAGNÓSTICO</strong>
+  {% else %}<strong>PROTOCOLO OK</strong>{% endif %}
+</td>
+<td>{{br_date(r['diagnostico_data']) if r['diagnostico_data'] else '—'}}</td>
+<td>{% if r['resultado']=='Prenhe' and r['data_ia'] %}<span data-parto="{{r['data_ia']}}"></span>{% else %}—{% endif %}</td>
+<td>
+  {% if r['data_ia'] %}
+  <button type="button" onclick="diag({{r['id']}})">{% if r['diagnostico_data'] %}Editar diagnóstico{% else %}Confirmar prenhez{% endif %}</button>
+  {% endif %}
+</td>
+</tr>
+<tr id="d{{r['id']}}" class="diag"><td colspan="7">
+<form autocomplete="off" method="post" class="diagform js-fast-save" data-fast-save="1">
+<input type="hidden" name="acao" value="diagnostico"><input type="hidden" name="iatf_id" value="{{r['id']}}">
+<label>Data do diagnóstico<input type="date" name="diagnostico_data" value="{{r['diagnostico_data'] or ''}}" required></label>
+<label>Resultado<select name="resultado" required>
+<option value="">Selecione</option>
+<option value="Prenhe" {% if r['resultado']=='Prenhe' %}selected{% endif %}>Prenhe</option>
+<option value="Vazia" {% if r['resultado']=='Vazia' %}selected{% endif %}>Vazia</option>
+</select></label>
+<label>Observação<textarea name="observacoes_individual" rows="2" placeholder="Observação do diagnóstico"></textarea></label>
+<button class="primary">SALVAR DIAGNÓSTICO</button>
+</form>
+</td></tr>
+{% else %}<tr><td colspan="7">Nenhuma IATF registrada.</td></tr>{% endfor %}
+</table></div></div></div>
+</div>
+<script>
+function tabI(id,b){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');b.classList.add('active')}
+function abrirTouro(){let b=document.getElementById('touroBox');if(b){b.classList.add('active');b.scrollIntoView({behavior:'smooth',block:'start'});}atualizaTouro()}
+function fecharTouro(){let b=document.getElementById('touroBox');if(b)b.classList.remove('active')}
+function irIatf(){let tabs=[...document.querySelectorAll('.tab')];let b=tabs.find(x=>x.textContent.trim().startsWith('2.'));if(b)tabI('cad',b);window.scrollTo({top:0,behavior:'smooth'})}
+function selTodasTouro(m){document.querySelectorAll('.chk-touro').forEach(c=>c.checked=m.checked);atualizaTouro()}
+function atualizaTouro(){let c=[...document.querySelectorAll('.chk-touro')],n=c.filter(x=>x.checked).length,m=document.getElementById('selTodasTouro');if(m){m.checked=c.length>0&&n===c.length;m.indeterminate=n>0&&n<c.length}let x=document.getElementById('contTouro');if(x)x.textContent=n+' de '+c.length+' selecionada(s)'}
+function diag(id){document.getElementById('d'+id).classList.toggle('active')}
+function iaInd(id){document.getElementById('ia'+id).classList.toggle('active')}
+function selTodasVacas(m){document.querySelectorAll('.chk-vaca:not(:disabled)').forEach(c=>c.checked=m.checked);atualizaSel()}
+function atualizaSel(){let c=[...document.querySelectorAll('.chk-vaca:not(:disabled)')],n=c.filter(x=>x.checked).length,m=document.getElementById('selTodas');if(m){m.checked=c.length>0&&n===c.length;m.indeterminate=n>0&&n<c.length}let x=document.getElementById('contSel');if(x)x.textContent=n+' de '+c.length+' selecionada(s)'}
+function dataBr(txt){if(!txt)return'';let p=txt.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:txt}
+function somaDia(txt,n){if(!txt)return'';let p=txt.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+(parseInt(n)||0));return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function atualizaCronograma(){let sel=document.getElementById('protocoloAplicar'),ini=document.getElementById('dataInicioIatf'),box=document.getElementById('cronogramaIatf');if(!sel||!ini||!box)return;let o=sel.options[sel.selectedIndex];if(!o||!o.value||!ini.value){box.classList.remove('active');return}box.classList.add('active');document.getElementById('cronD0').textContent=dataBr(ini.value);document.getElementById('cronD8').textContent=dataBr(somaDia(ini.value,o.dataset.d8||8));document.getElementById('cronD10').textContent=dataBr(somaDia(ini.value,o.dataset.d10||10));document.getElementById('cronD0Txt').textContent=o.dataset.d0txt||'';document.getElementById('cronD8Txt').textContent=o.dataset.d8txt||'';document.getElementById('cronD10Txt').textContent=o.dataset.d10txt||''}
+document.addEventListener('DOMContentLoaded',function(){atualizaSel();atualizaTouro();atualizaCronograma();let p=document.getElementById('protocoloAplicar'),d=document.getElementById('dataInicioIatf');if(p)p.addEventListener('change',atualizaCronograma);if(d)d.addEventListener('change',atualizaCronograma);{% if modo_reproducao=='touro' %}setTimeout(()=>{let b=document.getElementById('touroBox');if(b)b.scrollIntoView({block:'start'});},80);{% endif %}});
+function mais283(v){if(!v)return'';let p=v.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+283);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+document.querySelectorAll('[data-parto]').forEach(e=>e.textContent=mais283(e.dataset.parto));
+</script>
+
+<style>
+.iatf-total-etapa3{display:inline-flex;align-items:center;gap:12px;margin:4px 0 14px;padding:9px 14px;border:1px solid #b9d5c4;border-radius:8px;background:#edf7f0;color:#075c32;font-weight:700}
+.iatf-total-etapa3 strong{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 9px;border-radius:15px;background:#075c32;color:#fff;font-size:17px}
+</style>
+{% endblock %}

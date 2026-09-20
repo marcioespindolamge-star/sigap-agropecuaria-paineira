@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}<div class="titlebar"><h1>Rebanho</h1><a class="button" href="{{url_for('animal_novo')}}">+ NOVO ANIMAL</a></div>
+<form autocomplete="off" class="search"><input name="q" value="{{q}}" placeholder="Buscar brinco, nome, categoria ou lote"><button>Buscar</button></form>
+<div class="tablewrap"><table><thead><tr><th>Brinco</th><th>Nome</th><th>Sexo</th><th>Raça</th><th>Categoria</th><th>Núcleo de idade</th><th>Lote</th><th>Peso</th><th></th></tr></thead><tbody>
+{% for a in rows %}<tr><td><b>{{a['brinco']}}</b></td><td>{{a['nome']}}</td><td>{{a['sexo']}}</td><td>{{a['raca']}}</td><td>{{a['categoria']}}</td><td>{{a['lote']}}</td><td>{{a['peso_atual'] or ''}}</td><td><a href="{{url_for('animal_editar',id=a['id'])}}">Editar</a></td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}

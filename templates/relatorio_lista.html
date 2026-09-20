@@ -1,0 +1,41 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>{{titulo}}</title><style>
+body{font-family:Arial,sans-serif;margin:24px;color:#173525}header{display:flex;align-items:center;gap:16px;border-bottom:2px solid #1b6737;padding-bottom:12px;margin-bottom:18px}header img{width:80px;height:80px;object-fit:contain}h1{font-size:22px;margin:0;color:#0a5b2d}.sub{font-size:12px;color:#666;margin-top:5px}.toolbar{display:grid;grid-template-columns:260px 1fr 260px;gap:8px;align-items:center;margin:10px 0 16px}.toolbar-title{text-align:center;font:800 18px Arial,sans-serif;color:#125b2d;text-transform:uppercase}.toolbar-spacer{width:260px}.toolbar button,.toolbar a{box-sizing:border-box;height:40px;border-radius:5px;font:700 14px Arial,sans-serif;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:0 12px;cursor:pointer}.toolbar .print-btn{width:50px;border:1px solid #0f6b35;background:#0f6b35;color:#fff;padding:0}.toolbar .print-btn svg{width:22px;height:22px;display:block}.toolbar .back-btn{width:100px;border:1px solid #77a98a;background:#fff;color:#075c2f}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#e8f1eb;color:#064c24}th,td{border:1px solid #bec9c1;padding:6px;text-align:left}@media print{.toolbar{display:none}body{margin:8mm}}
+.report-list-head-v6043{display:grid!important;grid-template-columns:90px 1fr 105px;align-items:center;gap:14px;border-bottom:2px solid #1b6737;padding-bottom:12px;margin-bottom:18px}.report-list-logo{width:82px!important;height:82px!important;object-fit:contain}.report-list-center{text-align:center}.report-list-center h1{margin:0;color:#0a5b2d}.report-list-center>div{margin-top:3px;font-size:12px}.report-list-control{font-weight:900;color:#0a5b2d}.report-list-control b{color:#d9222a}.report-list-control em{color:#d5a900;font-style:normal}.report-list-flag{width:98px!important;height:82px!important;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12))}.resumo-terneiros{display:flex;justify-content:center;gap:42px;align-items:center;margin:0 0 14px;padding:10px 14px;border:1px solid #bfd1c4;border-radius:7px;background:#f4f8f5;color:#173525;font-size:14px}.resumo-terneiros b{color:#0a5b2d}@media print{.resumo-terneiros{break-inside:avoid}}</style>
+<style>
+/* V6.0.79 — impressão mais nítida em todos os relatórios */
+@media print {
+  body { color:#000 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  table { font-size:12px !important; color:#000 !important; }
+  th { background:#e1e1e1 !important; color:#000 !important; font-weight:800 !important; border:1.2px solid #555 !important; }
+  td { color:#000 !important; font-weight:600 !important; border:1px solid #777 !important; }
+  th, td { padding:6px 5px !important; }
+  tr { break-inside:avoid; }
+}
+</style>
+
+<style>
+/* V6.0.85 — impressão A4 retrato */
+@page { size: A4 portrait; margin: 8mm; }
+@media print {
+  html, body { width:194mm !important; margin:0 !important; padding:0 !important; }
+  .report-list-head-v6043 { grid-template-columns:68px 1fr 76px !important; gap:8px !important; padding-bottom:7px !important; margin-bottom:9px !important; }
+  .report-list-logo { width:62px !important; height:62px !important; }
+  .report-list-flag { width:70px !important; height:60px !important; }
+  .report-list-center h1 { font-size:18px !important; }
+  .report-list-center>div { font-size:9px !important; }
+  .resumo-terneiros { padding:6px 8px !important; margin-bottom:8px !important; font-size:10px !important; gap:20px !important; }
+  table { width:100% !important; table-layout:fixed !important; font-size:{% if colunas|length >= 9 %}7.8{% elif colunas|length >= 7 %}8.7{% else %}10{% endif %}px !important; }
+  th, td { padding:4px 2px !important; overflow-wrap:anywhere; word-break:normal; }
+}
+</style>
+</head><body><header class="report-list-head-v6043">
+  <img class="report-list-logo" src="{{ url_for('static', filename='logo-paineira.png') }}" alt="Agropecuária Paineira">
+  <div class="report-list-center">
+    <h1>AGROPECUÁRIA PAINEIRA</h1>
+    <div>Restinga Sêca – Vila Santuário – CEP 97200-000</div>
+    <div>Marcio 55 99922-2680 • Alex 55 99955-3773</div>
+    <div class="report-list-control">CONTROLE <b>DO</b> <em>REBANHO</em></div>
+    <div class="sub">{{titulo}} • Emitido em {{emissao}}</div>
+  </div>
+  <img class="report-list-flag" src="{{url_for('static',filename='bandeira-rs-bonita.png')}}" alt="Bandeira do Rio Grande do Sul">
+</header><div class="toolbar"><div><a class="back-btn" href="{{url_for('relatorios')}}">VOLTAR</a></div><div class="toolbar-title">{{titulo}}</div><div style="display:flex;justify-content:flex-end"><button class="print-btn" onclick="window.print()" title="Imprimir" aria-label="Imprimir"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 9V3h12v6h1a3 3 0 0 1 3 3v5h-4v4H6v-4H2v-5a3 3 0 0 1 3-3h1Zm2-4v4h8V5H8Zm8 14v-5H8v5h8Zm3-5h1v-2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v2h2v-2h12v2h1Z"/></svg></button></div></div>{% if resumo_terneiros %}<div class="resumo-terneiros"><span><b>Total de terneiros:</b> {{resumo_terneiros.total}}</span><span><b>Machos:</b> {{resumo_terneiros.machos}}</span><span><b>Fêmeas:</b> {{resumo_terneiros.femeas}}</span></div>{% endif %}<table><thead><tr>{% for c in colunas %}<th>{{c}}</th>{% endfor %}</tr></thead><tbody>{% for r in rows %}<tr>{% for c in colunas %}<td>{{r[c] if r[c] is not none else ''}}</td>{% endfor %}</tr>{% else %}<tr><td colspan="{{colunas|length or 1}}">Nenhum registro.</td></tr>{% endfor %}</tbody></table></body></html>

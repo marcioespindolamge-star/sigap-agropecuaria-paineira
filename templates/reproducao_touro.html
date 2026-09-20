@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.repro-touro{max-width:1050px;margin:0 auto}.box{background:#fff;border:1px solid #cfddd3;border-radius:8px;padding:16px;margin-bottom:14px}.secao-atual{margin-top:18px;padding-top:12px;border-top:1px solid #e1ebe4}.secao-atual h2{margin:0 0 10px}.g{display:grid;grid-template-columns:260px 1fr;gap:12px}.g label{font-weight:700;color:#244c34}.g input,.g textarea{width:100%;box-sizing:border-box;margin-top:5px}.full{grid-column:1/-1}.select-all-vacas{display:flex;align-items:center;gap:8px;padding:8px 4px;font-weight:800;color:#0b5a2b}.select-all-vacas label{display:inline-flex;align-items:center;gap:7px;margin:0}.select-all-vacas input{width:auto!important;margin:0!important}.touro-lista{max-height:420px;overflow:auto;border:1px solid #d4ded7;border-radius:7px;background:#fff}.touro-vaca{display:grid;grid-template-columns:34px 90px minmax(120px,1fr) 180px;gap:10px;align-items:center;padding:9px 10px;border-bottom:1px solid #edf1ee}.touro-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.touro-actions a,.touro-actions button{padding:10px 16px;font-weight:800}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse}th{background:#e8f1eb;color:#084f27}th,td{padding:8px;border-bottom:1px solid #e4ebe6;text-align:left}.small{font-size:12px;color:#4e6c59}.btn-voltar,.btn-troca-metodo{display:inline-flex;align-items:center;justify-content:center;text-decoration:none!important;border:1px solid #0f6b35;border-radius:6px;background:#fff;color:#0f6b35!important;min-width:110px}.btn-voltar:hover,.btn-troca-metodo:hover{background:#eef7f1}.aviso-limpo{font-size:12px;color:#607468;margin-top:8px}@media(max-width:760px){.g{grid-template-columns:1fr}.full{grid-column:auto}.touro-vaca{grid-template-columns:34px 80px 1fr}.touro-vaca .extra{display:none}}
+</style>
+<div class="repro-touro">
+<h1>Reprodução — Touro</h1>
+<div class="box"><h2>Entouramento</h2>
+<form autocomplete="off" method="post">
+<input type="hidden" name="acao" value="registrar_entouramento">
+<div class="g">
+<label>Data do entouramento<input type="date" name="data_entouramento" value="{{today}}" required></label>
+<label>Observação<textarea name="observacoes_entouramento" rows="2" placeholder="Observação geral deste entouramento (opcional)"></textarea></label>
+<div class="full"><label>Selecione a(s) vaca(s)</label>
+<div class="select-all-vacas"><label><input type="checkbox" id="selTodasTouro" onchange="selTodasTouro(this)"><span>SELECIONAR TODAS</span></label><span class="small" id="contTouro"></span></div>
+<div class="touro-lista">{% for v in vacas_touro_disponiveis %}<div class="touro-vaca"><input class="chk-touro" type="checkbox" name="matrizes_touro" value="{{v['brinco']}}" onchange="atualizaTouro()"><strong>{{v['brinco']}}</strong><span>{{v['nome'] or ''}}</span><span class="extra">{{v['lote'] or ''}}</span></div>{% else %}<div style="padding:12px">Nenhuma vaca disponível para entouramento.</div>{% endfor %}</div>
+<div class="aviso-limpo">A lista acima mostra somente matrizes livres. As que já estão no TOURO não aparecem novamente no checklist.</div>
+</div></div>
+<div class="touro-actions"><button class="primary">SALVAR ENTOURAMENTO</button><a class="btn-voltar" href="{{url_for('iatf')}}">VOLTAR</a></div>
+</form>
+<div class="secao-atual"><h2>Vacas no Touro</h2><div class="tablewrap"><table><tr><th>Data</th><th>Vaca</th><th>Observação</th><th></th></tr>
+{% for e in entouramentos %}<tr><td>{{br_date(e['data_entouramento'])}}</td><td><strong>{{e['matriz_brinco']}}</strong></td><td>{{e['observacoes'] or ''}}</td><td><form method="post" onsubmit="return confirm('Retirar esta vaca do TOURO?')"><input type="hidden" name="acao" value="excluir_entouramento"><input type="hidden" name="entouramento_id" value="{{e['id']}}"><button type="submit">RETIRAR DO TOURO</button></form></td></tr>{% else %}<tr><td colspan="4">Nenhuma vaca registrada no TOURO.</td></tr>{% endfor %}
+</table></div></div>
+</div></div>
+<script>
+function selTodasTouro(m){document.querySelectorAll('.chk-touro').forEach(c=>c.checked=m.checked);atualizaTouro()}
+function atualizaTouro(){let c=[...document.querySelectorAll('.chk-touro')],n=c.filter(x=>x.checked).length,m=document.getElementById('selTodasTouro');if(m){m.checked=c.length>0&&n===c.length;m.indeterminate=n>0&&n<c.length}let x=document.getElementById('contTouro');if(x)x.textContent=n+' de '+c.length+' selecionada(s)'}
+document.addEventListener('DOMContentLoaded',atualizaTouro)
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f5f2f">
+<link rel="icon" type="image/png" href="{{url_for('static',filename='favicon-32.png')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='style.css',v='6039')}}">
+<title>Carregando — Agropecuária Paineira</title>
+</head>
+<body class="post-login-loading">
+  <div class="post-login-card">
+    <img src="{{ LOGO_DATA_URI }}" alt="Agropecuária Paineira">
+    <div class="post-login-title">AGROPECUÁRIA PAINEIRA</div>
+    <div class="post-login-sub">Carregando o sistema...</div>
+    <div class="post-login-bar"><span></span></div>
+  </div>
+<script>
+setTimeout(function(){
+  window.location.replace("{{ destino }}");
+}, 1200);
+</script>
+</body>
+</html>

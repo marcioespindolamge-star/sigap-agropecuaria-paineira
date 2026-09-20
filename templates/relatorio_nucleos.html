@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+@page{size:A4 portrait;margin:8mm}
+
+.report-actions{
+  display:grid!important;
+  grid-template-columns:260px 1fr 260px!important;
+  gap:8px!important;
+  align-items:center!important;
+  margin:10px 0 16px!important;
+}
+.report-actions-title{text-align:center;font:800 18px Arial,sans-serif;color:#125b2d;text-transform:uppercase}.report-actions-spacer{width:260px}
+.report-actions .report-print,
+.report-actions .report-back{
+  box-sizing:border-box;
+  height:40px;
+  border-radius:5px;
+  font:700 14px Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  padding:0 12px;
+  cursor:pointer;
+}
+.report-actions .report-print{
+  width:50px;
+  border:1px solid #0f6b35;
+  background:#0f6b35;
+  color:#fff;
+  padding:0;
+}
+.report-actions .report-print svg{width:22px;height:22px;display:block}
+.report-actions .report-back{
+  width:100px;
+  border:1px solid #77a98a;
+  background:#fff;
+  color:#075c2f;
+}
+.nucleo-summary{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(130px,1fr));
+  gap:12px;
+  margin:18px 0 22px;
+}
+.nucleo-summary>div{
+  background:#fff;
+  border:1px solid #cbd9cf;
+  border-radius:10px;
+  padding:14px 16px;
+  box-shadow:0 2px 7px rgba(25,70,42,.06);
+  text-align:center;
+}
+.nucleo-summary strong{
+  display:block;
+  color:#315a3f;
+  font-size:13px;
+  margin-bottom:6px;
+}
+.nucleo-summary span{
+  display:block;
+  color:#0b5a2b;
+  font-size:26px;
+  line-height:1;
+  font-weight:900;
+}
+.nucleo-summary .nucleo-total{
+  background:#e9f4ec;
+  border-color:#9fbea8;
+}
+.nucleo-summary .nucleo-total strong,
+.nucleo-summary .nucleo-total span{color:#064923}
+@media(max-width:900px){.nucleo-summary{grid-template-columns:repeat(2,1fr)}}
+@media print{html,body{width:194mm!important;margin:0!important;padding:0!important}.report-actions{display:none!important}
+  .nucleo-summary{
+    display:table;
+    width:100%;
+    border-collapse:separate;
+    border-spacing:7px;
+    margin:12px 0 18px;
+  }
+  .nucleo-summary>div{
+    display:table-cell;
+    border:1px solid #9fb3a5;
+    border-radius:6px;
+    padding:10px 6px;
+    box-shadow:none;
+    background:#fff!important;
+  }
+  .nucleo-summary strong{font-size:11px}
+  .nucleo-summary span{font-size:21px}
+  .nucleo-summary .nucleo-total{border-width:2px}
+}
+</style>
+
+<div class="page-head">
+  <div>
+    <h1>Controle por Núcleos de Idade</h1>
+    <p>Ano {{ ano_atual }}</p>
+  </div>
+</div>
+<div class="report-actions">
+  <div><a class="report-back" href="{{url_for('relatorios')}}">VOLTAR</a></div>
+  <div></div>
+  <div style="display:flex;justify-content:flex-end"><button class="report-print" onclick="window.print()" title="Imprimir" aria-label="Imprimir"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 9V3h12v6h1a3 3 0 0 1 3 3v5h-4v4H6v-4H2v-5a3 3 0 0 1 3-3h1Zm2-4v4h8V5H8Zm8 14v-5H8v5h8Zm3-5h1v-2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v2h2v-2h12v2h1Z"/></svg></button></div>
+</div>
+
+
+{% set rn = resumo_nucleos_rebanho() %}
+<div class="nucleo-summary">
+  <div><strong>0–12 meses</strong><span>{{ rn["0-12 meses"] }}</span></div>
+  <div><strong>12–24 meses</strong><span>{{ rn["12-24 meses"] }}</span></div>
+  <div><strong>24–36 meses</strong><span>{{ rn["24-36 meses"] }}</span></div>
+  <div><strong>+36 meses</strong><span>{{ rn["+36 meses"] }}</span></div>
+  <div class="nucleo-total"><strong>Total</strong><span>{{ rn["0-12 meses"] + rn["12-24 meses"] + rn["24-36 meses"] + rn["+36 meses"] }}</span></div>
+</div>
+
+<div class="card">
+<table class="table">
+<thead><tr><th>Núcleo de idade</th><th>Sexo</th><th>Quantidade</th></tr></thead>
+<tbody>
+{% for n in nucleos %}
+<tr><td rowspan="2"><strong>{{n}}</strong></td><td>Macho</td><td>{{resumo[n]["Macho"]}}</td></tr>
+<tr><td>Fêmea</td><td>{{resumo[n]["Fêmea"]}}</td></tr>
+{% endfor %}
+<tr><td colspan="2"><strong>Total Geral</strong></td><td><strong>{{total_animais}}</strong></td></tr>
+</tbody>
+</table>
+
+<p style="margin-top:14px"><strong>Evolução automática:</strong>
+        todos os animais avançam um núcleo em <strong>1º de abril</strong> de cada ano:
+        0-12 → 12-24 → 24-36 → +36 meses. O núcleo +36 é o último e permanece nele.</p>
+</div>
+{% endblock %}

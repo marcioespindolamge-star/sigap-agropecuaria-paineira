@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.repro-unica{width:100%;max-width:1280px;margin:0 auto;padding:0 6px;box-sizing:border-box}.repro-unica h1{text-align:center;color:#075c2b;margin:6px 0 14px}
+.box-r{background:#fff;border:1px solid #bdd2c4;border-radius:10px;padding:14px;margin-bottom:16px;box-sizing:border-box}.box-r h2{color:#075c2b;margin:0 0 6px;font-size:18px}
+.topo-repro{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}.legenda{display:flex;gap:14px;align-items:center;font-weight:800;font-size:14px}.legenda span{display:flex;align-items:center;gap:5px}.bolinha{width:12px;height:12px;border-radius:50%;display:inline-block}.bol-iatf{background:#1976d2}.bol-touro{background:#e66a00}
+.lista-repro{max-height:calc(100vh - 245px);min-height:420px;overflow-y:auto;overflow-x:hidden;border:1px solid #d6e2d9;border-radius:7px;width:100%}.cab-repro,.linha-repro{display:grid;grid-template-columns:38px 58px 82px minmax(135px,.68fr) 72px 76px minmax(165px,1.25fr) minmax(150px,1.12fr) 72px;column-gap:4px;align-items:center;padding:5px 5px;box-sizing:border-box;font-size:13px}.cab-repro{background:#e9f2ec;color:#075c2b;font-weight:900;position:sticky;top:0;z-index:3;padding-top:6px;padding-bottom:6px}.linha-repro{border-bottom:1px solid #e5ece7;position:relative;min-width:0;line-height:1.1}.linha-repro>*{min-width:0}.linha-repro:last-child{border-bottom:0}
+.linha-repro.iatf-diag{background:#eaf4ff;border-left:4px solid #1976d2}.linha-repro.touro-diag{background:#fff7c9;border-left:4px solid #d6a800}.linha-repro.iatf-ia{background:#efe1d1;border-left:4px solid #795548}.linha-repro.prenhe-negativa{background:#fde2e2;border-left:4px solid #c62828}.linha-repro.prenhe-positiva{background:#e4f5e8;border-left:4px solid #2e7d32}.metodo-op{font-weight:900;white-space:nowrap;font-size:12px}.metodo-iatf{color:#1976d2}.metodo-touro{color:#d65c00}.detalhe{overflow-wrap:anywhere;line-height:1.25}.situacao{font-weight:900;line-height:1.18}.situacao.iatf{color:#1565c0}.situacao.touro{color:#cf5600}.situacao small{display:block;font-weight:700;margin-top:2px;font-size:11px}.acao-col{text-align:right}
+.acao-inline{display:none;grid-column:1/-1;margin:3px 0 1px 28px;padding:6px 7px;border-radius:6px;background:rgba(255,255,255,.9);border:1px solid #d9e5dc;gap:6px;flex-wrap:nowrap;align-items:flex-end}.acao-inline.ativo{display:flex}.acao-inline form{display:flex;gap:6px;align-items:flex-end;flex-wrap:nowrap;margin:0;min-width:0}.acao-inline .separador{width:1px;align-self:stretch;background:#d8e3db;margin:0 1px}.campo-mini{display:flex;flex-direction:column;gap:2px;font-size:10px;font-weight:800;color:#345;line-height:1.05}.campo-mini select,.campo-mini input{height:30px;min-height:30px;box-sizing:border-box;max-width:155px;font-size:12px;padding:3px 6px;border-radius:6px}.btn-r,.btn-editar,.btn-troca{border:0;border-radius:6px;color:#fff;font-weight:900;padding:5px 8px;cursor:pointer;min-height:30px;height:30px;font-size:11px;white-space:nowrap}.btn-r{background:#086b36}.btn-editar.iatf{background:#1976d2}.btn-editar.touro{background:#e66a00}.btn-editar.livre{background:#086b36}.btn-troca.touro{background:#e66a00}.btn-troca.iatf{background:#1976d2}.btn-fechar{border:1px solid #809589;background:#fff;color:#345;border-radius:6px;font-weight:800;padding:4px 8px;min-height:30px;height:30px;cursor:pointer;font-size:11px;white-space:nowrap;flex:0 0 auto;align-self:flex-end}.muted{color:#607266;font-size:11px}.linha-repro input[type=checkbox]{transform:scale(1.05)}
+.linha-repro input[type=radio]{-webkit-appearance:none!important;appearance:none!important;width:15px!important;min-width:15px!important;max-width:15px!important;height:15px!important;min-height:15px!important;max-height:15px!important;display:inline-block!important;flex:0 0 15px!important;margin:0 4px 0 0!important;padding:0!important;border:2px solid #77827c!important;border-radius:50%!important;background:#fff!important;vertical-align:-3px;opacity:1!important;cursor:pointer;box-sizing:border-box!important}
+.linha-repro .metodo-iatf input[type=radio]:checked{border-color:#0755a5!important;background:radial-gradient(circle at center,#0755a5 0 4px,#fff 4.5px 100%)!important;box-shadow:none!important}
+.linha-repro .metodo-touro input[type=radio]:checked{border-color:#a84400!important;background:radial-gradient(circle at center,#a84400 0 4px,#fff 4.5px 100%)!important;box-shadow:none!important}
+.linha-repro input[type=radio]:disabled{opacity:1!important;cursor:default}.linha-repro input[type=radio]:disabled:not(:checked){border-color:#9aa39e!important;background:#fff!important}
+@media(max-width:1150px){.repro-unica{padding:0 3px}.box-r{padding:8px}.cab-repro,.linha-repro{grid-template-columns:34px 52px 72px minmax(120px,.68fr) 64px 68px minmax(145px,1.2fr) minmax(135px,1fr) 66px;font-size:12px;padding-left:4px;padding-right:4px;column-gap:3px}.metodo-op{font-size:10px}.btn-editar{padding:4px 6px;font-size:10px}.acao-inline{margin-left:22px;padding:5px;gap:5px}.acao-inline form{gap:5px}.campo-mini select,.campo-mini input{max-width:155px}.lista-repro{max-height:calc(100vh - 225px)}}
+@media(max-width:900px){.lista-repro{overflow-x:auto;max-height:calc(100vh - 220px)}.cab-repro,.linha-repro{min-width:790px}.acao-inline{margin-left:20px;flex-wrap:wrap}.acao-inline form{flex-wrap:wrap}}
+.gnrh-opcao{display:flex;align-items:center;gap:5px;height:30px;min-height:30px;padding:0 6px;border:1px solid #b9cdbf;border-radius:6px;background:#fff;font-size:10px;white-space:nowrap}.gnrh-opcao input{width:15px;height:15px;accent-color:#1776d2}.gnrh-opcao strong{color:#0b5ea8}</style>
+<div class="repro-unica">
+<h1>REPRODUÇÃO</h1>
+<div class="box-r">
+  <div class="topo-repro">
+    <div>
+      <h2>MATRIZES — REPRODUÇÃO</h2>
+      <div class="muted">Matrizes sem DIU ficam nesta única lista. As que já estão em reprodução aparecem marcadas e podem ser continuadas ou trocadas de método em EDITAR.</div>
+    </div>
+    <div class="legenda"><span class="metodo-iatf"><i class="bolinha bol-iatf"></i>IATF</span><span class="metodo-touro"><i class="bolinha bol-touro"></i>TOURO</span><b>Total: {{ matrizes_repro|length }}</b></div>
+  </div>
+  <div class="lista-repro">
+    <div class="cab-repro"><span>Sel.</span><span>Brinco</span><span>Categoria</span><span>Campo/Lote</span><span class="metodo-iatf">IATF</span><span class="metodo-touro">TOURO</span><span>Protocolo / Data</span><span>Situação</span><span>Ação</span></div>
+    {% for a in matrizes_repro %}
+      {% set r=a.processo %}
+      {% set rf=a.resultado_repro %}
+      {% set em_iatf=r and r.tipo=='IATF' %}
+      {% set em_touro=r and r.tipo=='TOURO' %}
+      {% set prenhe=rf and rf.resultado=='Prenhe' %}
+      {% set vazia=rf and rf.resultado=='Vazia' %}
+      <div class="linha-repro {% if prenhe %}prenhe-positiva{% elif vazia %}prenhe-negativa{% elif em_iatf and r.fase=='AGUARDANDO INSEMINAÇÃO' %}iatf-ia{% elif em_iatf %}iatf-diag{% elif em_touro %}touro-diag{% endif %}" data-brinco="{{a['brinco']}}">
+        <input class="chk-matriz" type="checkbox" {% if r or prenhe %}checked disabled{% endif %} aria-label="Selecionar matriz {{a['brinco']}}">
+        <b>{{a['brinco']}}</b>
+        <span class="cat">{{a['categoria']}}</span>
+        <span class="lote">{{a['lote'] or ''}}</span>
+        <label class="metodo-op metodo-iatf"><input type="radio" class="radio-metodo" name="metodo_visual_{{a['brinco']}}" value="IATF" {% if em_iatf %}checked{% endif %} {% if r or prenhe %}disabled{% endif %}> IATF</label>
+        <label class="metodo-op metodo-touro"><input type="radio" class="radio-metodo" name="metodo_visual_{{a['brinco']}}" value="TOURO" {% if em_touro %}checked{% endif %} {% if r or prenhe %}disabled{% endif %}> TOURO</label>
+        <div class="detalhe">
+          {% if em_iatf %}<b>{{r.protocolo or 'IATF'}}</b><br>{{ br_date(r.data) }}
+          {% elif em_touro %}<b>Entouramento</b><br>{{ br_date(r.data) }}
+          {% else %}—{% endif %}
+        </div>
+        <div class="situacao {% if em_iatf %}iatf{% elif em_touro %}touro{% endif %}">
+          {% if prenhe %}<span style="color:#1b6e2d">PRENHEZ POSITIVA</span><small>PRENHE</small>
+          {% elif vazia %}<span style="color:#b71c1c">PRENHEZ NEGATIVA</span><small>VAZIA — LIBERADA</small>
+          {% elif em_iatf %}EM IATF<small>{{r.fase}}</small>
+          {% elif em_touro %}COM TOURO<small>AGUARDANDO DIAGNÓSTICO</small>
+          {% else %}APTA{% endif %}
+        </div>
+        <div class="acao-col">{% if prenhe %}<b style="color:#1b6e2d">—</b>{% else %}<button type="button" class="btn-editar {% if em_iatf %}iatf{% elif em_touro %}touro{% else %}livre{% endif %}">{% if r %}EDITAR{% else %}ABRIR{% endif %}</button>{% endif %}</div>
+
+        {% if prenhe %}
+        {% elif not r %}
+        <form method="post" class="acao-inline editor-livre">
+          <input type="hidden" name="acao" value="iniciar_reproducao"><input type="hidden" name="matrizes" value="{{a['brinco']}}"><input type="hidden" class="metodo-hidden" name="metodo_{{a['brinco']}}" value="">
+          <div class="editor-iatf" style="display:none;align-items:end;gap:8px;flex-wrap:wrap">
+            <label class="campo-mini">PROTOCOLO<select name="protocolo_id"><option value="">Selecione</option>{% for p in protocolos %}<option value="{{p['id']}}">{{p['nome']}}</option>{% endfor %}</select></label>
+            <label class="campo-mini">DATA DE INÍCIO<input type="date" name="data_inicio" value="{{today}}"></label>
+            <button class="btn-r" type="submit">APLICAR PROTOCOLO</button>
+          </div>
+          <div class="editor-touro" style="display:none;align-items:end;gap:8px;flex-wrap:wrap">
+            <label class="campo-mini">DATA DO ENTOURAMENTO<input type="date" name="data_entouramento" value="{{today}}"></label>
+            <button class="btn-r" type="submit">ENTOURAR</button>
+          </div>
+          <button type="button" class="btn-fechar">FECHAR</button>
+        </form>
+        {% elif em_iatf %}
+        <div class="acao-inline">
+          {% if r.fase=='AGUARDANDO INSEMINAÇÃO' %}
+          <form method="post" class="form-inseminar"><input type="hidden" name="acao" value="registrar_ia"><input type="hidden" name="iatf_id" value="{{r.id}}">
+            <label class="campo-mini">DATA DA IA<input type="date" name="data_ia" value="{{r.data_ia or today}}" required></label>
+            <label class="campo-mini">SÊMEN / TOURO<input name="semen_touro" value="{{r.semen_touro or ultimo_semen_touro or ''}}" placeholder="Sêmen / Touro"></label>
+            <label class="gnrh-opcao" title="Marque se foi aplicada GnRH no momento da inseminação"><input type="checkbox" name="gnrh_aplicado" value="1" {% if r.gnrh_aplicado %}checked{% endif %}> <strong>GnRH APLICADA</strong></label>
+            <button class="btn-r btn-inseminar" type="submit">INSEMINAR</button>
+          </form>
+          {% else %}
+          <form method="post"><input type="hidden" name="acao" value="diagnostico"><input type="hidden" name="iatf_id" value="{{r.id}}">
+            <label class="campo-mini">DATA DO DIAGNÓSTICO<input type="date" name="diagnostico_data" value="{{today}}" required></label>
+            <label class="campo-mini">RESULTADO<select name="resultado" required><option value="">Selecione</option><option>Prenhe</option><option>Vazia</option></select></label>
+            <label class="gnrh-opcao" title="GnRH registrada na inseminação; também pode ser corrigida aqui"><input type="checkbox" name="gnrh_aplicado" value="1" {% if r.gnrh_aplicado %}checked{% endif %}> <strong>GnRH APLICADA</strong></label>
+            <button class="btn-r" type="submit">DIAGNÓSTICO</button>
+          </form>
+          {% endif %}
+          <span class="separador"></span>
+          <form method="post" onsubmit="return confirm('Trocar a matriz {{a['brinco']}} de IATF para TOURO? O IATF ativo será encerrado.');">
+            <input type="hidden" name="acao" value="iniciar_reproducao"><input type="hidden" name="matrizes" value="{{a['brinco']}}"><input type="hidden" name="metodo_{{a['brinco']}}" value="TOURO">
+            <label class="campo-mini">NOVA DATA DO ENTOURAMENTO<input type="date" name="data_entouramento" value="{{today}}" required></label>
+            <button class="btn-troca touro" type="submit">TROCAR PARA TOURO</button>
+          </form>
+          <button type="button" class="btn-fechar">FECHAR</button>
+        </div>
+        {% else %}
+        <div class="acao-inline">
+          <form method="post"><input type="hidden" name="acao" value="diagnostico_touro"><input type="hidden" name="entouramento_id" value="{{r.id}}">
+            <label class="campo-mini">DATA DO DIAGNÓSTICO<input type="date" name="diagnostico_data" value="{{today}}" required></label>
+            <label class="campo-mini">RESULTADO<select name="resultado" required><option value="">Selecione</option><option>Prenhe</option><option>Vazia</option></select></label>
+            <button class="btn-r" type="submit">DIAGNÓSTICO</button>
+          </form>
+          <span class="separador"></span>
+          <form method="post" onsubmit="return confirm('Trocar a matriz {{a['brinco']}} de TOURO para IATF? O entouramento ativo será encerrado.');">
+            <input type="hidden" name="acao" value="iniciar_reproducao"><input type="hidden" name="matrizes" value="{{a['brinco']}}"><input type="hidden" name="metodo_{{a['brinco']}}" value="IATF">
+            <label class="campo-mini">PROTOCOLO<select name="protocolo_id" required><option value="">Selecione</option>{% for p in protocolos %}<option value="{{p['id']}}">{{p['nome']}}</option>{% endfor %}</select></label>
+            <label class="campo-mini">DATA DE INÍCIO<input type="date" name="data_inicio" value="{{today}}" required></label>
+            <button class="btn-troca iatf" type="submit">TROCAR PARA IATF</button>
+          </form>
+          <button type="button" class="btn-fechar">FECHAR</button>
+        </div>
+        {% endif %}
+      </div>
+    {% else %}<div style="padding:14px">Nenhuma matriz disponível no momento.</div>{% endfor %}
+  </div>
+</div>
+</div>
+<script>
+document.querySelectorAll('.linha-repro').forEach(row=>{
+  const editor=row.querySelector('.acao-inline');
+  const btn=row.querySelector('.btn-editar');
+  const chk=row.querySelector('.chk-matriz');
+  const radios=[...row.querySelectorAll('.radio-metodo')];
+  const hidden=row.querySelector('.metodo-hidden');
+  const boxI=row.querySelector('.editor-iatf');
+  const boxT=row.querySelector('.editor-touro');
+  function atualizarLivre(){
+    const sel=radios.find(r=>r.checked);
+    if(sel && chk && !chk.disabled) chk.checked=true;
+    if(hidden) hidden.value=sel?sel.value:'';
+    if(boxI) boxI.style.display=(sel&&sel.value==='IATF')?'flex':'none';
+    if(boxT) boxT.style.display=(sel&&sel.value==='TOURO')?'flex':'none';
+  }
+  radios.forEach(r=>{if(!r.disabled) r.addEventListener('change',()=>{atualizarLivre(); if(editor) editor.classList.add('ativo');});});
+  if(chk && !chk.disabled) chk.addEventListener('change',()=>{if(!chk.checked){radios.forEach(r=>r.checked=false);atualizarLivre();}});
+  btn?.addEventListener('click',()=>editor?.classList.toggle('ativo'));
+  row.querySelectorAll('.btn-fechar').forEach(b=>b.addEventListener('click',()=>editor?.classList.remove('ativo')));
+  const livre=row.querySelector('form.editor-livre');
+  livre?.addEventListener('submit',e=>{
+    if(hidden && !hidden.value){e.preventDefault();alert('Escolha IATF ou TOURO para esta matriz.');return;}
+    if(hidden?.value==='IATF' && !livre.querySelector('select[name="protocolo_id"]')?.value){e.preventDefault();alert('Selecione o protocolo IATF.');}
+  });
+  atualizarLivre();
+});
+
+// V6.1.75 — mensagens da Reprodução no centro da tela e aviso imediato
+// enquanto o sistema processa a gravação.
+function reproToast(texto, tipo='ok', duracao=2600) {
+  let box=document.getElementById('repro-toast-centro');
+  if(!box){
+    box=document.createElement('div');
+    box.id='repro-toast-centro';
+    Object.assign(box.style,{
+      position:'fixed',left:'50%',top:'48%',transform:'translate(-50%,-50%)',
+      zIndex:'100000',minWidth:'320px',maxWidth:'620px',padding:'16px 22px',
+      borderRadius:'12px',fontWeight:'800',fontSize:'16px',textAlign:'center',
+      boxShadow:'0 8px 30px rgba(0,0,0,.25)',transition:'opacity .2s'
+    });
+    document.body.appendChild(box);
+  }
+  box.style.background=tipo==='erro'?'#a51d1d':(tipo==='processando'?'#245b78':'#0f6b35');
+  box.style.color='#fff';
+  box.style.opacity='1';
+  box.textContent=texto;
+  clearTimeout(box._timer);
+  if(duracao>0) box._timer=setTimeout(()=>{box.style.opacity='0';},duracao);
+}
+
+document.querySelectorAll('main > .flash').forEach(f=>{
+  const erro=f.classList.contains('erro') || f.classList.contains('error');
+  reproToast(f.textContent.trim(), erro?'erro':'ok', erro?4200:3000);
+  f.remove();
+});
+
+// V6.1.76 — envio robusto da inseminação.
+// Alguns registros antigos podiam ter datas em formatos diferentes e o
+// validador global de datas impedia o submit sem uma mensagem clara.
+// Aqui o botão INSEMINAR envia os dados diretamente, normalizando a data.
+function dataParaIsoRepro(valor){
+  const v=String(valor||'').trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  const m=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(!m) return '';
+  const d=Number(m[1]), mo=Number(m[2]), y=Number(m[3]);
+  const dt=new Date(y,mo-1,d);
+  if(dt.getFullYear()!==y || dt.getMonth()!==mo-1 || dt.getDate()!==d) return '';
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+
+document.querySelectorAll('form.form-inseminar').forEach(form=>{
+  const botao=form.querySelector('.btn-inseminar');
+  if(!botao) return;
+  botao.addEventListener('click', async (ev)=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(botao.dataset.enviando==='1') return;
+    const br=form.closest('.linha-repro')?.dataset.brinco || '';
+    const dataEl=form.querySelector('input[name="data_ia"]');
+    const dataIso=dataParaIsoRepro(dataEl?.value);
+    if(!dataIso){
+      reproToast('CONFIRA A DATA DA IA — USE DD/MM/AAAA.','erro',4200);
+      dataEl?.focus();
+      return;
+    }
+    const dados=new FormData(form);
+    dados.set('data_ia',dataIso);
+    botao.dataset.enviando='1';
+    botao.disabled=true;
+    const rotulo=botao.textContent;
+    botao.textContent='SALVANDO...';
+    reproToast(`SALVANDO INSEMINAÇÃO${br?' DA MATRIZ '+br:''}...`,'processando',0);
+    try{
+      const resp=await fetch(form.action || location.href,{method:'POST',body:dados,credentials:'same-origin'});
+      if(resp.redirected){
+        location.replace(resp.url);
+        return;
+      }
+      const html=await resp.text();
+      const doc=new DOMParser().parseFromString(html,'text/html');
+      const msg=doc.querySelector('.flash.erro,.flash.error,.flash');
+      reproToast(msg?msg.textContent.trim():'NÃO FOI POSSÍVEL REGISTRAR A INSEMINAÇÃO.','erro',4500);
+    }catch(e){
+      reproToast('FALHA AO SALVAR A INSEMINAÇÃO. TENTE NOVAMENTE.','erro',4500);
+    }finally{
+      botao.dataset.enviando='0';
+      botao.disabled=false;
+      botao.textContent=rotulo;
+    }
+  });
+});
+
+// Depois de salvar uma IA, abre e centraliza automaticamente a próxima matriz.
+const focoRepro={{ foco_repro|tojson }};
+if(focoRepro){
+  const alvo=[...document.querySelectorAll('.linha-repro')].find(r=>r.dataset.brinco===String(focoRepro));
+  if(alvo){
+    requestAnimationFrame(()=>{
+      alvo.scrollIntoView({behavior:'smooth',block:'center'});
+      const editor=alvo.querySelector('.acao-inline');
+      if(editor) editor.classList.add('ativo');
+      setTimeout(()=>{
+        const semen=alvo.querySelector('input[name="semen_touro"]');
+        if(semen){semen.focus();semen.select();}
+      },450);
+    });
+  }
+}
+</script>
+{% endblock %}

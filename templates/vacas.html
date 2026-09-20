@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block content %}
+<div class="titlebar">
+  <div><h1>Matrizes</h1><p class="muted">Cadastro principal das matrizes (vacas e novilhas), com opção de incluir o nascimento da cria no próprio cadastro.</p></div>
+  <a class="button" href="{{url_for('animal_novo', cadastro_vaca_url=True)}}">+ ADICIONAR MATRIZ</a>
+</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Brinco</th><th>Nome</th><th>Raça</th><th>Ano Safra</th><th>Lote</th><th>Filhos</th><th>Último terneiro</th><th>Última IA</th><th>Resultado IATF</th><th>Ações</th></tr></thead>
+<tbody>
+{% for a in rows %}
+<tr>
+<td><b>{{a['brinco']}}</b></td><td>{{a['nome'] or ''}}</td><td>{{a['raca'] or ''}}</td><td>{{a['nascimento'] or ''}}</td><td>{{a['lote'] or ''}}</td>
+<td><b>{{a['total_filhos'] or 0}}</b></td><td>{{a['ultimo_terneiro'] or ''}}</td><td>{{br_date(a['ultima_ia']) if a['ultima_ia'] else ''}}</td><td>{{a['ultimo_resultado_iatf'] or ''}}</td>
+<td><a class="button light" style="padding:7px 12px;font-weight:700;white-space:nowrap" href="{{url_for('animal_editar',id=a['id'],voltar_para='vacas')}}">EDITAR</a></td>
+</tr>
+{% else %}<tr><td colspan="10" style="text-align:center;padding:24px">Nenhuma matriz cadastrada.</td></tr>{% endfor %}
+</tbody></table></div>
+<section style="margin-top:16px"><b>Como funciona:</b> esta é a tela principal para cadastrar e editar matrizes (vacas e novilhas). O número de uma matriz pode coincidir com o de um terneiro sem causar conflito; matrizes não podem repetir outra matriz e terneiros não podem repetir outro terneiro.</section>
+{% endblock %}

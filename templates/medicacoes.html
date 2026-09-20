@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.med-wrap h1{margin-bottom:14px}
+.med-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.med-tab{border:1px solid #9fb3a5;background:#f3f6f3;padding:10px 18px;border-radius:5px;font-weight:800;color:#0b5a2b;cursor:pointer}
+.med-tab.active{background:#0f6b35;color:#fff}
+.med-panel{display:none}.med-panel.active{display:block}
+.med-box{background:#fff;border:1px solid #cfddd3;border-radius:8px;padding:16px;margin-bottom:14px}
+.med-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.med-grid label{font-weight:700;color:#244c34}
+.med-grid input,.med-grid select,.med-grid textarea{width:100%;box-sizing:border-box;margin-top:5px}
+.med-full{grid-column:1/-1}
+.med-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.med-actions-top{margin:0 0 14px;justify-content:flex-start;position:sticky;top:0;background:#fff;padding:6px 0;z-index:5}
+.med-actions button{min-width:180px}
+.med-lista{max-height:230px;overflow:auto;border:1px solid #d4ded7;border-radius:6px;padding:8px;background:#fbfcfb}
+.med-animal{display:grid;grid-template-columns:32px 110px 1fr 160px 160px;gap:8px;align-items:center;padding:7px;border-bottom:1px solid #edf1ee;font-weight:400!important}
+.med-animal:last-child{border-bottom:0}
+.med-table{width:100%;border-collapse:collapse}
+.med-table th{background:#e8f1eb;color:#084f27}
+.med-table th,.med-table td{padding:8px;border-bottom:1px solid #e4ebe6;text-align:left}
+.scope{display:none}.scope.active{display:block}
+@media(max-width:850px){.med-grid{grid-template-columns:1fr}.med-full{grid-column:auto}.med-animal{grid-template-columns:32px 90px 1fr}.hide-small{display:none}}
+</style>
+
+<div class="med-wrap">
+<h1>Medicações / Manejo</h1>
+
+<div class="med-tabs">
+  <button type="button" class="med-tab active" onclick="abaMed('cadastro',this)">1. Cadastrar medicação</button>
+  <button type="button" class="med-tab" onclick="abaMed('aplicar',this)">2. Aplicar medicação</button>
+  <button type="button" class="med-tab" onclick="abaMed('historico',this)">Histórico</button>
+</div>
+
+<div id="cadastro" class="med-panel active">
+  <div class="med-box">
+    <h2>Cadastro de medicação</h2>
+    <form autocomplete="off" method="post" class="js-fast-save" data-fast-save="1">
+      <input type="hidden" name="acao" value="cadastrar_medicacao">
+      <div class="med-grid">
+        <label>Nome da medicação<input name="nome" required placeholder="Ex.: Ivermectina"></label>
+        <label>Tipo<input name="tipo" placeholder="Ex.: Vermífugo, Vacina, Antibiótico"></label>
+        <label>Dose por animal<input id="dosePadraoMed" name="dose_padrao" inputmode="decimal" placeholder="Ex.: 5"></label>
+        <label>Unidade<input name="unidade" placeholder="Ex.: mL"></label>
+        <label>Fabricante<input name="fabricante"></label>
+        <label>Valor do produto (R$)<input id="valorProdutoMed" name="valor_produto" inputmode="decimal" placeholder="Ex.: 500,00"></label>
+        <label>Quantidade da embalagem<input id="qtdEmbalagemMed" name="quantidade_embalagem" inputmode="decimal" placeholder="Ex.: 500"></label>
+        <label>Custo por animal (automático)<input id="custoAnimalMed" name="custo_animal_exibicao" readonly tabindex="-1" placeholder="R$ 0,00"></label>
+        <label class="med-full">Observação / orientação<textarea name="observacoes" rows="3"></textarea></label>
+      </div>
+      <div class="med-actions"><button class="primary" type="submit">SALVAR MEDICAÇÃO</button></div>
+    </form>
+  </div>
+
+  <div class="med-box">
+    <h2>Medicações cadastradas</h2>
+    <div class="tablewrap">
+      <table class="med-table">
+        <tr><th>Nome</th><th>Tipo</th><th>Dose/animal</th><th>Fabricante</th><th>Valor produto</th><th>Embalagem</th><th>Custo/animal</th><th></th></tr>
+        {% for m in medicamentos %}
+        <tr>
+          <td><strong>{{m['nome']}}</strong></td>
+          <td>{{m['tipo'] or ''}}</td>
+          <td>{{m['dose_padrao'] or ''}}{% if m['unidade'] %} {{m['unidade']}}{% endif %}</td>
+          <td>{{m['fabricante'] or ''}}</td>
+          <td>{% if m['valor_produto'] %}R$ {{ '%.2f'|format(m['valor_produto'])|replace('.', ',') }}{% endif %}</td>
+          <td>{% if m['quantidade_embalagem'] %}{{ '%g'|format(m['quantidade_embalagem']) }} {{m['unidade'] or ''}}{% endif %}</td>
+          <td>{% if m['custo_animal'] %}R$ {{ '%.2f'|format(m['custo_animal'])|replace('.', ',') }}{% endif %}</td>
+          <td>
+            <form autocomplete="off" method="post" onsubmit="return confirm('Remover esta medicação da lista?')">
+              <input type="hidden" name="acao" value="excluir_medicacao">
+              <input type="hidden" name="medicamento_id" value="{{m['id']}}">
+              <button type="submit">Remover</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}<tr><td colspan="8">Nenhuma medicação cadastrada ainda.</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="aplicar" class="med-panel">
+  <div class="med-box">
+    <h2>Aplicar medicação</h2>
+    {% if not medicamentos %}
+      <p><strong>Cadastre uma medicação primeiro.</strong> Depois ela ficará disponível aqui para aplicação.</p>
+    {% else %}
+    <form autocomplete="off" method="post" class="js-fast-save" data-fast-save="1">
+      <input type="hidden" name="acao" value="aplicar">
+      <div class="med-actions med-actions-top">
+        <button class="primary" type="submit">REGISTRAR APLICAÇÃO</button>
+      </div>
+      <div class="med-grid">
+        <label>Medicação
+          <select name="medicamento_id" id="medicamento" required onchange="preencherDose()">
+            <option value="">Selecione</option>
+            {% for m in medicamentos %}
+            <option value="{{m['id']}}" data-dose="{{m['dose_padrao'] or ''}}" data-unidade="{{m['unidade'] or ''}}">{{m['nome']}}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Data<input type="date" name="data" value="{{today}}"></label>
+        <label>Dose da aplicação<input name="dose" id="doseAplicacao" placeholder="Usa a dose padrão se deixar em branco"></label>
+        <label>Próxima data<input type="date" name="proxima_data"></label>
+        <label>Aplicar em
+          <select name="modo_aplicacao" id="modoAplicacao" onchange="mostrarEscopo()">
+            <option value="individual">Animal(is)</option>
+            <option value="campo">Campo</option>
+            <option value="categoria">Categoria</option>
+            <option value="todos">Todos os animais ativos</option>
+          </select>
+        </label>
+
+        <div class="med-full">
+          <div id="scope-individual" class="scope active">
+            <label>Selecione o(s) animal(is)</label>
+            <div class="med-lista">
+              {% for a in animais %}
+              <label class="med-animal">
+                <input type="checkbox" name="brincos" value="{{a['brinco']}}">
+                <strong>{{a['brinco']}}</strong>
+                <span>{{a['nome'] or ''}}</span>
+                <span class="hide-small">{{a['categoria'] or ''}}</span>
+                <span class="hide-small">{{a['lote'] or ''}}</span>
+              </label>
+              {% else %}<div>Nenhum animal ativo cadastrado.</div>{% endfor %}
+            </div>
+          </div>
+
+          <div id="scope-campo" class="scope">
+            <label>Campo
+              <select name="campo">
+                <option value="">Selecione</option>
+                {% for campo in campos_lotes %}<option value="{{campo}}">{{campo}}</option>{% endfor %}
+              </select>
+            </label>
+          </div>
+
+          <div id="scope-categoria" class="scope">
+            <label>Categoria
+              <select name="categoria">
+                <option value="">Selecione</option>
+                {% for c in categorias %}<option value="{{c['categoria']}}">{{c['categoria']}}</option>{% endfor %}
+              </select>
+            </label>
+          </div>
+
+          <div id="scope-todos" class="scope">
+            <p><strong>Atenção:</strong> a aplicação será registrada para todos os animais ativos.</p>
+          </div>
+        </div>
+
+        <label class="med-full">Observação<textarea name="observacoes" rows="3"></textarea></label>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div id="historico" class="med-panel">
+  <div class="med-box">
+    <h2>Histórico de aplicações</h2>
+    <div class="tablewrap">
+      <table class="med-table">
+        <tr><th>Data</th><th>Animal</th><th>Campo</th><th>Medicação</th><th>Tipo</th><th>Dose</th><th>Custo/animal</th><th>Próxima</th></tr>
+        {% for r in rows %}
+        <tr>
+          <td>{{br_date(r['data']) if r['data'] else ''}}</td>
+          <td>{{r['brinco'] or ''}}</td>
+          <td>{{r['lote'] or ''}}</td>
+          <td>{{r['produto'] or ''}}</td>
+          <td>{{r['tipo'] or ''}}</td>
+          <td>{{r['dose'] or ''}}</td>
+          <td>{% if r['custo_animal'] %}R$ {{ '%.2f'|format(r['custo_animal'])|replace('.', ',') }}{% else %}R$ 0,00{% endif %}</td>
+          <td>{{br_date(r['proxima_data']) if r['proxima_data'] else ''}}</td>
+        </tr>
+        {% else %}<tr><td colspan="8">Nenhuma aplicação registrada.</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function abaMed(id,btn){
+  document.querySelectorAll('.med-panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.med-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function mostrarEscopo(){
+  const modo=document.getElementById('modoAplicacao').value;
+  document.querySelectorAll('.scope').forEach(x=>x.classList.remove('active'));
+  const el=document.getElementById('scope-'+modo);
+  if(el) el.classList.add('active');
+}
+function preencherDose(){
+  const s=document.getElementById('medicamento');
+  const o=s.options[s.selectedIndex];
+  const dose=document.getElementById('doseAplicacao');
+  if(o && o.dataset.dose){
+    dose.value=o.dataset.dose + (o.dataset.unidade ? ' ' + o.dataset.unidade : '');
+  }
+}
+function numeroMed(v){
+  v=String(v||'').trim().replace(/\s/g,'');
+  if(v.includes(',') && v.includes('.')) v=v.replace(/\./g,'').replace(',','.');
+  else v=v.replace(',','.');
+  const n=parseFloat(v); return Number.isFinite(n)?n:0;
+}
+function calcularCustoAnimalMed(){
+  const valor=numeroMed(document.getElementById('valorProdutoMed')?.value);
+  const qtd=numeroMed(document.getElementById('qtdEmbalagemMed')?.value);
+  const dose=numeroMed(document.getElementById('dosePadraoMed')?.value);
+  const out=document.getElementById('custoAnimalMed');
+  if(!out) return;
+  const custo=(valor>0 && qtd>0 && dose>0)?(valor/qtd)*dose:0;
+  out.value=custo>0?custo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'R$ 0,00';
+}
+['valorProdutoMed','qtdEmbalagemMed','dosePadraoMed'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcularCustoAnimalMed));
+calcularCustoAnimalMed();
+
+</script>
+{% endblock %}

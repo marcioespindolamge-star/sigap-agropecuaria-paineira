@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.trocas{max-width:950px;margin:0 auto}.trocas h1{text-align:center}.intro{text-align:center;color:#52675a;margin-bottom:18px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box{background:#fff;border:1px solid #cfddd3;border-radius:9px;padding:16px}.box h2{margin-top:0;color:#075b2c}.lista{border:1px solid #e0e8e2;border-radius:7px;overflow:hidden}.linha{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid #edf1ee}.linha:last-child{border-bottom:0}.linha strong{color:#8d1717}.linha button{white-space:nowrap;font-size:11px;font-weight:900}.vazio{padding:12px;color:#617167}.acoes{margin-top:16px;text-align:center}.btn-voltar{display:inline-flex;padding:10px 18px;border:1px solid #0f6b35;border-radius:6px;color:#0f6b35!important;text-decoration:none!important;font-weight:800}@media(max-width:760px){.cols{grid-template-columns:1fr}.linha{grid-template-columns:70px 1fr}.linha form{grid-column:1/-1}}
+</style>
+<div class="trocas">
+<h1>Trocar método reprodutivo</h1>
+<div class="intro">Use esta tela somente quando precisar retirar uma matriz de um método para colocá-la no outro.</div>
+<div class="cols">
+<div class="box"><h2>Matrizes no IATF</h2><div class="lista">
+{% for v in matrizes_iatf_ativas %}<div class="linha"><strong>{{v['brinco']}}</strong><span>{{v['nome'] or ''}}</span><form method="post" onsubmit="return confirm('Retirar a matriz {{v['brinco']}} do IATF?')"><input type="hidden" name="acao" value="liberar_iatf_matriz"><input type="hidden" name="matriz_brinco" value="{{v['brinco']}}"><input type="hidden" name="voltar_modo" value="troca"><button type="submit">RETIRAR DO IATF</button></form></div>{% else %}<div class="vazio">Nenhuma matriz com IATF ativo.</div>{% endfor %}
+</div></div>
+<div class="box"><h2>Matrizes no Touro</h2><div class="lista">
+{% for v in matrizes_touro_ativas %}<div class="linha"><strong>{{v['brinco']}}</strong><span>{{v['nome'] or ''}}</span><form method="post" onsubmit="return confirm('Retirar a matriz {{v['brinco']}} do TOURO?')"><input type="hidden" name="acao" value="liberar_touro_matriz"><input type="hidden" name="matriz_brinco" value="{{v['brinco']}}"><input type="hidden" name="voltar_modo" value="troca"><button type="submit">RETIRAR DO TOURO</button></form></div>{% else %}<div class="vazio">Nenhuma matriz no TOURO.</div>{% endfor %}
+</div></div>
+</div>
+<div class="acoes"><a class="btn-voltar" href="{{url_for('iatf')}}">VOLTAR À REPRODUÇÃO</a></div>
+</div>
+{% endblock %}
