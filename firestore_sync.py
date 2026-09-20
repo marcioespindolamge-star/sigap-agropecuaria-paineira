@@ -154,6 +154,19 @@ def restaurar_firestore_para_sqlite(db_path):
             ).fetchall()
         }
         conn.execute("PRAGMA foreign_keys=OFF")
+
+        # Migração de compatibilidade do banco efêmero do Render.
+        # A versão atual do SIGAP usa esta coluna nas telas/consultas de matrizes.
+        if "animais" in existentes:
+            colunas_animais = {
+                r[1] for r in conn.execute('PRAGMA table_info("animais")').fetchall()
+            }
+            if "diu_aplicado" not in colunas_animais:
+                conn.execute(
+                    'ALTER TABLE "animais" ADD COLUMN "diu_aplicado" INTEGER DEFAULT 0'
+                )
+                conn.commit()
+
         total = 0
 
         for tabela in TABELAS_SIGAP:
