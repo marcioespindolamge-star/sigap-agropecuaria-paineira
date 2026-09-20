@@ -2031,3 +2031,61 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
   .header-copy-centered .sigap-subtitle{font-size:6.5px!important}
   .mov-wrap .calcgrid{grid-template-columns:1fr 1fr!important}
 }
+
+
+/* V6.1.84 — interface mobile simplificada: Início + Matrizes */
+.mobile-home-actions,.matrizes-mobile{display:none}
+@media(max-width:700px){
+  .mobile-home-actions{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+    margin:3px 0 12px;
+  }
+  .mobile-home-actions a{
+    min-height:82px;
+    border:1px solid #d2e0d5;
+    border-radius:12px;
+    background:#fff;
+    color:#0b5d2e;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    font-weight:850;
+    font-size:14px;
+    box-shadow:0 2px 7px rgba(0,0,0,.05);
+  }
+  .mobile-home-actions a b{font-size:25px;line-height:1}
+  .dashboard-modern>.dashboard-stats,
+  .dashboard-modern>.dashboard-grid{display:none!important}
+
+  .titlebar .muted{display:none!important}
+  .titlebar>a.button{width:100%;text-align:center;margin-bottom:7px}
+  .matrizes-desktop{display:none!important}
+  .matrizes-mobile{display:grid!important;gap:8px}
+  .matriz-mobile-card{
+    position:relative;
+    background:#fff;
+    border:1px solid #d4e1d7;
+    border-radius:11px;
+    padding:11px 82px 11px 11px;
+    min-height:76px;
+    box-shadow:0 1px 5px rgba(0,0,0,.04);
+  }
+  .matriz-mobile-main{display:flex;flex-direction:column;gap:3px}
+  .matriz-mobile-main strong{color:#075c2b;font-size:16px}
+  .matriz-mobile-main span{font-size:12px;font-weight:700;color:#40594a}
+  .matriz-mobile-info{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+  .matriz-mobile-info span{font-size:11px;background:#eef5f0;border-radius:999px;padding:4px 7px;color:#31513d}
+  .matriz-mobile-info span:empty{display:none}
+  .matriz-mobile-edit{
+    position:absolute!important;
+    right:9px;top:50%;transform:translateY(-50%);
+    min-width:64px!important;min-height:36px!important;
+    padding:7px 9px!important;font-size:11px!important;
+  }
+  .matrizes-mobile+section{display:none!important}
+}
