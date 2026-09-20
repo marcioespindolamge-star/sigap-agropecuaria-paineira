@@ -1953,3 +1953,81 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
 .header-copy-centered .sigap-title{font-size:24px!important;font-weight:950!important;letter-spacing:2px!important;color:#075f2d!important;margin-top:7px!important;line-height:1!important;}
 .header-copy-centered .sigap-subtitle{font-size:10px;font-weight:800;letter-spacing:.35px;color:#40594a;margin-top:4px;white-space:nowrap;}
 @media(max-width:760px){.header-copy-centered .sigap-title{font-size:18px!important}.header-copy-centered .sigap-subtitle{font-size:8px;white-space:normal}}
+
+
+/* V6.1.84 — adaptação mobile/iPhone: mantém desktop e compacta telas estreitas */
+@media (max-width: 700px){
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{width:100%;max-width:100%;overflow-x:hidden}
+  .app-header{padding:6px 8px!important}
+  .header-v6043{grid-template-columns:54px minmax(0,1fr)!important;gap:7px!important;min-height:68px!important}
+  .header-v6043 .farm-logo{width:52px!important;height:52px!important}
+  .rs-real-flag-wrap{display:none!important}
+  .header-copy-centered .brand{font-size:15px!important;line-height:1.05!important}
+  .header-copy-centered .address{font-size:9px!important;line-height:1.15!important}
+  .header-copy-centered .contacts{font-size:8px!important;gap:5px!important;flex-wrap:wrap!important}
+  .header-copy-centered .sigap-title{font-size:16px!important;margin-top:4px!important}
+  .header-copy-centered .sigap-subtitle{font-size:7px!important;line-height:1.15!important}
+
+  .main-nav,nav.main-nav{
+    justify-content:flex-start!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:6px 7px!important;
+    gap:5px!important;
+  }
+  .main-nav::-webkit-scrollbar,nav.main-nav::-webkit-scrollbar{display:none}
+  .main-nav a,nav.main-nav a{font-size:12px!important;padding:7px 8px!important;min-height:36px;display:inline-flex!important;align-items:center}
+
+  main{width:100%!important;max-width:100%!important;padding:7px!important}
+  main h1{font-size:19px!important;margin:5px auto 9px!important}
+  h2{font-size:16px!important}
+  section{width:100%!important;max-width:100%!important;padding:9px!important;margin-bottom:9px!important;border-radius:9px!important}
+  .grid,.matriz-form-grid{grid-template-columns:1fr!important;gap:8px!important}
+  input:not([type="checkbox"]):not([type="radio"]),select,textarea{
+    width:100%!important;max-width:100%!important;font-size:16px!important;min-height:40px!important;padding:8px 9px!important
+  }
+  textarea{min-height:64px!important}
+  input[type="checkbox"],input[type="radio"]{min-width:18px!important;min-height:18px!important}
+
+  .actions,.save-cancel-pair{width:100%!important;gap:7px!important;flex-wrap:wrap!important}
+  .save-cancel-pair .primary,.save-cancel-pair .button,
+  .save-cancel-pair a.button.light[href*="vacas"],.save-cancel-pair a.button.light[href*="voltar"]{
+    flex:1 1 calc(50% - 4px)!important;width:auto!important;min-width:0!important;max-width:none!important;height:44px!important
+  }
+  button,.button{min-height:40px}
+
+  .tablewrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  table{min-width:max-content}
+  th,td{font-size:11px!important;padding:6px!important}
+
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .stat{padding:10px 6px!important}
+  .stat b{font-size:22px!important}
+  .nucleo-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  .nucleo-summary>div{padding:7px!important}
+
+  .search{width:100%;flex-wrap:wrap}
+  .search input{flex:1 1 100%}
+  .titlebar,.matrizes-topo,.nascimentos-topo,.mov-wrap>.top{width:100%!important}
+  .matriz-form-section{padding:9px!important}
+  .matriz-form-head{width:100%!important}
+  .matriz-form-head .nascimentos-geral-btn{width:100%!important;text-align:center}
+
+  .mov-wrap{width:100%!important;max-width:100%!important;margin:8px auto 24px!important;padding:0 7px!important}
+  .mov-wrap .box{padding:9px!important;overflow-x:auto}
+  .mov-wrap .calcgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .mov-wrap .calcitem{min-width:0!important;padding:9px!important}
+  .mov-wrap .calcitem strong{font-size:16px!important;white-space:normal!important}
+  .mov-wrap .mov-float-next{right:8px!important;bottom:8px!important;max-width:calc(100vw - 16px)!important}
+
+  footer{padding:15px 8px!important;line-height:1.7}
+}
+@media (max-width: 390px){
+  .cards{grid-template-columns:1fr 1fr!important}
+  .header-copy-centered .contacts{display:none!important}
+  .header-copy-centered .sigap-subtitle{font-size:6.5px!important}
+  .mov-wrap .calcgrid{grid-template-columns:1fr 1fr!important}
+}
