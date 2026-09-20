@@ -133,3 +133,63 @@ def sincronizar_sqlite(db_path):
         return True
     finally:
         conn.close()
+
+
+def restaurar_firestore_para_sqlite(db_path):
+    """Carrega o espelho do Firestore para um SQLite já inicializado.
+
+    Uso destinado ao ambiente online (Render), onde o disco local é efêmero.
+    Não apaga dados do Firestore e não remove registros locais.
+    """
+    cloud = _cliente()
+    if cloud is None:
+        return False
+
+    conn = sqlite3.connect(str(db_path), timeout=30)
+    conn.row_factory = sqlite3.Row
+    try:
+        existentes = {
+            r[0] for r in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        }
+        conn.execute("PRAGMA foreign_keys=OFF")
+        total = 0
+
+        for tabela in TABELAS_SIGAP:
+            if tabela not in existentes:
+                continue
+
+            colunas = [
+                r[1] for r in conn.execute(f'PRAGMA table_info("{tabela}")').fetchall()
+            ]
+            permitidas = set(colunas)
+            for snap in cloud.collection(tabela).stream():
+                dados = snap.to_dict() or {}
+                dados = {
+                    k: v for k, v in dados.items()
+                    if k in permitidas and not str(k).startswith("_sigap_")
+                }
+                if "id" in permitidas and "id" not in dados:
+                    try:
+                        dados["id"] = int(snap.id)
+                    except (TypeError, ValueError):
+                        pass
+                if not dados:
+                    continue
+
+                nomes = list(dados.keys())
+                marcas = ",".join("?" for _ in nomes)
+                cols = ",".join(f'"{n}"' for n in nomes)
+                sql = f'INSERT OR REPLACE INTO "{tabela}" ({cols}) VALUES ({marcas})'
+                conn.execute(sql, tuple(dados[n] for n in nomes))
+                total += 1
+
+        conn.commit()
+        return total
+    finally:
+        try:
+            conn.execute("PRAGMA foreign_keys=ON")
+        except Exception:
+            pass
+        conn.close()
