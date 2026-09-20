@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="dashboard-modern">
+<div class="mobile-home-actions" aria-label="Acesso rápido no celular">
+  <a href="{{ url_for('vacas') }}"><b>🐄</b><span>Matrizes</span></a>
+  <a href="{{ url_for('iatf') }}"><b>🐂</b><span>Reprodução</span></a>
+  <a href="{{ url_for('pesagens') }}"><b>⚖</b><span>Pesagens</span></a>
+  <a href="{{ url_for('medicacoes') }}"><b>💊</b><span>Medicações</span></a>
+  <a href="{{ url_for('movimentacoes') }}"><b>↔</b><span>Movimentações</span></a>
+  <a href="{{ url_for('relatorios') }}"><b>📊</b><span>Relatórios</span></a>
+</div>
 <div class="dashboard-stats dashboard-nucleos">
     <div class="stat-card stat-green">
       <div class="stat-icon">🐄</div>
