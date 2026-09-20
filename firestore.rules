@@ -1,0 +1,12 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Começamos bloqueado por segurança.
+    // As coleções do SIGAP serão liberadas somente após
+    // a autenticação estar ligada ao sistema.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
