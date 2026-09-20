@@ -102,16 +102,8 @@ def sincronizar_sqlite(db_path):
                     batch = cloud.batch()
                     operacoes = 0
 
-            # Remove da nuvem registros que já foram excluídos localmente.
-            for doc in cloud.collection(tabela).stream():
-                if doc.id not in ids_atuais:
-                    batch.delete(doc.reference)
-                    operacoes += 1
-                    if operacoes >= 400:
-                        batch.commit()
-                        batch = cloud.batch()
-                        operacoes = 0
-
+            # Sincronização segura: apenas cria/atualiza documentos no Firestore.
+            # Exclusões locais não são propagadas automaticamente para a nuvem.
             if operacoes:
                 batch.commit()
 
