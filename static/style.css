@@ -2089,3 +2089,72 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
   }
   .matrizes-mobile+section{display:none!important}
 }
+
+
+/* V6.1.84 — iPhone compacto: formulário sem botões cobrindo campos */
+@media(max-width:700px){
+  .app-header{padding:3px 6px!important;border-bottom-width:3px!important}
+  .header-v6043{grid-template-columns:42px minmax(0,1fr)!important;gap:5px!important;min-height:54px!important}
+  .header-v6043 .farm-logo{width:40px!important;height:40px!important}
+  .header-copy-centered .brand{font-size:13px!important}
+  .header-copy-centered .address{font-size:7.5px!important;margin-top:1px!important}
+  .header-copy-centered .contacts{font-size:7px!important;gap:4px!important;margin-top:1px!important}
+  .header-copy-centered .sigap-title{font-size:14px!important;margin-top:2px!important;letter-spacing:1.3px!important}
+  .header-copy-centered .sigap-subtitle{font-size:5.8px!important;margin-top:1px!important}
+  .wa-icon{width:11px!important;height:11px!important;font-size:7px!important}
+
+  .main-nav,nav.main-nav{padding:4px 5px!important;gap:4px!important}
+  .main-nav a,nav.main-nav a{font-size:10.5px!important;padding:5px 7px!important;min-height:30px!important;border-radius:7px!important}
+
+  main{padding:5px!important}
+  main h1{font-size:18px!important;margin:4px auto 6px!important}
+  .matriz-form-section{padding:7px!important;margin-bottom:7px!important}
+  .matriz-form-head{gap:5px!important;margin-bottom:5px!important}
+  .matriz-subtitulo{font-size:15px!important}
+  .matriz-form-head .nascimentos-geral-btn{min-height:34px!important;padding:6px 8px!important;font-size:11px!important}
+
+  .matriz-form-grid{row-gap:5px!important}
+  .matriz-form-grid label{font-size:10px!important;line-height:1.05!important}
+  .matriz-form-grid input:not([type="checkbox"]):not([type="radio"]),
+  .matriz-form-grid select,
+  .matriz-form-grid textarea{
+    min-height:34px!important;
+    height:auto!important;
+    margin-top:2px!important;
+    padding:5px 7px!important;
+    font-size:16px!important;
+    border-radius:6px!important;
+  }
+  .matriz-form-grid textarea{min-height:48px!important}
+  .matriz-form-grid small{font-size:8.5px!important;margin-top:1px!important;line-height:1.1!important}
+  .diu-aplicado-opcao{padding:6px 8px!important}
+
+  /* No iPhone os botões fazem parte do formulário: não flutuam sobre os campos. */
+  .actions:has(.form-save-btn),
+  .matriz-form-grid .actions,
+  .save-cancel-pair{
+    position:static!important;
+    bottom:auto!important;
+    z-index:auto!important;
+    background:transparent!important;
+    padding:4px 0 0!important;
+    margin:0!important;
+    box-shadow:none!important;
+  }
+  .form-save-btn{
+    position:static!important;
+    bottom:auto!important;
+    box-shadow:none!important;
+    margin:0!important;
+  }
+  .save-cancel-pair .primary,
+  .save-cancel-pair .button,
+  .save-cancel-pair a.button.light[href*="vacas"],
+  .save-cancel-pair a.button.light[href*="voltar"]{
+    min-height:38px!important;
+    height:38px!important;
+    max-height:38px!important;
+    font-size:12px!important;
+    padding:0 8px!important;
+  }
+}
