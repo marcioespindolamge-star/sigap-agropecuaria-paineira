@@ -3,7 +3,16 @@
   <div><h1>Matrizes</h1><p class="muted">Cadastro principal das matrizes (vacas e novilhas), com opção de incluir o nascimento da cria no próprio cadastro.</p></div>
   <a class="button" href="{{url_for('animal_novo', cadastro_vaca_url=True)}}">+ ADICIONAR MATRIZ</a>
 </div>
-<div class="tablewrap"><table>
+<div class="matrizes-mobile">
+{% for a in rows %}
+  <article class="matriz-mobile-card">
+    <div class="matriz-mobile-main"><strong>BRINCO {{a['brinco']}}</strong><span>{{a['raca'] or 'SEM RAÇA'}}</span></div>
+    <div class="matriz-mobile-info"><span>{{a['lote'] or 'SEM CAMPO'}}</span><span>{{a['ultimo_resultado_iatf'] or ''}}</span></div>
+    <a class="button light matriz-mobile-edit" href="{{url_for('animal_editar',id=a['id'],voltar_para='vacas')}}">EDITAR</a>
+  </article>
+{% else %}<div class="matriz-mobile-empty">Nenhuma matriz cadastrada.</div>{% endfor %}
+</div>
+<div class="tablewrap matrizes-desktop"><table>
 <thead><tr><th>Brinco</th><th>Nome</th><th>Raça</th><th>Ano Safra</th><th>Lote</th><th>Filhos</th><th>Último terneiro</th><th>Última IA</th><th>Resultado IATF</th><th>Ações</th></tr></thead>
 <tbody>
 {% for a in rows %}
