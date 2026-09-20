@@ -2196,3 +2196,27 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
     min-height:38px!important;
   }
 }
+
+
+/* V6.1.84 — navegação mobile final: sem menu duplicado */
+.mobile-home-back{display:none}
+@media(max-width:700px){
+  .mobile-menu-toggle{display:none!important}
+  .main-nav,nav.main-nav,.main-nav.mobile-open,nav.main-nav.mobile-open{display:none!important}
+  .mobile-home-back{
+    display:flex!important;
+    width:calc(100% - 10px);
+    margin:4px 5px;
+    min-height:34px;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    color:#075c2b;
+    border:1px solid #8cae98;
+    border-radius:7px;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:900;
+  }
+  body:has(.dashboard-modern) .mobile-home-back{display:none!important}
+}
