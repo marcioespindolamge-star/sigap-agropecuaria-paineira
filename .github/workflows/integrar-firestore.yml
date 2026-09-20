@@ -18,7 +18,7 @@ jobs:
         with:
           ref: integracao-firebase-segura
       - name: Integrar sincronizacao no app.py
-        shell: python
+        shell: python {0}
         run: |
           from pathlib import Path
           p = Path("app.py")
