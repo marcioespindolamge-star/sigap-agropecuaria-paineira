@@ -9,6 +9,15 @@
   <a href="{{ url_for('movimentacoes') }}"><b>↔</b><span>Movimentações</span></a>
   <a href="{{ url_for('relatorios') }}"><b>📊</b><span>Relatórios</span></a>
 </div>
+<div class="mobile-herd-balance">
+  <div class="mobile-herd-balance-title">SALDO DO REBANHO <strong>{{ total }}</strong></div>
+  <div class="mobile-herd-balance-grid">
+    <div><span>0–12 MESES</span><strong>{{ nucleo_0_12 }}</strong></div>
+    <div><span>12–24 MESES</span><strong>{{ nucleo_12_24 }}</strong></div>
+    <div><span>24–36 MESES</span><strong>{{ nucleo_24_36 }}</strong></div>
+    <div><span>+36 MESES</span><strong>{{ nucleo_mais_36 }}</strong></div>
+  </div>
+</div>
 <div class="dashboard-stats dashboard-nucleos">
     <div class="stat-card stat-green">
       <div class="stat-icon">🐄</div>
