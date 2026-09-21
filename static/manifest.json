@@ -2,27 +2,15 @@
   "name": "SIGAP - Sistema Integrado de Gestão Agropecuária Paineira",
   "short_name": "SIGAP",
   "description": "Sistema Integrado de Gestão Agropecuária Paineira",
-  "start_url": "/?app=iphone",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f3f7f4",
   "theme_color": "#0f5f2f",
   "icons": [
     {
-      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
+      "src": "/static/sigap-atalho-iphone.png?v=20260921d",
       "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
-      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
