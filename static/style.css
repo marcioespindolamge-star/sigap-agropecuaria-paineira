@@ -2220,3 +2220,71 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
   }
   body:has(.dashboard-modern) .mobile-home-back{display:none!important}
 }
+
+
+/* V6.1.84 — cabeçalho mobile mais legível, sem alterar os 6 atalhos */
+@media(max-width:700px){
+  .app-header{
+    padding:7px 8px 8px!important;
+    min-height:118px!important;
+    background-position:center center!important;
+  }
+  .header-v6043{
+    grid-template-columns:58px minmax(0,1fr)!important;
+    min-height:102px!important;
+    gap:8px!important;
+    align-items:center!important;
+  }
+  .header-v6043 .farm-logo{
+    width:56px!important;
+    height:56px!important;
+    align-self:start!important;
+    margin-top:4px!important;
+  }
+  .header-copy-centered{
+    padding:1px 3px 3px!important;
+    line-height:1.15!important;
+  }
+  .header-copy-centered .brand{
+    font-size:17px!important;
+    line-height:1.12!important;
+    letter-spacing:.2px!important;
+    margin:0 0 3px!important;
+  }
+  .header-copy-centered .address{
+    display:block!important;
+    font-size:10px!important;
+    line-height:1.2!important;
+    margin:0 0 4px!important;
+  }
+  .header-copy-centered .contacts{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    justify-content:center!important;
+    gap:3px 9px!important;
+    font-size:9.5px!important;
+    line-height:1.25!important;
+    margin:0 0 5px!important;
+  }
+  .wa-icon{width:14px!important;height:14px!important;font-size:9px!important}
+  .header-copy-centered .sigap-title{
+    font-size:22px!important;
+    line-height:1!important;
+    letter-spacing:3px!important;
+    margin:2px 0 3px!important;
+  }
+  .header-copy-centered .sigap-subtitle{
+    display:block!important;
+    font-size:7.5px!important;
+    line-height:1.15!important;
+    letter-spacing:.35px!important;
+    margin:0!important;
+  }
+}
+@media(max-width:390px){
+  .header-copy-centered .brand{font-size:15px!important}
+  .header-copy-centered .address{font-size:9px!important}
+  .header-copy-centered .contacts{font-size:8.7px!important}
+  .header-copy-centered .sigap-title{font-size:20px!important}
+  .header-copy-centered .sigap-subtitle{font-size:6.8px!important}
+}
