@@ -2288,3 +2288,13 @@ a.tab[href*="iatf"]:hover{background:#f7faf8!important;}
   .header-copy-centered .sigap-title{font-size:20px!important}
   .header-copy-centered .sigap-subtitle{font-size:6.8px!important}
 }
+
+
+/* V6.1.84 — iPhone instalado na Tela de Início: respeitar barra de status */
+@media(max-width:700px){
+  @supports (padding-top: env(safe-area-inset-top)){
+    .app-header{
+      padding-top:calc(7px + env(safe-area-inset-top))!important;
+    }
+  }
+}
