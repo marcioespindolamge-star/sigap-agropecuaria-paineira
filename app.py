@@ -5,6 +5,20 @@ from pathlib import Path
 from datetime import datetime, date, timedelta
 from functools import wraps
 
+# Conversão segura de valores monetários recebidos dos formulários.
+def parse_money(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if not texto:
+        return 0.0
+    if "," in texto and "." in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    else:
+        texto = texto.replace(",", ".")
+    try:
+        return float(texto)
+    except (TypeError, ValueError):
+        return 0.0
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, abort
 from firestore_sync import firestore_habilitado, sincronizar_sqlite, restaurar_firestore_para_sqlite
 
