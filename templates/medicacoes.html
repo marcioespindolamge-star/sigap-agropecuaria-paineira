@@ -40,13 +40,7 @@
       <div class="med-grid">
         <label>Nome da medicação<input name="nome" required placeholder="Ex.: Ivermectina"></label>
         <label>Tipo<input name="tipo" placeholder="Ex.: Vermífugo, Vacina, Antibiótico"></label>
-        <label>Dose por animal<input id="dosePadraoMed" name="dose_padrao" inputmode="decimal" placeholder="Ex.: 5"></label>
-        <label>Unidade<input name="unidade" placeholder="Ex.: mL"></label>
-        <label>Fabricante<input name="fabricante"></label>
-        <label>Valor do produto (R$)<input id="valorProdutoMed" name="valor_produto" inputmode="decimal" placeholder="Ex.: 500,00"></label>
-        <label>Quantidade da embalagem<input id="qtdEmbalagemMed" name="quantidade_embalagem" inputmode="decimal" placeholder="Ex.: 500"></label>
-        <label>Custo por animal (automático)<input id="custoAnimalMed" name="custo_animal_exibicao" readonly tabindex="-1" placeholder="R$ 0,00"></label>
-        <label class="med-full">Observação / orientação<textarea name="observacoes" rows="3"></textarea></label>
+        <label class="med-full">Observação<textarea name="observacoes" rows="3"></textarea></label>
       </div>
       <div class="med-actions"><button class="primary" type="submit">SALVAR MEDICAÇÃO</button></div>
     </form>
@@ -56,16 +50,12 @@
     <h2>Medicações cadastradas</h2>
     <div class="tablewrap">
       <table class="med-table">
-        <tr><th>Nome</th><th>Tipo</th><th>Dose/animal</th><th>Fabricante</th><th>Valor produto</th><th>Embalagem</th><th>Custo/animal</th><th></th></tr>
+        <tr><th>Nome</th><th>Tipo</th><th>Observação</th><th>Ações</th></tr>
         {% for m in medicamentos %}
         <tr>
           <td><strong>{{m['nome']}}</strong></td>
           <td>{{m['tipo'] or ''}}</td>
-          <td>{{m['dose_padrao'] or ''}}{% if m['unidade'] %} {{m['unidade']}}{% endif %}</td>
-          <td>{{m['fabricante'] or ''}}</td>
-          <td>{% if m['valor_produto'] %}R$ {{ '%.2f'|format(m['valor_produto'])|replace('.', ',') }}{% endif %}</td>
-          <td>{% if m['quantidade_embalagem'] %}{{ '%g'|format(m['quantidade_embalagem']) }} {{m['unidade'] or ''}}{% endif %}</td>
-          <td>{% if m['custo_animal'] %}R$ {{ '%.2f'|format(m['custo_animal'])|replace('.', ',') }}{% endif %}</td>
+          <td>{{m['observacoes'] or ''}}</td>
           <td>
             <form autocomplete="off" method="post" onsubmit="return confirm('Remover esta medicação da lista?')">
               <input type="hidden" name="acao" value="excluir_medicacao">
@@ -74,7 +64,7 @@
             </form>
           </td>
         </tr>
-        {% else %}<tr><td colspan="8">Nenhuma medicação cadastrada ainda.</td></tr>{% endfor %}
+        {% else %}<tr><td colspan="4">Nenhuma medicação cadastrada ainda.</td></tr>{% endfor %}
       </table>
     </div>
   </div>
@@ -203,23 +193,5 @@ function preencherDose(){
     dose.value=o.dataset.dose + (o.dataset.unidade ? ' ' + o.dataset.unidade : '');
   }
 }
-function numeroMed(v){
-  v=String(v||'').trim().replace(/\s/g,'');
-  if(v.includes(',') && v.includes('.')) v=v.replace(/\./g,'').replace(',','.');
-  else v=v.replace(',','.');
-  const n=parseFloat(v); return Number.isFinite(n)?n:0;
-}
-function calcularCustoAnimalMed(){
-  const valor=numeroMed(document.getElementById('valorProdutoMed')?.value);
-  const qtd=numeroMed(document.getElementById('qtdEmbalagemMed')?.value);
-  const dose=numeroMed(document.getElementById('dosePadraoMed')?.value);
-  const out=document.getElementById('custoAnimalMed');
-  if(!out) return;
-  const custo=(valor>0 && qtd>0 && dose>0)?(valor/qtd)*dose:0;
-  out.value=custo>0?custo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'R$ 0,00';
-}
-['valorProdutoMed','qtdEmbalagemMed','dosePadraoMed'].forEach(id=>document.getElementById(id)?.addEventListener('input',calcularCustoAnimalMed));
-calcularCustoAnimalMed();
-
 </script>
 {% endblock %}
