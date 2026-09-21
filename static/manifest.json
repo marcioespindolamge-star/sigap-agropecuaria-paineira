@@ -1,21 +1,30 @@
 {
-  "name": "Agropecuária Paineira - Controle do Rebanho",
-  "short_name": "Paineira",
-  "description": "Gerenciador de bovinos da Agropecuária Paineira",
-  "start_url": "/",
+  "name": "SIGAP - Sistema Integrado de Gestão Agropecuária Paineira",
+  "short_name": "SIGAP",
+  "description": "Sistema Integrado de Gestão Agropecuária Paineira",
+  "start_url": "/?app=iphone",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f3f7f4",
   "theme_color": "#0f5f2f",
   "icons": [
     {
-      "src": "/static/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/static/icon-512.png",
+      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/sigap-atalho-iphone.png?v=20260921b",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
