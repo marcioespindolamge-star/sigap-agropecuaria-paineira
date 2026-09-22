@@ -106,6 +106,7 @@
                 <a class="button venda-ver" href="{{url_for('relatorio_venda',venda_id=venda['id'])}}">VER RELATÓRIO</a>
                 <a class="button venda-imprimir" target="_blank" href="{{url_for('relatorio_venda',venda_id=venda['id'],imprimir=1)}}">🖨 IMPRIMIR</a>
                 <a class="button venda-pdf" href="{{url_for('baixar_relatorio_venda_pdf',venda_id=venda['id'])}}">⬇ BAIXAR PDF</a>
+                <button type="button" class="button venda-editar" onclick="alert('A edição desta venda será habilitada sem alterar os dados já gravados.')">EDITAR</button>
                 <form method="post" action="{{url_for('excluir_venda_realizada',venda_id=venda['id'])}}" class="venda-excluir-form" onsubmit="return confirm('Excluir esta venda realizada do histórico? Esta ação não poderá ser desfeita.');"><button type="submit" class="button venda-excluir">EXCLUIR</button></form>
               </td>
             </tr>
@@ -133,7 +134,7 @@
 .vendas-realizadas>summary span{font-size:12px;color:#607267;font-weight:700}.vendas-historico-box{padding:10px}.vendas-scroll{overflow-x:auto}
 .vendas-voltar-wrap{margin:0 0 10px}.vendas-voltar{background:#fff!important;color:#075f32!important;border:1px solid #075f32!important;font-weight:800;cursor:pointer}.vendas-table{width:100%;min-width:900px;border-collapse:collapse}.vendas-table th{background:#126334;color:#fff;padding:9px 8px;text-align:left}.vendas-table td{padding:9px 8px;border-bottom:1px solid #dde6e0;vertical-align:middle}
 .venda-acoes{white-space:nowrap}.venda-acoes .button{display:inline-block;margin:2px 4px 2px 0;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:800;text-decoration:none}
-.venda-ver{background:#e9f3ec!important;color:#075f32!important;border:1px solid #91b49f!important}.venda-imprimir{background:#075f32!important;color:#fff!important;border:1px solid #075f32!important}.venda-pdf{background:#fff!important;color:#075f32!important;border:1px solid #075f32!important}
+.venda-ver{background:#e9f3ec!important;color:#075f32!important;border:1px solid #91b49f!important}.venda-imprimir{background:#075f32!important;color:#fff!important;border:1px solid #075f32!important}.venda-pdf{background:#fff!important;color:#075f32!important;border:1px solid #075f32!important}.venda-editar{background:#f4b400!important;color:#1f2d23!important;border:1px solid #d99f00!important}
 @media(max-width:760px){.vendas-realizadas>summary{align-items:flex-start;flex-direction:column}.vendas-historico-box{padding:6px}}
 .nucleo-escolha{background:#f6f9f7;border:1px solid #d9e4dc;border-radius:6px;padding:12px 14px;margin:10px 0 8px}
 .nucleo-escolha-titulo{font-weight:800;color:#095b2f;margin-bottom:9px}
