@@ -202,3 +202,115 @@ def restaurar_firestore_para_sqlite(db_path):
         except Exception:
             pass
         conn.close()
+
+
+# Rota complementar de edição de venda.
+# Registrada quando o Flask do SIGAP é criado, sem alterar o app.py nem a rotina
+# de restauração Firestore -> SQLite.
+def _registrar_edicao_venda_sigap():
+    try:
+        from flask import Flask, request, render_template, redirect, url_for, flash, abort
+    except Exception:
+        return
+
+    original_init = Flask.__init__
+    if getattr(original_init, "_sigap_edicao_venda", False):
+        return
+
+    def init_com_edicao(self, *args, **kwargs):
+        original_init(self, *args, **kwargs)
+
+        def editar_venda_realizada(venda_id):
+            db_path = os.environ.get(
+                "PAINEIRA_DB",
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "dados", "rebanho.db")
+            )
+            conn = sqlite3.connect(db_path, timeout=30)
+            conn.row_factory = sqlite3.Row
+            venda = conn.execute("SELECT * FROM vendas WHERE id=?", (venda_id,)).fetchone()
+            if not venda:
+                conn.close()
+                abort(404)
+            itens = conn.execute(
+                "SELECT * FROM venda_itens WHERE venda_id=? ORDER BY id", (venda_id,)
+            ).fetchall()
+
+            if request.method == "POST":
+                f = request.form
+                def numero(valor, padrao=0.0):
+                    try:
+                        texto = str(valor or "").strip()
+                        if "," in texto:
+                            texto = texto.replace(".", "").replace(",", ".")
+                        return float(texto)
+                    except Exception:
+                        return float(padrao or 0)
+
+                data = (f.get("data") or venda["data"] or "").strip()
+                forma = (f.get("forma_calculo") or venda["forma_calculo"] or "kg").strip()
+                if forma not in ("kg", "unitario"):
+                    forma = "kg"
+                valor_ref = numero(f.get("valor_referencia"), venda["valor_referencia"])
+
+                # Animais e pesos permanecem exatamente como foram gravados na venda.
+                total_peso = round(sum(float(i["peso"] or 0) for i in itens), 2)
+                novos_valores = []
+                for item in itens:
+                    valor = (
+                        round(float(item["peso"] or 0) * valor_ref, 2)
+                        if forma == "kg" else round(valor_ref, 2)
+                    )
+                    novos_valores.append((valor, item["id"]))
+                bruto = round(sum(v for v, _ in novos_valores), 2)
+                fundo = round(bruto * 0.015, 2)
+                liquido = round(bruto - fundo, 2)
+
+                conn.execute("""UPDATE vendas SET
+                    data=?, banco=?, agencia=?, conta_corrente=?, cpf_titular=?,
+                    forma_calculo=?, valor_referencia=?, total_peso=?, total_bruto=?,
+                    percentual_fundo=1.5, fundo_rural=?, total_liquido=?, observacoes=?,
+                    comprador_nome=?, comprador_nome_fantasia=?, comprador_cnpj=?,
+                    comprador_cep=?, comprador_cidade=?, comprador_endereco=?,
+                    comprador_observacoes=?
+                    WHERE id=?""",
+                    (
+                        data, (f.get("banco") or "").strip(),
+                        (f.get("agencia") or "").strip(),
+                        (f.get("conta_corrente") or "").strip(),
+                        (f.get("cpf_titular") or "").strip(),
+                        forma, valor_ref, total_peso, bruto, fundo, liquido,
+                        (f.get("observacoes") or "").strip(),
+                        (f.get("comprador_nome") or "").strip(),
+                        (f.get("comprador_nome_fantasia") or "").strip(),
+                        (f.get("comprador_cnpj") or "").strip(),
+                        (f.get("comprador_cep") or "").strip(),
+                        (f.get("comprador_cidade") or "").strip(),
+                        (f.get("comprador_endereco") or "").strip(),
+                        (f.get("comprador_observacoes") or "").strip(),
+                        venda_id,
+                    )
+                )
+                for valor, item_id in novos_valores:
+                    conn.execute(
+                        "UPDATE venda_itens SET valor_individual=? WHERE id=? AND venda_id=?",
+                        (valor, item_id, venda_id),
+                    )
+                conn.commit()
+                conn.close()
+                flash("Venda atualizada. Os animais vendidos não foram alterados.", "ok")
+                return redirect(url_for("relatorio_venda", venda_id=venda_id))
+
+            conn.close()
+            return render_template("editar_venda.html", venda=venda, itens=itens)
+
+        self.add_url_rule(
+            "/movimentacoes/venda/<int:venda_id>/editar",
+            endpoint="editar_venda_realizada",
+            view_func=editar_venda_realizada,
+            methods=["GET", "POST"],
+        )
+
+    init_com_edicao._sigap_edicao_venda = True
+    Flask.__init__ = init_com_edicao
+
+_registrar_edicao_venda_sigap()
