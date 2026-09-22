@@ -106,7 +106,7 @@
                 <a class="button venda-ver" href="{{url_for('relatorio_venda',venda_id=venda['id'])}}">VER RELATÓRIO</a>
                 <a class="button venda-imprimir" target="_blank" href="{{url_for('relatorio_venda',venda_id=venda['id'],imprimir=1)}}">🖨 IMPRIMIR</a>
                 <a class="button venda-pdf" href="{{url_for('baixar_relatorio_venda_pdf',venda_id=venda['id'])}}">⬇ BAIXAR PDF</a>
-                <button type="button" class="button venda-editar" onclick="alert('A edição desta venda será habilitada sem alterar os dados já gravados.')">EDITAR</button>
+                <a class="button venda-editar" href="{{url_for('editar_venda_realizada',venda_id=venda['id'])}}">EDITAR</a>
                 <form method="post" action="{{url_for('excluir_venda_realizada',venda_id=venda['id'])}}" class="venda-excluir-form" onsubmit="return confirm('Excluir esta venda realizada do histórico? Esta ação não poderá ser desfeita.');"><button type="submit" class="button venda-excluir">EXCLUIR</button></form>
               </td>
             </tr>
