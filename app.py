@@ -2352,6 +2352,42 @@ def gerar_pdf_venda(venda, itens):
     out.write(f"trailer\n<< /Size {len(objects)+1} /Root {catalog_id} 0 R >>\nstartxref\n{xref}\n%%EOF".encode("ascii"))
     out.seek(0); return out
 
+@app.route("/movimentacoes/venda/<int:venda_id>/editar", methods=["GET","POST"])
+@login_required
+def editar_venda_realizada(venda_id):
+    c=db()
+    venda=c.execute("SELECT * FROM vendas WHERE id=?",(venda_id,)).fetchone()
+    if not venda:
+        c.close(); abort(404)
+    itens=c.execute("SELECT * FROM venda_itens WHERE venda_id=? ORDER BY id",(venda_id,)).fetchall()
+    if request.method=="POST":
+        f=request.form
+        def numero(v):
+            try:
+                s=str(v or "0").strip()
+                return float(s.replace(".","").replace(",",".")) if "," in s else float(s or 0)
+            except Exception:
+                return 0.0
+        data=f.get("data") or venda["data"]
+        forma=f.get("forma_calculo") or venda["forma_calculo"] or "kg"
+        valor_ref=numero(f.get("valor_referencia"))
+        # Animais vendidos e venda_itens ficam intocados: nao altera brinco,
+        # categoria, peso, status nem reintegra animal ao rebanho.
+        total_peso=round(sum(float(item["peso"] or 0) for item in itens),1)
+        if forma=="kg":
+            bruto=round(sum(float(item["peso"] or 0)*valor_ref for item in itens),2)
+        else:
+            bruto=round(len(itens)*valor_ref,2)
+        fundo=round(bruto*0.015,2)
+        liquido=round(bruto-fundo,2)
+        c.execute("""UPDATE vendas SET data=?,banco=?,agencia=?,conta_corrente=?,cpf_titular=?,forma_calculo=?,valor_referencia=?,total_peso=?,total_bruto=?,percentual_fundo=?,fundo_rural=?,total_liquido=?,observacoes=?,comprador_nome=?,comprador_nome_fantasia=?,comprador_cnpj=?,comprador_cep=?,comprador_cidade=?,comprador_endereco=?,comprador_observacoes=? WHERE id=?""",
+                  (data,f.get("banco",""),f.get("agencia",""),f.get("conta_corrente",""),f.get("cpf_titular",""),forma,valor_ref,total_peso,bruto,1.5,fundo,liquido,f.get("observacoes",""),f.get("comprador_nome",""),f.get("comprador_nome_fantasia",""),f.get("comprador_cnpj",""),f.get("comprador_cep",""),f.get("comprador_cidade",""),f.get("comprador_endereco",""),f.get("comprador_observacoes",""),venda_id))
+        c.commit(); c.close()
+        flash("Venda atualizada com sucesso.","ok")
+        return redirect(url_for("relatorio_venda",venda_id=venda_id))
+    c.close()
+    return render_template("editar_venda.html",venda=venda,itens=itens)
+
 @app.route("/movimentacoes/venda/<int:venda_id>/excluir", methods=["POST"])
 @login_required
 def excluir_venda_realizada(venda_id):
